@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MenuActivity" >
+
+    <TextView
+        android:id="@+id/textview_restaurantName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textSize="20dp"
+        android:text="NoName" />
+
+    <TextView
+        android:id="@+id/editText_phonenumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textview_restaurantName"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="10dp"
+        android:autoLink="phone"
+        android:text="02-880-0000"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/textView_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textview_restaurantName"
+        android:layout_below="@+id/editText_phonenumber"
+        android:layout_marginTop="10dp"
+        android:text="영업 시간 :" />
+
+    <TextView
+        android:id="@+id/textview_closeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textview_opentime"
+        android:layout_alignBottom="@+id/textview_opentime"
+        android:layout_toRightOf="@+id/textview_fromto"
+        android:layout_marginLeft="20dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textview_opentime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView_time"
+        android:layout_alignBottom="@+id/textView_time"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/textView_time"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textview_fromto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textview_opentime"
+        android:layout_alignBottom="@+id/textview_opentime"
+        android:layout_toRightOf="@+id/textview_opentime"
+        android:layout_marginLeft="30dp"
+        android:text="~" />
+
+    <ExpandableListView
+        android:id="@+id/expandableListView_menus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/textView_time" >
+    </ExpandableListView>
+
+</RelativeLayout>
