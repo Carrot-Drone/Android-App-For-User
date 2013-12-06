@@ -26,7 +26,7 @@ public class MainActivity extends ListActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categories);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categories);
 		setListAdapter(adapter);
 		
 		// 처음 설치시 assets/databases/Shadal 파일로 디비 설정

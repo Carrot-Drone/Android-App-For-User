@@ -99,7 +99,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu); 
 		// Show the Up button in the action bar.
-		setupActionBar();
+//		setupActionBar();
 		Intent caller = getIntent();
 		res_id = caller.getIntExtra("res_id", -1);
 		
@@ -148,7 +148,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActionBar().setTitle("샤달");
+			getActionBar().setTitle(name);
 		}
 	}
 
@@ -182,8 +182,6 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
-
 		super.onStop();
 	}
 
@@ -236,7 +234,7 @@ class LogSender extends AsyncTask<String, Void, HttpResponse>{
 		try{
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost("http://services.snu.ac.kr:3111/new_call");
-			ArrayList value = new ArrayList();
+			ArrayList<BasicNameValuePair> value = new ArrayList<BasicNameValuePair>();
 			value.add(new BasicNameValuePair("phoneNumber", res.getPhoneNumber()));
 			value.add(new BasicNameValuePair("name", res.getName()));
 			value.add(new BasicNameValuePair("device", "android"));
@@ -245,7 +243,6 @@ class LogSender extends AsyncTask<String, Void, HttpResponse>{
 			try {
 				httppost.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

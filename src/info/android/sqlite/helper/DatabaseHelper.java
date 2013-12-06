@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import info.android.sqlite.model.Restaurant;
 import info.android.sqlite.model.Menu_data;
