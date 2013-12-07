@@ -195,6 +195,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                res.setCategory(c.getString(c.getColumnIndex("category")));
                res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
                res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
+               if(c.getInt(c.getColumnIndex("flyer")) == 1){
+            	   res.setFlyer(true);
+               }else{
+            	   res.setFlyer(false);
+               }
+               if(c.getInt(c.getColumnIndex("coupon")) == 1){
+            	   res.setCoupon(true);
+               }else{
+            	   res.setCoupon(false);
+               }
+               res.setCouponString(c.getString(c.getColumnIndex("couponString")));
+
 
                // adding to res list
                ress.add(res);

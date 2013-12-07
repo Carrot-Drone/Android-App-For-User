@@ -11,4 +11,22 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"/>
+    
+    <ImageView
+	    android:id="@+id/flyer"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentRight="true"
+        android:src="@drawable/flyer"
+	    android:adjustViewBounds="true" />
+    
+    <ImageView
+	    android:id="@+id/coupon"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentRight="true"
+        android:src="@drawable/coupon"
+	    android:adjustViewBounds="true" />
+    
+    
 </LinearLayout>

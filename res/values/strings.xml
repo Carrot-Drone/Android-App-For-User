@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Shadal</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">샤달</string>
+    <string name="action_flyer">전단지</string>
 
     <string-array name="categories">
         <item>치킨</item>
@@ -15,9 +14,5 @@
         <item>냉면</item>
         <item>기타</item>
     </string-array>
-
-    
-    <string name="title_activity_restaurant">Restaurant</string>
-    <string name="title_activity_menu">MenuActivity</string>
     
 </resources>

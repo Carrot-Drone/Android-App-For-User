@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-//import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -35,31 +34,23 @@ import com.lchpartners.android.adaptor.ExpandableMenuAdapter;
 
 public class MenuActivity extends Activity implements OnClickListener {
 	private DatabaseHelper db;
-
-	private int res_id;
+	
+	private Restaurant restaurant;
+	
 	private ArrayList<String> sectionList;
 	private ArrayList<ArrayList<String>> menuList;
 	private ArrayList<ArrayList<String>> priceList;
-	private String name;
-	private String phoneNumber;
-	private String openingHours;
-	private String closingHours;
 	private ExpandableListView elView;
 
 	private void setRestaurantFromDatabase(int res_id){
 	    Context context = getApplicationContext();
 	    db = new DatabaseHelper(context);
 	    
-	    Restaurant res = db.getRestaurant((long)res_id);
-		
-	    name = res.getName();
-	    phoneNumber = res.getPhoneNumber();
-	    openingHours = res.getOpeningHours();
-	    closingHours = res.getClosingHours();
+	    restaurant = db.getRestaurant((long)res_id);
 	    
 	    ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)res_id);
 	    int menu_size = menus.size();
-	    
+	
 
 		sectionList = new ArrayList<String>();
 		menuList = new ArrayList<ArrayList<String>>();
@@ -98,22 +89,24 @@ public class MenuActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu); 
+		
 		// Show the Up button in the action bar.
 //		setupActionBar();
+		
 		Intent caller = getIntent();
-		res_id = caller.getIntExtra("res_id", -1);
+		int res_id = caller.getIntExtra("res_id", -1);
 		
 		setRestaurantFromDatabase(res_id);
 		
 		TextView nameView = (TextView)findViewById(R.id.textview_restaurantName);
-		nameView.setText(name);
+		nameView.setText(restaurant.name);
 		TextView numberView = (TextView)findViewById(R.id.editText_phonenumber);
-		numberView.setText(phoneNumber);
+		numberView.setText(restaurant.phoneNumber);
 		numberView.setOnClickListener(this);
 		TextView otimeView = (TextView)findViewById(R.id.textview_opentime);
 		TextView ctimeView = (TextView)findViewById(R.id.textview_closeTime);
 		
-		if(openingHours.equals("0") || closingHours.equals("0")){
+		if(restaurant.openingHours.equals("0") || restaurant.closingHours.equals("0")){
 			TextView fromto = (TextView)findViewById(R.id.textview_fromto);
 			TextView time = (TextView)findViewById(R.id.textView_time);
 			otimeView.setVisibility(View.INVISIBLE);
@@ -121,8 +114,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 			fromto.setVisibility(View.INVISIBLE);
 			time.setVisibility(View.INVISIBLE);
 		}else{
-			int otime = Integer.parseInt(openingHours);
-			int ctime = Integer.parseInt(closingHours);
+			int otime = Integer.parseInt(restaurant.openingHours);
+			int ctime = Integer.parseInt(restaurant.closingHours);
 			if(otime%100>=10)
 				otimeView.setText("" + otime/100 + ":" + otime%100);
 			else
@@ -148,33 +141,28 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActionBar().setTitle(name);
+			getActionBar().setTitle(restaurant.name);
 		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		if(!restaurant.flyer){
+			getMenuInflater().inflate(R.menu.menu, menu);
+		}
 		return true;
-
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.d("TEST", "onoptions");
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-
-			//NavUtils.navigateUpFromSameTask(this);
-			finish();
+		case R.id.action_flyer:
+			Intent moveToFlyer = new Intent(MenuActivity.this, FlyerActivity.class);
+			moveToFlyer.putExtra("phoneNumber", restaurant.phoneNumber);
+			startActivity(moveToFlyer);
+			onPause();
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -190,7 +178,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		switch(arg0.getId()){
-		case R.id.editText_phonenumber : sendLog(res_id);break;
+		case R.id.editText_phonenumber : sendLog(restaurant.id);break;
 		default : break;
 		}
 	}

@@ -1,12 +1,15 @@
 package info.android.sqlite.model;
 
 public class Restaurant {
-		int id;
-	    String name;
-	    String phoneNumber;
-	    String category;
-	    String openingHours;
-	    String closingHours;
+		public int id;
+	    public String name;
+	    public String phoneNumber;
+	    public String category;
+	    public String openingHours;
+	    public String closingHours;
+	    public boolean flyer;
+	    public boolean coupon;
+	    public String couponString;
 	    
 	    // constructors
 	    public Restaurant() {
@@ -47,6 +50,18 @@ public class Restaurant {
 	    public void setClosingHours(String closingHours){
 	    	this.closingHours = closingHours;
 	    }
+
+	    public void setFlyer(boolean flyer){
+	    	this.flyer = flyer;
+	    }
+	    
+	    public void setCoupon(boolean coupon){
+	    	this.coupon = coupon;
+	    }
+	    
+	    public void setCouponString(String couponString){
+	    	this.couponString = couponString;
+	    }
 	 
 	    // getters
 	    public long getId() {
@@ -71,5 +86,17 @@ public class Restaurant {
 	    
 	    public String getClosingHours(){
 	    	return this.closingHours;
+	    }
+	    
+	    public boolean getFlyer(){
+	    	return this.flyer;
+	    }
+	    
+	    public boolean getCoupon(){
+	    	return this.coupon;
+	    }
+	    
+	    public String getCouponString(){
+	    	return this.couponString;
 	    }
 }
