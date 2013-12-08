@@ -82,10 +82,11 @@ public class ScreenSlidePageFragment extends Fragment{
         		}
         	}
         }
-        
+		
 	    Drawable d = Drawable.createFromStream(istream, null);
 	    mImage.setImageDrawable(d);
-	    
+	    mImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
 	    return rootView;
     }
 
