@@ -23,7 +23,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -123,8 +126,22 @@ public class MenuActivity extends Activity implements OnClickListener {
 			if(ctime%100>=10)
 				ctimeView.setText("" + ctime/100 + ":" + ctime%100);
 			else
-				ctimeView.setText("" + ctime/100 + ":0" + ctime%100);
+				ctimeView.setText("" + ctime/100 + ":0" + ctime%100);	
+		}
+		
+		if(restaurant.coupon == true){
+			TextView couponString = (TextView)findViewById(R.id.textview_couponString);
+			couponString.setText(restaurant.couponString);
+			couponString.setTextSize(20);
+		}else{
+			TextView couponString = (TextView)findViewById(R.id.textview_couponString);
+			couponString.setVisibility(ImageView.INVISIBLE);
+			elView = (ExpandableListView) findViewById(R.id.expandableListView_menus);
 			
+			RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+			        ViewGroup.LayoutParams.WRAP_CONTENT);
+			p.addRule(RelativeLayout.BELOW, R.id.textView_time);
+			elView.setLayoutParams(p);
 		}
 		elView = (ExpandableListView) findViewById(R.id.expandableListView_menus);
 		elView.setIndicatorBounds(0, 30);

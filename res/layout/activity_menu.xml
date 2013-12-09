@@ -67,13 +67,22 @@
         android:layout_marginLeft="30dp"
         android:text="~" />
 
+    <TextView
+        android:id="@+id/textview_couponString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_below="@+id/textView_time" />
+
     <ExpandableListView
         android:id="@+id/expandableListView_menus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/textView_time" >
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/textview_couponString" >
     </ExpandableListView>
 
 </RelativeLayout>
