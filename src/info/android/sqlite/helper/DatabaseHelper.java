@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
  
     // Database Version
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 17;
  
     // Database Name
     private static final String DATABASE_NAME = "Shadal";
@@ -82,14 +82,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     		mContext.deleteDatabase(DATABASE_NAME);
     	}
     	
-        // on upgrade drop older tables
-    	/*
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MENU);
- 
-        // create new tables
-        onCreate(db);
-    	 */
+        try {
+			copyDataBase();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     
