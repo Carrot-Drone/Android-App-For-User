@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">샤달</string>
+    <string name="app_subtitle">: 서울대학교 대표 배달음식앱</string>
+    <!-- previously the string above was : 서울대 배달음식 어플리케이션-->
     <string name="action_flyer">전단지</string>
 
     <string-array name="categories">

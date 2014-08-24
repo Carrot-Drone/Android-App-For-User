@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:views="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp">
+    <com.lchpartners.views.NamsanTextView
+        android:id="@+id/textview_mainTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_marginLeft="25dp"
+        android:textSize="30.5sp"
+        android:text="@string/app_name"
+        views:weight="extra_bold"
+        android:textColor="@android:color/white"/>
+    <com.lchpartners.views.NamsanTextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_toRightOf="@id/textview_mainTitle"
+        android:layout_marginLeft="8dp"
+        android:textSize="17sp"
+        views:weight="extra_bold"
+        android:text="@string/app_subtitle"
+        android:textColor="@android:color/white"/>
+</RelativeLayout>
