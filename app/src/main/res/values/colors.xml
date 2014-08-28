@@ -2,5 +2,6 @@
 <resources>
 
     <color name="red">#ffff0000</color>
+    <color name="shadal_default">#ff7233</color>
     
 </resources>

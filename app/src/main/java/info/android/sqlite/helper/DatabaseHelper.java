@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_MENU = "menus";
 
     
-    public boolean isDataBaseExist(){
+    public boolean doesDatabaseExist(){
     	File dbFile = new File(DATABASE_PATH + DATABASE_NAME);
     	return dbFile.exists();
     }
