@@ -16,6 +16,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private Context mContext = null;
@@ -35,8 +38,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Table Names
     private static final String TABLE_RES = "restaurants";
     private static final String TABLE_MENU = "menus";
+    private static final String TABLE_FLYER = "flyers";
 
-    
+    private static final String CREATE_TABLE_RESTAURANT = "create table restaurants (id INTEGER PRIMARY KEY, server_id INT, name TEXT, category TEXT, "
+            + "openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer BOOL, has_coupon BOOL, is_new BOOL, is_favorite BOOL, coupon_string TEXT, updated_at TEXT);";
+    private static final String CREATE_TABLE_FLYERS = "create table flyers (id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT);";
+    private static final String CREATE_TABLE_MENU = "create table menus (id INTEGER PRIMARY KEY, menu TEXT, section TEXT, "
+            + "price INT, restaurant_id INT);";
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context;
+        DATABASE_PATH = "/data/data/" + mContext.getPackageName() + "/databases/";
+    }
     public boolean doesDatabaseExist(){
     	File dbFile = new File(DATABASE_PATH + DATABASE_NAME);
     	return dbFile.exists();
@@ -60,20 +74,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         myOutput.close();
         myInput.close();
     }
- 
-    public DatabaseHelper(Context context) {
-    	
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    	this.mContext = context;
-        DATABASE_PATH = "/data/data/" + mContext.getPackageName() + "/databases/";
-    }
+
  
     @Override
     public void onCreate(SQLiteDatabase db) {
- 
         // creating required tables
- //       db.execSQL(CREATE_TABLE_RESTAURANT);
- //       db.execSQL(CREATE_TABLE_MENU);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_RES);
+        db.execSQL(CREATE_TABLE_RESTAURANT);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_MENU);
+        db.execSQL(CREATE_TABLE_MENU);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_FLYER);
+        db.execSQL(CREATE_TABLE_FLYERS);
     }
  
     @Override
@@ -81,13 +92,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     	if (newVersion > oldVersion) {
     		mContext.deleteDatabase(DATABASE_NAME);
     	}
-    	
+    	/*
         try {
 			copyDataBase();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
     }
     
     
@@ -96,21 +108,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
     * Creating a restaurant
     */
-   public long createRestaurant(Restaurant res) {
-       SQLiteDatabase db = this.getWritableDatabase();
+    public long createRestaurant(Restaurant res) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-       ContentValues values = new ContentValues();
-       values.put("name", res.getName());
-       values.put("phoneNumber", res.getPhoneNumber());
-       values.put("category", res.getCategory());
-       values.put("openingHours", res.getOpeningHours());
-       values.put("closingHours", res.getClosingHours());
-       
-       // insert row
-       long res_id = db.insert(TABLE_RES, "nullColumnHack", values);
-       
-       return res_id;
-   }
+        ContentValues values = new ContentValues();
+        values.put("name", res.getName());
+        values.put("phoneNumber", res.getPhoneNumber());
+        values.put("category", res.getCategory());
+        values.put("openingHours", res.getOpeningHours());
+        values.put("closingHours", res.getClosingHours());
+
+        // insert row
+        long res_id = db.insert(TABLE_RES, "nullColumnHack", values);
+
+        return res_id;
+    }
+    public long createRestaurant(JSONObject res) throws Exception{
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("server_id", res.getInt("id"));
+        values.put("updated_at", res.getString("updated_at"));
+
+        values.put("name", res.getString("name"));
+        values.put("phoneNumber", res.getString("phone_number"));
+        values.put("category", res.getString("category"));
+        values.put("openingHours", res.getString("openingHours"));
+        values.put("closingHours", res.getString("closingHours"));
+
+        values.put("has_flyer", res.getBoolean("has_flyer"));
+        values.put("has_coupon", res.getBoolean("has_coupon"));
+        values.put("is_new", false);
+        values.put("is_favorite", false);
+
+        values.put("coupon_string", res.getString("coupon_string"));
+
+        JSONArray menus = res.getJSONArray("menus");
+        for(int i=0; i<menus.length(); i++){
+            createMenu(menus.getJSONObject(i));
+        }
+
+        JSONArray urls = res.getJSONArray("flyers_url");
+        for(int i=0; i<urls.length(); i++){
+            createFlyer(urls.getString(i), res.getInt("id"));
+        }
+
+        // insert row
+        long res_id = db.insert(TABLE_RES, "nullColumnHack", values);
+
+        return res_id;
+    }
 
    /**
     * get single restaurant
@@ -130,22 +177,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
        Restaurant res = new Restaurant();
        res.setId(c.getInt(c.getColumnIndex("id")));
+       res.setServer_id(c.getInt(c.getColumnIndex("server_id")));
        res.setName((c.getString(c.getColumnIndex("name"))));       
        res.setCategory(c.getString(c.getColumnIndex("category")));
        res.setPhoneNumber(c.getString(c.getColumnIndex("phoneNumber")));
        res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
        res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-       if(c.getInt(c.getColumnIndex("flyer")) == 1){
+       if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
     	   res.setFlyer(true);
        }else{
     	   res.setFlyer(false);
        }
-       if(c.getInt(c.getColumnIndex("coupon")) == 1){
-    	   res.setCoupon(true);
+       if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
+           res.setCoupon(true);
        }else{
-    	   res.setCoupon(false);
+           res.setCoupon(false);
        }
-       res.setCouponString(c.getString(c.getColumnIndex("couponString")));
+       if(c.getInt(c.getColumnIndex("is_new")) == 1){
+           res.setNew(true);
+       }else{
+           res.setNew(false);
+       }
+       if(c.getInt(c.getColumnIndex("is_favorite")) == 1){
+           res.setFavorite(true);
+       }else{
+           res.setFavorite(false);
+       }
+       res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
 
 
        return res;
@@ -173,17 +231,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                res.setCategory(c.getString(c.getColumnIndex("category")));
                res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
                res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-               if(c.getInt(c.getColumnIndex("flyer")) == 1){
+               if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
             	   res.setFlyer(true);
                }else{
             	   res.setFlyer(false);
                }
-               if(c.getInt(c.getColumnIndex("coupon")) == 1){
+               if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
             	   res.setCoupon(true);
                }else{
             	   res.setCoupon(false);
                }
-               res.setCouponString(c.getString(c.getColumnIndex("couponString")));
+               res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
 
                // adding to res list
                ress.add(res);
@@ -215,17 +273,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                res.setCategory(c.getString(c.getColumnIndex("category")));
                res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
                res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-               if(c.getInt(c.getColumnIndex("flyer")) == 1){
+               if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
             	   res.setFlyer(true);
                }else{
             	   res.setFlyer(false);
                }
-               if(c.getInt(c.getColumnIndex("coupon")) == 1){
+               if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
             	   res.setCoupon(true);
                }else{
             	   res.setCoupon(false);
                }
-               res.setCouponString(c.getString(c.getColumnIndex("couponString")));
+               res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
 
 
                // adding to res list
@@ -236,37 +294,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        return ress;
    }
 
-   /**
-    * getting all menus under single restaurant
-    * */
-   public ArrayList<Menu_data> getAllMenusByRestaurant(long res_id) {
-       ArrayList<Menu_data> menus = new ArrayList<Menu_data>();
+    /**
+     * getting all menus under single restaurant
+     * */
+    public ArrayList<Menu_data> getAllMenusByRestaurant(long res_id) {
+        ArrayList<Menu_data> menus = new ArrayList<Menu_data>();
 
-       String selectQuery = "SELECT  * FROM " + TABLE_MENU + " WHERE " 
-    		   + "restaurant_id = " + res_id;
+        String selectQuery = "SELECT  * FROM " + TABLE_MENU + " WHERE "
+                + "restaurant_id = " + res_id;
 
-       Log.e(LOG, selectQuery);
+        Log.e(LOG, selectQuery);
 
-       SQLiteDatabase db = this.getReadableDatabase();
-       Cursor c = db.rawQuery(selectQuery, null);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
 
-       // looping through all rows and adding to list
-       if (c.moveToFirst()) {
-           do {
-               Menu_data menu = new Menu_data();
-               menu.setId(c.getInt((c.getColumnIndex("id"))));
-               menu.setMenu((c.getString(c.getColumnIndex("menu"))));
-               menu.setSection(c.getString(c.getColumnIndex("section")));
-               menu.setPrice(c.getInt(c.getColumnIndex("price")));
-               menu.setRestaurantId(c.getInt(c.getColumnIndex("restaurant_id")));
-               
-               // adding to menu list
-               menus.add(menu);
-           } while (c.moveToNext());
-       }
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Menu_data menu = new Menu_data();
+                menu.setId(c.getInt((c.getColumnIndex("id"))));
+                menu.setMenu((c.getString(c.getColumnIndex("menu"))));
+                menu.setSection(c.getString(c.getColumnIndex("section")));
+                menu.setPrice(c.getInt(c.getColumnIndex("price")));
+                menu.setRestaurantId(c.getInt(c.getColumnIndex("restaurant_id")));
 
-       return menus;
-   }
+                // adding to menu list
+                menus.add(menu);
+            } while (c.moveToNext());
+        }
+
+        return menus;
+    }
+    /**
+     * getting all flyer urls under single restaurant
+     * */
+    public ArrayList<String> getALLURLsForRestaurant(long res_id) {
+        ArrayList<String> urls = new ArrayList<String>();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_FLYER + " WHERE "
+                + "restaurant_id = " + res_id;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                urls.add(c.getString(c.getColumnIndex("url")));
+            } while (c.moveToNext());
+        }
+
+        return urls;
+    }
 
    /**
     * Deleting a restaurant
@@ -297,7 +378,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        return menu_id;
    }
 
-   // closing database
+    public long createMenu(JSONObject menu) throws Exception {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("menu", menu.getString("name"));
+        values.put("section", menu.getString("section"));
+        values.put("price", menu.getInt("price"));
+        values.put("restaurant_id", menu.getInt("restaurant_id"));
+
+        // insert row
+        long menu_id = db.insert(TABLE_MENU, null, values);
+
+        return menu_id;
+    }
+
+    public long createFlyer(String flyer, int restaurant_id) throws Exception {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("url", flyer);
+        values.put("restaurant_id", restaurant_id);
+
+        // insert row
+        long flyer_id = db.insert(TABLE_FLYER, null, values);
+
+        return flyer_id;
+    }
+
+        // closing database
    public void closeDB() {
        SQLiteDatabase db = this.getReadableDatabase();
        if (db != null && db.isOpen())

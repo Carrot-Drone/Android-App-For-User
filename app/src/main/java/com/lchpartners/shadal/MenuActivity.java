@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.lchpartners.android.adaptor.ExpandableMenuAdapter;
+import com.lchpartners.server.Server;
 
 public class MenuActivity extends Activity implements OnClickListener {
 	private DatabaseHelper db;
@@ -51,7 +52,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	    
 	    restaurant = db.getRestaurant((long)res_id);
 	    
-	    ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)res_id);
+	    ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)restaurant.server_id);
 	    int menu_size = menus.size();
 	
 
@@ -117,8 +118,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 			fromto.setVisibility(View.INVISIBLE);
 			time.setVisibility(View.INVISIBLE);
 		}else{
-			int otime = Integer.parseInt(restaurant.openingHours);
-			int ctime = Integer.parseInt(restaurant.closingHours);
+			int otime = (int)Double.parseDouble(restaurant.openingHours)*100;
+			int ctime = (int)Double.parseDouble(restaurant.closingHours)*100;
 			if(otime%100>=10)
 				otimeView.setText("" + otime/100 + ":" + otime%100);
 			else
@@ -129,9 +130,9 @@ public class MenuActivity extends Activity implements OnClickListener {
 				ctimeView.setText("" + ctime/100 + ":0" + ctime%100);	
 		}
 		
-		if(restaurant.coupon == true){
+		if(restaurant.has_coupon == true){
 			TextView couponString = (TextView)findViewById(R.id.textview_couponString);
-			couponString.setText(restaurant.couponString);
+			couponString.setText(restaurant.coupon_string);
 			couponString.setTextSize(20);
 		}else{
 			TextView couponString = (TextView)findViewById(R.id.textview_couponString);
@@ -243,7 +244,7 @@ class LogSender extends AsyncTask<String, Void, HttpResponse>{
 			value.add(new BasicNameValuePair("phoneNumber", res.getPhoneNumber()));
 			value.add(new BasicNameValuePair("name", res.getName()));
 			value.add(new BasicNameValuePair("device", "android"));
-			value.add(new BasicNameValuePair("campus", "Gwanak"));
+			value.add(new BasicNameValuePair("campus", Server.CAMPUS));
 			
 			try {
 				httppost.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
