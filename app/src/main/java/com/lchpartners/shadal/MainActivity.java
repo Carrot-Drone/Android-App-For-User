@@ -1,40 +1,68 @@
 package com.lchpartners.shadal;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.Menu;
+
+import com.lchpartners.fragments.CategoryFragment;
+
 import java.io.IOException;
 
 import info.android.sqlite.helper.DatabaseHelper;
-import android.os.Bundle;
-import android.app.ListActivity;
-import android.content.Intent;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
-public class MainActivity extends ListActivity{
+public class MainActivity extends Activity {
+
+    /**
+     * Created by Gwangrae Kim on 2014-08-25.
+     */
+    public static class ShadalTabsAdapter extends FragmentPagerAdapter {
+        public ShadalTabsAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new CategoryFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+    }
+
+    private final static String TAG = "MainActivity";
+    //For handling fragment tabs.
+    ShadalTabsAdapter mAdapter;
+    ViewPager mPager;
+
+    //For handling data
 	DatabaseHelper mDbHelper;
-	
-	String [] categories = { "치킨", "피자", "중국집", "한식/분식", "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
-	TextView text;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categories);
-		setListAdapter(adapter);
+        mAdapter = new ShadalTabsAdapter(getFragmentManager());
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mAdapter);
 		
 		// 처음 설치시 assets/databases/Shadal 파일로 디비 설정
 		try{
 	        mDbHelper = new DatabaseHelper(getApplicationContext());
-	        boolean isExist = mDbHelper.isDataBaseExist();
+	        boolean dbExists = mDbHelper.doesDatabaseExist();
 
 	        SQLiteDatabase db;
-	        if(!isExist){
+	        if(!dbExists){
 	            //get database, we will override it in next steep
 	            //but folders containing the database are created
 	            db = mDbHelper.getWritableDatabase();
@@ -44,13 +72,14 @@ public class MainActivity extends ListActivity{
 	        }                                              
 	        db = mDbHelper.getWritableDatabase();
 		}catch(SQLException eSQL){
-	        Log.e("log_tag","Can not open database");
+	        Log.e(TAG,"Cannot open database");
 		}
 		catch (IOException IOe) {
-	        Log.e("log_tag","Can not copy initial database");
+	        Log.e(TAG,"Cannot copy initial database");
 		}
 	}
-	
+
+    /**
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -58,5 +87,11 @@ public class MainActivity extends ListActivity{
 		moveToRestaurant.putExtra("category", position);
 		startActivity(moveToRestaurant);
 		onPause();
-	}
+	}*/
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        getMenuInflater().inflate(R.menu.search,menu);
+        return true;
+    }
 }
