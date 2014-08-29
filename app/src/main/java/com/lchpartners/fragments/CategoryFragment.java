@@ -82,7 +82,6 @@ public class CategoryFragment extends Fragment {
                 }
             });
 
-
             return convertView;
         }
     }
