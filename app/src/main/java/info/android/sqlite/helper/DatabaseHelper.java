@@ -16,6 +16,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.lchpartners.server.Server;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,6 +80,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("tag1", "onCreate Database");
+
         // creating required tables
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_RES);
         db.execSQL(CREATE_TABLE_RESTAURANT);
@@ -89,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    	if (newVersion > oldVersion) {
+        if (newVersion > oldVersion) {
     		mContext.deleteDatabase(DATABASE_NAME);
     	}
     	/*
@@ -108,6 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
     * Creating a restaurant
     */
+    /*
     public long createRestaurant(Restaurant res) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -123,7 +128,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return res_id;
     }
-    public long createRestaurant(JSONObject res) throws Exception{
+    */
+    // Create and Update Restaurant. if exist, update if not, create.
+    public long updateRestaurant(JSONObject res) throws Exception{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -153,13 +160,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             createFlyer(urls.getString(i), res.getInt("id"));
         }
 
-        // insert row
-        long res_id = db.insert(TABLE_RES, "nullColumnHack", values);
+        // Check where the res exist already
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
+                + "server_id = " + res.getInt("id");
+        Cursor c = db.rawQuery(selectQuery, null);
 
+        long res_id;
+
+        if (c != null && c.getCount()>0) {
+            c.moveToFirst();
+            Log.d("tag", "updateRestaurant1");
+            res_id = db.update(TABLE_RES, values, "server_id = ?",new String[] {  String.valueOf(res.getInt("id"))});
+            Log.d("tag", "updateRestaurant3");
+        }else{
+            // insert res
+            res_id = db.insert(TABLE_RES, "nullColumnHack", values);
+        }
         return res_id;
     }
 
-   /**
+    public void updateRestaurantInCategory(JSONArray ress, String category) throws Exception{
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("tag", "update Res In category"+category);
+        // 없던 음식점 추가하기
+        for(int i=0; i<ress.length(); i++){
+            JSONObject res = ress.getJSONObject(i);
+            String sql = "SELECT * FROM" + TABLE_RES + "WHERE " + "server_id =" + res.getInt("id");
+            Cursor c = db.rawQuery(sql, null);
+            if(c!=null && c.getCount()>0) {
+                // 혹시 같은 음식점 2개 이상 들어간 경우
+                if (c.getCount() > 1) {
+                    db.delete(TABLE_RES, "server_id=?", new String[]{String.valueOf(res.getInt("id"))});
+                    Server server = new Server();
+                    server.updateRestaurant(res.getInt("id"), "12:00");
+                }
+
+                sql = "SELECT * FROM" + TABLE_RES + "WHERE " + "server_id =" + res.getInt("id");
+                c = db.rawQuery(sql, null);
+                c.moveToFirst();
+                // 업데이트가 필요한 경우.
+                if(!res.getString("updated_at").equals(c.getString(c.getColumnIndex("updated_at")))){
+                    Server server = new Server();
+                    server.updateRestaurant(res.getInt("id"), c.getString(c.getColumnIndex("updated_at")));
+                }
+            }else{
+                Server server = new Server();
+                server.updateRestaurant(res.getInt("id"), "12:00");
+            }
+        }
+        // 삭제된 음식점 삭제하기
+        String sql = "SELECT * FROM" + TABLE_RES + "WHERE " + "category =" + category;
+        Cursor c = db.rawQuery(sql, null);
+        if(c!=null && c.getCount()>0) {
+            boolean exist = false;
+            for(int i=0; i<ress.length(); i++){
+                JSONObject res = ress.getJSONObject(i);
+                if(res.getInt("id") == c.getInt(c.getColumnIndex("server_id"))) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(exist==false){
+                db.delete(TABLE_RES, "server_id=?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("server_id")))});
+            }
+        }
+    }
+
+    /**
     * get single restaurant
     */
    public Restaurant getRestaurant(long res_id) {

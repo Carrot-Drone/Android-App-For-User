@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -56,7 +57,6 @@ public class Server{
     DatabaseHelper mDbHelper;
 
     public Server(){
-        mDbHelper = new DatabaseHelper(context);
     }
     // 전체 음식점 데이터를 업데이트
     public void updateAllRestaurant(){
@@ -70,14 +70,14 @@ public class Server{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            mDbHelper = new DatabaseHelper(context);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
-            mDbHelper.onCreate(db);
             try {
                 JSONArray resArray = new JSONArray(result);
                 for(int i = 0; i<resArray.length(); i++){
                     Log.d("tag", String.valueOf(i));
                     Log.d("tag", resArray.getJSONObject(i).getString("name"));
-                    mDbHelper.createRestaurant(resArray.getJSONObject(i));
+                    mDbHelper.updateRestaurant(resArray.getJSONObject(i));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -88,10 +88,12 @@ public class Server{
 
                 e.printStackTrace();
             }
+            mDbHelper.closeDB();
         }
     }
     // 특정 음식점 데이터를 업데이트
     public void updateRestaurant(int restaurant_id, String updated_at){
+        Log.d("tag", "Update Res" + String.valueOf(restaurant_id));
         HttpAsyncRestaurant async = new HttpAsyncRestaurant();
         async.restaurant_id = restaurant_id;
         async.updated_at = updated_at;
@@ -111,10 +113,17 @@ public class Server{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            mDbHelper = new DatabaseHelper(context);
             Log.d("tag", result);
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            try {
+                mDbHelper.updateRestaurant(new JSONObject(result));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mDbHelper.closeDB();
         }
     }
-    // 특정 음식점 데이터를 업데이트
     public void updateRestaurantInCategory(String category){
         HttpAsyncRestaurantInCategory async = new HttpAsyncRestaurantInCategory();
         async.category = category;
@@ -134,7 +143,17 @@ public class Server{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d("tag", result);
+            mDbHelper = new DatabaseHelper(context);
+            try {
+                mDbHelper.updateRestaurantInCategory(new JSONArray(result), category);
+                mDbHelper.closeDB();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("tag", result);
+                mDbHelper.closeDB();
+
+            }
         }
     }
 

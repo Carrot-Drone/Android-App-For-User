@@ -6,6 +6,7 @@ import info.android.sqlite.model.Restaurant;
 import java.util.ArrayList;
 
 import com.lchpartners.android.adaptor.RestaurantArrayAdapter;
+import com.lchpartners.server.Server;
 
 import android.annotation.TargetApi;
 import android.app.ListActivity;
@@ -23,21 +24,33 @@ public class RestaurantActivity extends ListActivity{
 	private DatabaseHelper db;
 	
 	TextView selection;
+    String category;
    
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_restaurant);
+
+        // get current Res's category from Intent;
+        Intent intent = new Intent(this.getIntent());
+        int index  = intent.getIntExtra("category", 1);
+        String [] categories = getResources().getStringArray(R.array.categories);
+        category = categories[index];
 		
-       // Show the Up button in the action bar.
- //      setupActionBar();
+        // Show the Up button in the action bar.
+        // setupActionBar();
 		
-       Context context = getApplicationContext();
-       db = new DatabaseHelper(context);
+        Context context = getApplicationContext();
+        db = new DatabaseHelper(context);
        
-       openAndQueryDatabase();
-       displayResultList();
+        openAndQueryDatabase();
+        displayResultList();
+
+        // update Restaurant In Category
+        Server.context = getApplicationContext();
+        Server server = new Server();
+        server.updateRestaurantInCategory(category);
    }
    
 	/**
@@ -59,11 +72,6 @@ public class RestaurantActivity extends ListActivity{
    }
    
    private void openAndQueryDatabase() {
-	// get current Res's category from Intent;
-	Intent intent = new Intent(this.getIntent());
-	int index  = intent.getIntExtra("category", 1);
-    String [] categories = getResources().getStringArray(R.array.categories);
-    String category = categories[index];
     
     System.out.println(category);
 

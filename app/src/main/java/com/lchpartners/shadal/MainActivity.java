@@ -55,18 +55,14 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-        Server.context = getApplicationContext();
-
+/*
         Server server = new Server();
         server.updateAllRestaurant();
-//        server.updateRestaurant(95, "12:00");
-//        server.updateRestaurantInCategory("치킨");
-
+*/
         mAdapter = new ShadalTabsAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-		
+
 		// 처음 설치시 assets/databases/Shadal 파일로 디비 설정
 		try{
 
@@ -90,6 +86,7 @@ public class MainActivity extends Activity {
 		catch (IOException IOe) {
 	        Log.e(TAG,"Cannot copy initial database");
 		}
+
 	}
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);

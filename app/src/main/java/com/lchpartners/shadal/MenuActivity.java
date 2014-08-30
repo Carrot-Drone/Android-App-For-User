@@ -101,6 +101,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 		int res_id = caller.getIntExtra("res_id", -1);
 		
 		setRestaurantFromDatabase(res_id);
+
+        // check for update
+        Server server = new Server();
+        server.updateRestaurant(restaurant.server_id, restaurant.updated_at);
 		
 		TextView nameView = (TextView)findViewById(R.id.textview_restaurantName);
 		nameView.setText(restaurant.name);
