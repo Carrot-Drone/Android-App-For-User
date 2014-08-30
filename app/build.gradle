@@ -1,10 +1,11 @@
-﻿apply plugin: 'android'
+apply plugin: 'android'
 
 android {
     compileSdkVersion 19
     buildToolsVersion '19.1'
     defaultConfig {
         applicationId 'com.lchpartners.shadal'
+        minSdkVersion 14
         targetSdkVersion 19
     }
     buildTypes {

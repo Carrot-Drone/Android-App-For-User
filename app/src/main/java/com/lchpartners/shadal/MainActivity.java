@@ -1,4 +1,4 @@
-﻿package com.lchpartners.shadal;
+package com.lchpartners.shadal;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.lchpartners.fragments.CategoryFragment;
-import com.lchpartners.server.Server;
 
 import java.io.IOException;
 
@@ -67,12 +66,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     int mCurrPage = 0;
 
     //For handling data
-	DatabaseHelper mDbHelper;
+    DatabaseHelper mDbHelper;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 /*
         Server server = new Server();
         server.updateAllRestaurant();
@@ -96,36 +95,36 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         mSelectedPageBtn = mMainBtn;
 
-		// 처음 설치시 assets/databases/Shadal 파일로 디비 설정
-		try{
+        // 처음 설치시 assets/databases/Shadal 파일로 디비 설정
+        try{
 
-          Context context = getApplicationContext();
-	        mDbHelper = new DatabaseHelper(context);
-	        boolean dbExists = mDbHelper.doesDatabaseExist();
+            Context context = getApplicationContext();
+            mDbHelper = new DatabaseHelper(context);
+            boolean dbExists = mDbHelper.doesDatabaseExist();
 
-	        SQLiteDatabase db;
-	        if(!dbExists){
-	            //get database, we will override it in next steep
-	            //but folders containing the database are created
-	            db = mDbHelper.getWritableDatabase();
-	            db.close();
-	            //copy database
-	            mDbHelper.copyDataBase();                        
-	        }                                              
-	        db = mDbHelper.getWritableDatabase();
-		}
-    catch(SQLException eSQL){
-	        Log.e(TAG,"Cannot open database");
+            SQLiteDatabase db;
+            if(!dbExists){
+                //get database, we will override it in next steep
+                //but folders containing the database are created
+                db = mDbHelper.getWritableDatabase();
+                db.close();
+                //copy database
+                mDbHelper.copyDataBase();
+            }
+            db = mDbHelper.getWritableDatabase();
+        }
+        catch(SQLException eSQL){
+            Log.e(TAG,"Cannot open database");
             Toast.makeText(this,"데이터베이스를 여는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
-		}
-		catch (IOException IOe) {
-	        Log.e(TAG,"Cannot copy initial database");
+        }
+        catch (IOException IOe) {
+            Log.e(TAG,"Cannot copy initial database");
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
-		}
+        }
 
-	}
+    }
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -191,7 +190,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
         }
         else {
-           //RIGHT scroll : In this case, position value points the previous page.
+            //RIGHT scroll : In this case, position value points the previous page.
             if (positionOffset < 0.5) {
                 //Retain curentPageIndex.
             }
