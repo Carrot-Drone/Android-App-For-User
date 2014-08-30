@@ -2,9 +2,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="즐겨찾기"
+        android:icon="@drawable/ic_search"
+        android:title="검색"
         android:orderInCategory="000"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:actionViewClass="android.widget.SearchView"
         />
 </menu>

@@ -1,6 +1,5 @@
 package com.lchpartners.shadal;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -25,6 +24,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private final static String TAG = "MainActivity";
 
     private final static int PAGE_COUNT = 4;
+
     private final static int PAGE_MAIN = 0;
     private final static int PAGE_FAVORITE = 1;
     private final static int PAGE_RANDOM = 2;
@@ -35,12 +35,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
      */
     public static class ShadalTabsAdapter extends FragmentPagerAdapter {
 
-        //TODO - use it or remove it.
-        private ActionBar mActionBar;
 
-        public ShadalTabsAdapter(FragmentManager fm, ActionBar actionBar) {
+        public ShadalTabsAdapter(FragmentManager fm) {
             super(fm);
-            this.mActionBar = actionBar;
         }
 
         @Override
@@ -63,6 +60,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     ShadalTabsAdapter mAdapter;
     ViewPager mPager;
     ImageButton mSelectedPageBtn, mMainBtn, mFavoriteBtn, mRandomBtn, mMoreBtn;
+    int mCurrPage = 0;
 
     //For handling data
 	DatabaseHelper mDbHelper;
@@ -72,7 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        mAdapter = new ShadalTabsAdapter(getFragmentManager(), getActionBar());
+        mAdapter = new ShadalTabsAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setOnPageChangeListener(this);
@@ -85,6 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mMoreBtn = (ImageButton) findViewById(R.id.button_tab_more);
 
         mMainBtn.setOnClickListener(this);
+        mMainBtn.setSelected(true);
         mFavoriteBtn.setOnClickListener(this);
         mRandomBtn.setOnClickListener(this);
         mMoreBtn.setOnClickListener(this);
@@ -121,7 +120,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        //TODO : implement search button - getMenuInflater().inflate(R.menu.search,menu);
+        if(mCurrPage == 0)
+            getMenuInflater().inflate(R.menu.search,menu);
         return true;
     }
 
@@ -156,17 +156,52 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // Log.e(TAG, "SCROLLED");
+    public void onPageSelected(int position) {
+        mCurrPage = position;
+        invalidateOptionsMenu();
     }
 
     @Override
-    public void onPageSelected(int position) {
-        Log.e(TAG, "SELECTED "+Integer.valueOf(position).toString());
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        /**Determine scroll direction and check whether the user scrolled enough.
+         * Note that positionOffset is always positive, and position value is given quite weirdly.
+         * Carefully take care of behavior of the OnPageChangedListener using Logcat
+         * before you change code here.
+         **/
+        if (position < mCurrPage) {
+            //LEFT scroll : In this case, position value itself points the new page the user is navigating to.
+            if (positionOffset > 0.5) {
+                position++; //Retain currentPageIndex.
+            }
+        }
+        else {
+           //RIGHT scroll : In this case, position value points the previous page.
+            if (positionOffset < 0.5) {
+                //Retain curentPageIndex.
+            }
+            else position++; // If the user scrolled enough, Make this value to point the new page.
+        }
+
+        mSelectedPageBtn.setSelected(false);
+        switch (position) {
+            case PAGE_MAIN :
+                mSelectedPageBtn = mMainBtn;
+                break;
+            case PAGE_FAVORITE :
+                mSelectedPageBtn = mFavoriteBtn;
+                break;
+            case PAGE_RANDOM :
+                mSelectedPageBtn = mRandomBtn;
+                break;
+            case PAGE_MORE :
+                mSelectedPageBtn = mMoreBtn;
+                break;
+        }
+        mSelectedPageBtn.setSelected(true);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        Log.e(TAG, "SCROLLSTATECHANGED");
+        //Do nothing
     }
 }

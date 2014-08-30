@@ -11,7 +11,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_app"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -20,22 +20,13 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.lchpartners.shadal.RestaurantActivity"
-            android:configChanges="orientation|keyboard|screenSize"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.RESTAURANT" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.lchpartners.shadal.MenuActivity"
             android:configChanges="orientation|keyboard|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/title_menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MENU" />
             </intent-filter>
@@ -43,10 +34,20 @@
         <activity
             android:name="com.lchpartners.shadal.FlyerActivity"
             android:configChanges="orientation|keyboard|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/title_flyer" >
             <intent-filter>
                 <action android:name="android.intent.action.FLYER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.lchpartners.shadal.RestaurantSearchActivity"
+            android:configChanges="orientation|keyboard|screenSize"
+            android:label="@string/title_restaurant_search" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
     </application>
 

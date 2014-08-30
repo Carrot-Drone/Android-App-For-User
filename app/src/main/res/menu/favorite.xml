@@ -6,5 +6,5 @@
         android:icon="@drawable/ic_img"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/action_flyer"/>
+        android:title="@string/title_flyer"/>
 </menu>
