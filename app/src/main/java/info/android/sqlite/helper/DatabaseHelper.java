@@ -271,6 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
            res.setFavorite(false);
        }
        res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
+       res.setUpdated_at(c.getString(c.getColumnIndex("updated_at")));
 
 
        return res;
