@@ -1,8 +1,9 @@
 package com.lchpartners.fragments;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,9 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lchpartners.shadal.R;
-import com.lchpartners.shadal.RestaurantActivity;
 
 /**
  * Created by Gwangrae Kim on 2014-08-27.
@@ -76,12 +77,12 @@ public class CategoryFragment extends Fragment {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick (View v) {
-                    Intent moveToRestaurant = new Intent(getContext(), RestaurantActivity.class);
+                    /*Intent moveToRestaurant = new Intent(getContext(), RestaurantActivity.class);
                     moveToRestaurant.putExtra("category", position);
-                    getContext().startActivity(moveToRestaurant);
+                    getContext().startActivity(moveToRestaurant);*/
+                    Toast.makeText(getContext(), "TODO", Toast.LENGTH_SHORT).show();
                 }
             });
-
 
             return convertView;
         }
@@ -89,6 +90,16 @@ public class CategoryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Activity activity = getActivity();
+
+        //Setting up the action bar
+        ActionBar actionBar = activity.getActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+        ViewGroup titleBar = (ViewGroup) inflater.inflate(R.layout.action_bar, null);
+        titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
+        actionBar.setCustomView(titleBar);
+        activity.invalidateOptionsMenu();
+
         String [] names = { "치킨", "피자", "중국집", "한식/분식",
                                 "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
         int [] drawables = { R.drawable.ic_chic, R.drawable.ic_pizza, R.drawable.ic_chinese, R.drawable.ic_bob,

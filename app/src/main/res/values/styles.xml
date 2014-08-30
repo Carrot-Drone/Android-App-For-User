@@ -23,7 +23,7 @@
         <item name="android:height">56dp</item>
         <item name="android:background">@color/shadal_default</item>
         <item name="android:icon">@android:color/transparent</item>
-        <item name="android:displayOptions">showCustom</item>
+        <item name="android:displayOptions">showCustom|homeAsUp</item>
         <item name="android:customNavigationLayout">@layout/action_bar</item>
     </style>
 

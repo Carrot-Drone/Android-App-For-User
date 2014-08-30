@@ -1,4 +1,4 @@
-package com.lchpartners.shadal;
+﻿package com.lchpartners.shadal;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -13,6 +13,9 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.lchpartners.fragments.CategoryFragment;
 import com.lchpartners.server.Server;
@@ -21,32 +24,47 @@ import java.io.IOException;
 
 import info.android.sqlite.helper.DatabaseHelper;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+    private final static String TAG = "MainActivity";
+
+    private final static int PAGE_COUNT = 4;
+
+    private final static int PAGE_MAIN = 0;
+    private final static int PAGE_FAVORITE = 1;
+    private final static int PAGE_RANDOM = 2;
+    private final static int PAGE_MORE = 3;
 
     /**
      * Created by Gwangrae Kim on 2014-08-25.
      */
     public static class ShadalTabsAdapter extends FragmentPagerAdapter {
+
+
         public ShadalTabsAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return new CategoryFragment();
+            if (position == PAGE_MAIN) return new CategoryFragment();
+            else if (position == PAGE_FAVORITE) return new CategoryFragment();
+            else if (position == PAGE_RANDOM) return new CategoryFragment();
+            else if (position == PAGE_MORE) return new CategoryFragment();
+            else return null;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return PAGE_COUNT;
         }
 
     }
 
-    private final static String TAG = "MainActivity";
     //For handling fragment tabs.
     ShadalTabsAdapter mAdapter;
     ViewPager mPager;
+    ImageButton mSelectedPageBtn, mMainBtn, mFavoriteBtn, mRandomBtn, mMoreBtn;
+    int mCurrPage = 0;
 
     //For handling data
 	DatabaseHelper mDbHelper;
@@ -62,11 +80,26 @@ public class MainActivity extends Activity {
         mAdapter = new ShadalTabsAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
+        mPager.setOnPageChangeListener(this);
+
+        //TODO : for long clicks - 'set default page'
+
+        mMainBtn = (ImageButton) findViewById(R.id.button_tab_main);
+        mFavoriteBtn = (ImageButton) findViewById(R.id.button_tab_favorite);
+        mRandomBtn = (ImageButton) findViewById(R.id.button_tab_random);
+        mMoreBtn = (ImageButton) findViewById(R.id.button_tab_more);
+        mMainBtn.setOnClickListener(this);
+        mMainBtn.setSelected(true);
+        mFavoriteBtn.setOnClickListener(this);
+        mRandomBtn.setOnClickListener(this);
+        mMoreBtn.setOnClickListener(this);
+
+        mSelectedPageBtn = mMainBtn;
 
 		// 처음 설치시 assets/databases/Shadal 파일로 디비 설정
 		try{
 
-            Context context = getApplicationContext();
+          Context context = getApplicationContext();
 	        mDbHelper = new DatabaseHelper(context);
 	        boolean dbExists = mDbHelper.doesDatabaseExist();
 
@@ -80,11 +113,16 @@ public class MainActivity extends Activity {
 	            mDbHelper.copyDataBase();                        
 	        }                                              
 	        db = mDbHelper.getWritableDatabase();
-		}catch(SQLException eSQL){
+		}
+    catch(SQLException eSQL){
 	        Log.e(TAG,"Cannot open database");
+            Toast.makeText(this,"데이터베이스를 여는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
+            finish();
 		}
 		catch (IOException IOe) {
 	        Log.e(TAG,"Cannot copy initial database");
+            Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
+            finish();
 		}
 
 	}
@@ -96,19 +134,90 @@ public class MainActivity extends Activity {
         else
             return false;
     }
-    /**
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Intent moveToRestaurant = new Intent(MainActivity.this, RestaurantActivity.class);
-		moveToRestaurant.putExtra("category", position);
-		startActivity(moveToRestaurant);
-		onPause();
-	}*/
-
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        getMenuInflater().inflate(R.menu.search,menu);
+        if(mCurrPage == 0)
+            getMenuInflater().inflate(R.menu.search,menu);
         return true;
+    }
+
+    @Override
+    public void onClick (View v) {
+        int id = v.getId();
+        //When the user pressed the same tab.
+        if (id == mSelectedPageBtn.getId() && id != mRandomBtn.getId())
+            return;
+
+        mSelectedPageBtn.setSelected(false);
+        if (id == R.id.button_tab_main) {
+            mPager.setCurrentItem(PAGE_MAIN, true);
+            mSelectedPageBtn = mMainBtn;
+        }
+        else if (id == R.id.button_tab_favorite) {
+            mPager.setCurrentItem(PAGE_FAVORITE, true);
+            mSelectedPageBtn = mFavoriteBtn;
+        }
+        else if (id == R.id.button_tab_random) {
+            mPager.setCurrentItem(PAGE_RANDOM, true);
+            //TODO : shake effect
+            //TODO : refresh content on Scroll?
+
+            mSelectedPageBtn = mRandomBtn;
+        }
+        else if (id == R.id.button_tab_more) {
+            mPager.setCurrentItem(PAGE_MORE, true);
+            mSelectedPageBtn = mMoreBtn;
+        }
+        mSelectedPageBtn.setSelected(true);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mCurrPage = position;
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        /**Determine scroll direction and check whether the user scrolled enough.
+         * Note that positionOffset is always positive, and position value is given quite weirdly.
+         * Carefully take care of behavior of the OnPageChangedListener using Logcat
+         * before you change code here.
+         **/
+        if (position < mCurrPage) {
+            //LEFT scroll : In this case, position value itself points the new page the user is navigating to.
+            if (positionOffset > 0.5) {
+                position++; //Retain currentPageIndex.
+            }
+        }
+        else {
+           //RIGHT scroll : In this case, position value points the previous page.
+            if (positionOffset < 0.5) {
+                //Retain curentPageIndex.
+            }
+            else position++; // If the user scrolled enough, Make this value to point the new page.
+        }
+
+        mSelectedPageBtn.setSelected(false);
+        switch (position) {
+            case PAGE_MAIN :
+                mSelectedPageBtn = mMainBtn;
+                break;
+            case PAGE_FAVORITE :
+                mSelectedPageBtn = mFavoriteBtn;
+                break;
+            case PAGE_RANDOM :
+                mSelectedPageBtn = mRandomBtn;
+                break;
+            case PAGE_MORE :
+                mSelectedPageBtn = mMoreBtn;
+                break;
+        }
+        mSelectedPageBtn.setSelected(true);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        //Do nothing
     }
 }
