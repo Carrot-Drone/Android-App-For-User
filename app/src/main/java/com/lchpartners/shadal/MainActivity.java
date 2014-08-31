@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -19,17 +18,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.lchpartners.apphelper.preference.PrefUtil;
-import com.lchpartners.apphelper.server.Server;
 import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.Stack;
 
 import info.android.sqlite.helper.DatabaseHelper;
-import info.android.sqlite.model.Restaurant;
 
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private final static String TAG = "MainActivity";
