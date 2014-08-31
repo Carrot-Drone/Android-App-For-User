@@ -20,12 +20,14 @@ import android.widget.Toast;
 import com.lchpartners.apphelper.preference.PrefUtil;
 import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
+import com.lchpartners.fragments.MenuFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
 import java.util.Stack;
 
 import info.android.sqlite.helper.DatabaseHelper;
+
 
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private final static String TAG = "MainActivity";
@@ -72,6 +74,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 Log.e(TAG,"2");
                 return RestaurantsFragment.newInstance(record.param0);
             }
+            else if(record.className.equals(MenuFragment.class.getSimpleName())) {
+                return MenuFragment.newInstance(record.param0);
+            }
             else return null;
         }
 
@@ -85,6 +90,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         public ShadalTabsAdapter(FragmentManager fm, MainActivity activity) {
             super(fm);
             this.mActivity = activity;
+            this.mDbHelper = mActivity.mDbHelper;
             this.mFragementManager = fm;
             for (int i = 0; i < isRootLoad.length ; i++) {
                 isRootLoad[i] = true;
@@ -92,12 +98,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             //Generate Fragments
             mFirstPageStack.push(new FragmentRecord(CategoryFragment.class));
             mSecondPageStack.push(new FragmentRecord(RestaurantsFragment.class, 0));
-            mThirdPageStack.push(new FragmentRecord(RestaurantsFragment.class, 1));
+            mThirdPageStack.push(new FragmentRecord(MenuFragment.class, mDbHelper.getRandomRestaurant().id));
             mFourthPageStack.push(new FragmentRecord(RestaurantsFragment.class, 2));
         }
 
         private FragmentManager mFragementManager;
         private MainActivity mActivity;
+        private DatabaseHelper mDbHelper;
 
         //Back stacks for each page
         private Stack<FragmentRecord> mFirstPageStack = new Stack<FragmentRecord>();
@@ -244,28 +251,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTabsAdapter = new ShadalTabsAdapter(getFragmentManager(), this);
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mTabsAdapter);
-        mPager.setOnPageChangeListener(this);
-
-        //TODO : for long clicks - 'set default page'
-
-        mMainBtn = (ImageButton) findViewById(R.id.button_tab_main);
-        mFavoriteBtn = (ImageButton) findViewById(R.id.button_tab_favorite);
-        mRandomBtn = (ImageButton) findViewById(R.id.button_tab_random);
-        mMoreBtn = (ImageButton) findViewById(R.id.button_tab_more);
-        mMainBtn.setOnClickListener(this);
-        mMainBtn.setSelected(true);
-        mFavoriteBtn.setOnClickListener(this);
-        mRandomBtn.setOnClickListener(this);
-        mMoreBtn.setOnClickListener(this);
-
-        mSelectedTabBtn = mMainBtn;
-
         // 처음 설치시 assets/databases/Shadal 파일로 디비 설정
         try{
-
             Context context = getApplicationContext();
             mDbHelper = new DatabaseHelper(context);
             boolean dbExists = mDbHelper.doesDatabaseExist();
@@ -297,7 +284,31 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        mTabsAdapter = new ShadalTabsAdapter(getFragmentManager(), this);
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(mTabsAdapter);
+        mPager.setOnPageChangeListener(this);
+
+        //TODO : for long clicks - 'set default page'
+
+        mMainBtn = (ImageButton) findViewById(R.id.button_tab_main);
+        mFavoriteBtn = (ImageButton) findViewById(R.id.button_tab_favorite);
+        mRandomBtn = (ImageButton) findViewById(R.id.button_tab_random);
+        mMoreBtn = (ImageButton) findViewById(R.id.button_tab_more);
+        mMainBtn.setOnClickListener(this);
+        mMainBtn.setSelected(true);
+        mFavoriteBtn.setOnClickListener(this);
+        mRandomBtn.setOnClickListener(this);
+        mMoreBtn.setOnClickListener(this);
+
+        mSelectedTabBtn = mMainBtn;
+    }
+
+    @Override
+    public void onDestroy() {
         mDbHelper.closeDB();
+        super.onDestroy();
     }
 
     /**
