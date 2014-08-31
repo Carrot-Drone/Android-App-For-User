@@ -22,6 +22,7 @@ import com.lchpartners.fragments.CategoryFragment;
 import java.io.IOException;
 
 import info.android.sqlite.helper.DatabaseHelper;
+import info.android.sqlite.model.Restaurant;
 
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private final static String TAG = "MainActivity";
@@ -72,10 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
-        Server server = new Server();
-        server.updateAllRestaurant();
-*/
+
         mAdapter = new ShadalTabsAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
@@ -123,15 +121,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }
-
-    }
-    public boolean isConnected(){
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
+        mDbHelper.closeDB();
     }
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
