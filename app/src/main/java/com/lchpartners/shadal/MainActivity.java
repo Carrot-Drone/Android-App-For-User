@@ -67,11 +67,11 @@ public class MainActivity extends Activity implements View.OnClickListener, View
          */
         private Fragment getFragmentFromRecord(FragmentRecord record) {
             if(record.className.equals(CategoryFragment.class.getSimpleName())) {
-                Log.e(TAG,"1");
+//                Log.e(TAG,"1");
                 return CategoryFragment.newInstance();
             }
             else if(record.className.equals(RestaurantsFragment.class.getSimpleName())) {
-                Log.e(TAG,"2");
+//                Log.e(TAG,"2");
                 return RestaurantsFragment.newInstance(record.param0);
             }
             else if(record.className.equals(MenuFragment.class.getSimpleName())) {
@@ -122,7 +122,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         private boolean[] isRootLoad = new boolean[4]; //Used to suppress updateActionBar() for the first launch.
 
         private Stack<FragmentRecord> getStack(int tab) {
-            Log.e(TAG, "getStack "+Integer.valueOf(tab).toString());
+//            Log.e(TAG, "getStack "+Integer.valueOf(tab).toString());
             if (tab == TAB_MAIN) return mFirstPageStack;
             else if (tab == TAB_FAVORITE) return mSecondPageStack;
             else if (tab == TAB_RANDOM) return mThirdPageStack;
@@ -131,7 +131,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
 
         private boolean isValid(int tab) {
-            Log.e(TAG, "isValid "+Integer.valueOf(tab).toString());
+//            Log.e(TAG, "isValid "+Integer.valueOf(tab).toString());
             if (tab == TAB_MAIN) return isFirstPageValid;
             else if (tab == TAB_FAVORITE) return isSecondPageValid;
             else if (tab == TAB_RANDOM) return isThirdPageValid;
@@ -140,12 +140,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
 
         private boolean isAllTabsValid() {
-            Log.e(TAG, "isAllTabsValid");
+//            Log.e(TAG, "isAllTabsValid");
             return isFirstPageValid && isSecondPageValid && isThirdPageValid && isFourthPageValid;
         }
 
         private void setValidity(int tab, boolean isValid) {
-            Log.e(TAG, "setValid "+Integer.valueOf(tab).toString()+" "+Boolean.valueOf(isValid).toString());
+//            Log.e(TAG, "setValid "+Integer.valueOf(tab).toString()+" "+Boolean.valueOf(isValid).toString());
             if (tab == TAB_MAIN) isFirstPageValid = isValid;
             else if (tab == TAB_FAVORITE) isSecondPageValid = isValid;
             else if (tab == TAB_RANDOM) isThirdPageValid = isValid;
@@ -154,7 +154,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         @Override
         public Fragment getItem(int tab) {
-            Log.e(TAG, "getItem "+Integer.valueOf(tab).toString());
+//            Log.e(TAG, "getItem "+Integer.valueOf(tab).toString());
             Stack<FragmentRecord> currStack = getStack(tab);
             Fragment result = getFragmentFromRecord(currStack.peek());
             if (isRootLoad[tab]) {
@@ -174,19 +174,19 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         @Override
         public int getItemPosition(Object object) {
-            Log.e(TAG, "getItemPosition");
+ //           Log.e(TAG, "getItemPosition");
             if (isAllTabsValid()) {
-                Log.e(TAG, "No change");
+ //               Log.e(TAG, "No change");
                 return POSITION_UNCHANGED;
             }
             else {
-                Log.e(TAG, "refresh screens");
+ //               Log.e(TAG, "refresh screens");
                 return POSITION_NONE;
             }
         }
 
         public void push(int tab, FragmentRecord newFragmentRecord) {
-            Log.e(TAG, "push "+Integer.valueOf(tab).toString()+" "+newFragmentRecord.className);
+ //           Log.e(TAG, "push "+Integer.valueOf(tab).toString()+" "+newFragmentRecord.className);
 
             Fragment previousTop = getCurrentFragment(tab);
             mFragementManager.beginTransaction().remove(previousTop).commit();
@@ -201,7 +201,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         //TODO : notify user before finishing!
         public void pop(int tab) {
-            Log.e(TAG, "pop "+Integer.valueOf(tab).toString());
+//            Log.e(TAG, "pop "+Integer.valueOf(tab).toString());
             Fragment previousTop = getCurrentFragment(tab);
             mFragementManager.beginTransaction().remove(previousTop).commit();
             mFragementManager.executePendingTransactions();
@@ -219,7 +219,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
 
         public Fragment getCurrentFragment(int tab) {
-            Log.e(TAG, "getCurrentFragment "+Integer.valueOf(tab).toString());
+//            Log.e(TAG, "getCurrentFragment "+Integer.valueOf(tab).toString());
             return mCurrentFragments.get(tab);
         }
     }
@@ -261,7 +261,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
             // Database file이 없거나, version이 맞지 않으면..
             String version = PrefUtil.getVersion(getApplicationContext());
-            Log.d("tag", "original version :"+version + " latest Version : " + PrefUtil.VERSION);
+//            Log.d("tag", "original version :"+version + " latest Version : " + PrefUtil.VERSION);
 
             if(!dbExists || !version.equals(PrefUtil.VERSION)){
                 PrefUtil.setVersion(getApplicationContext());
@@ -275,12 +275,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             db = mDbHelper.getWritableDatabase();
         }
         catch(SQLException eSQL){
-            Log.e(TAG,"Cannot open database");
+//            Log.e(TAG,"Cannot open database");
             Toast.makeText(this,"데이터베이스를 여는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }
         catch (IOException IOe) {
-            Log.e(TAG,"Cannot copy initial database");
+//            Log.e(TAG,"Cannot copy initial database");
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }

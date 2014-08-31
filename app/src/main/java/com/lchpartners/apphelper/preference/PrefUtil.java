@@ -21,7 +21,7 @@ public class PrefUtil {
     }
 
     public static void setVersion(Context c) {
-        Log.d("tag", "set Version to : "+VERSION);
+//        Log.d("tag", "set Version to : "+VERSION);
         SharedPreferences pref = c.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
