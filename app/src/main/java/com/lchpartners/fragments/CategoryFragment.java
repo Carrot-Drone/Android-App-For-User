@@ -21,7 +21,7 @@ import com.lchpartners.shadal.R;
 /**
  * Created by Gwangrae Kim on 2014-08-27.
  */
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements ActionBarUpdater {
     private static class CategoryAdapter extends ArrayAdapter <String> {
         private int mOneLineLayout = 0;
         private Drawable[] mCategoryDrawables;
@@ -88,26 +88,35 @@ public class CategoryFragment extends Fragment {
         }
     }
 
+    private final static String TAG = "CategoryFragment";
+    private final static String[] mCategoryNames
+        = { "치킨", "피자", "중국집", "한식/분식", "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
+    private final static int [] mCategoryDrawables =
+            { R.drawable.ic_chic, R.drawable.ic_pizza, R.drawable.ic_chinese, R.drawable.ic_bob,
+            R.drawable.ic_dosirak, R.drawable.ic_bossam, R.drawable.ic_noodle, R.drawable.ic_etc };
+
+    private Activity mActivity;
+
+    public static CategoryFragment newInstance() {
+        return new CategoryFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Activity activity = getActivity();
-
-        //Setting up the action bar
-        ActionBar actionBar = activity.getActionBar();
-        //actionBar.setDisplayHomeAsUpEnabled(true);
-        ViewGroup titleBar = (ViewGroup) inflater.inflate(R.layout.action_bar, null);
-        titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
-        actionBar.setCustomView(titleBar);
-        activity.invalidateOptionsMenu();
-
-        String [] names = { "치킨", "피자", "중국집", "한식/분식",
-                                "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
-        int [] drawables = { R.drawable.ic_chic, R.drawable.ic_pizza, R.drawable.ic_chinese, R.drawable.ic_bob,
-                             R.drawable.ic_dosirak, R.drawable.ic_bossam, R.drawable.ic_noodle, R.drawable.ic_etc };
-
+        mActivity = getActivity();
         ListView categoryListView = (ListView) inflater.inflate(R.layout.fragment_category,null);
         categoryListView.setAdapter
-                (new CategoryAdapter(getActivity(),R.layout.listview_item_category,names,drawables));
+                (new CategoryAdapter(getActivity(),R.layout.listview_item_category,mCategoryNames,mCategoryDrawables));
         return categoryListView;
+    }
+
+    public void updateActionBar () {
+        //Setting up the action bar
+        ActionBar actionBar = mActivity.getActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+        ViewGroup titleBar = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.action_bar, null);
+        titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
+        actionBar.setCustomView(titleBar);
+        mActivity.invalidateOptionsMenu();
     }
 }

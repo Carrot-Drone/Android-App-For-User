@@ -12,12 +12,15 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
+import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
 
@@ -37,19 +40,20 @@ public class MainActivity extends Activity implements View.OnClickListener, View
      * Created by Gwangrae Kim on 2014-08-25.
      */
     public static class ShadalTabsAdapter extends FragmentPagerAdapter {
-
-
+        private SparseArray<Fragment> mCachedFragments = new SparseArray<Fragment>();
         public ShadalTabsAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            if (position == PAGE_MAIN) return new CategoryFragment();
-            else if (position == PAGE_FAVORITE) return new CategoryFragment();
-            else if (position == PAGE_RANDOM) return new CategoryFragment();
-            else if (position == PAGE_MORE) return new CategoryFragment();
-            else return null;
+            Fragment result = null;
+            if (position == PAGE_MAIN) result = CategoryFragment.newInstance();
+            else if (position == PAGE_FAVORITE) result = RestaurantsFragment.newInstance(0);
+            else if (position == PAGE_RANDOM) result = new CategoryFragment();
+            else if (position == PAGE_MORE) result = new CategoryFragment();
+            mCachedFragments.put(position, result);
+            return result;
         }
 
         @Override
@@ -57,13 +61,17 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             return PAGE_COUNT;
         }
 
+        public Fragment getCachedItem (int position) {
+            return mCachedFragments.get(position);
+        }
+
     }
 
     //For handling fragment tabs.
-    ShadalTabsAdapter mAdapter;
-    ViewPager mPager;
-    ImageButton mSelectedPageBtn, mMainBtn, mFavoriteBtn, mRandomBtn, mMoreBtn;
-    int mCurrPage = 0;
+    private ShadalTabsAdapter mTabsAdapter;
+    private ViewPager mPager;
+    private ImageButton mSelectedPageBtn, mMainBtn, mFavoriteBtn, mRandomBtn, mMoreBtn;
+    private int mCurrPage = 0, mNextPage = 0;
 
     //For handling data
     DatabaseHelper mDbHelper;
@@ -76,9 +84,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         Server server = new Server();
         server.updateAllRestaurant();
 */
-        mAdapter = new ShadalTabsAdapter(getFragmentManager());
+        mTabsAdapter = new ShadalTabsAdapter(getFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
+        mPager.setAdapter(mTabsAdapter);
         mPager.setOnPageChangeListener(this);
 
         //TODO : for long clicks - 'set default page'
@@ -123,8 +131,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
+
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -133,9 +141,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         else
             return false;
     }
+
+    /**
+     * NOTE : Each fragment is responsible for refreshing the options menu on scroll events.
+     */
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        if(mCurrPage == 0)
+        if(mNextPage == 0)
             getMenuInflater().inflate(R.menu.search,menu);
         return true;
     }
@@ -173,7 +185,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     @Override
     public void onPageSelected(int position) {
         mCurrPage = position;
-        invalidateOptionsMenu();
+        mNextPage = position;
     }
 
     @Override
@@ -197,8 +209,14 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else position++; // If the user scrolled enough, Make this value to point the new page.
         }
 
+        mNextPage = position;
+
+        //Update the actionbar
+        ActionBarUpdater newPageActionBarUpdater = (ActionBarUpdater) mTabsAdapter.getCachedItem(mNextPage);
+        newPageActionBarUpdater.updateActionBar();
+
         mSelectedPageBtn.setSelected(false);
-        switch (position) {
+        switch (mNextPage) {
             case PAGE_MAIN :
                 mSelectedPageBtn = mMainBtn;
                 break;

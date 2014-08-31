@@ -21,35 +21,34 @@ import info.android.sqlite.model.Restaurant;
 /**
  * Created by Gwangrae Kim on 2014-08-30.
  */
-public class RestaurantsFragment extends Fragment {
+public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
+    private final static String EXTRA_CATEGORY_IDX = "catIdx";
+    private final static String TAG = "CategoryFragment";
+
+    public static RestaurantsFragment newInstance(int categoryIndex) {
+        RestaurantsFragment rf = new RestaurantsFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putInt(EXTRA_CATEGORY_IDX, categoryIndex);
+        rf.setArguments(bdl);
+        return rf;
+    }
+
     private RestaurantsAdapter adapter;
     private ArrayList<Restaurant> mResults = new ArrayList<Restaurant>();
     private DatabaseHelper db;
     private String mCategoryName;
     private Activity mActivity;
 
-    public RestaurantsFragment () {
-        super();
-    }
-
-    public RestaurantsFragment (int categoryIndex) {
-        super();
-        mActivity = getActivity();
-        mCategoryName = getResources().getStringArray(R.array.categories)[categoryIndex];
+    public void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int categoryIndex = getArguments().getInt(EXTRA_CATEGORY_IDX);
+        this.mCategoryName = getResources().getStringArray(R.array.categories)[categoryIndex];
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.mActivity = getActivity();
         ListView resultView = (ListView) inflater.inflate(R.layout.activity_restaurant, container, false);
-
-        //Setting up the action bar
-        ActionBar actionBar = mActivity.getActionBar();
-        //actionBar.setDisplayHomeAsUpEnabled(true);
-        ViewGroup titleBar = (ViewGroup) inflater.inflate(R.layout.action_bar_restaurant, null);
-        titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
-        NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.textview_restaurant_title);
-        title.setText(mCategoryName);
-        actionBar.setCustomView(titleBar);
 
         //Query database
         db = new DatabaseHelper(mActivity);
@@ -61,6 +60,15 @@ public class RestaurantsFragment extends Fragment {
         return resultView;
     }
 
-
+    public void updateActionBar () {
+        ActionBar actionBar = mActivity.getActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+        ViewGroup titleBar = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.action_bar_restaurant, null);
+        titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
+        NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.textview_restaurant_title);
+        title.setText(mCategoryName);
+        actionBar.setCustomView(titleBar);
+        mActivity.invalidateOptionsMenu();
+    }
 
 }
