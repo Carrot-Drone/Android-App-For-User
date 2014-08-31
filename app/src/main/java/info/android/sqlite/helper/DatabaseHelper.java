@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lchpartners.server.Server;
+import com.lchpartners.apphelper.server.Server;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

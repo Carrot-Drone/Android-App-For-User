@@ -36,7 +36,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.lchpartners.android.adaptor.ExpandableMenuAdapter;
-import com.lchpartners.server.Server;
+import com.lchpartners.apphelper.server.Server;
 
 public class MenuActivity extends Activity implements OnClickListener {
 	private DatabaseHelper db;

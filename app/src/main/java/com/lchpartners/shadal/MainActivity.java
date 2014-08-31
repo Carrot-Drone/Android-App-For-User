@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.lchpartners.apphelper.preference.PrefUtil;
 import com.lchpartners.fragments.CategoryFragment;
 
 import java.io.IOException;
@@ -101,7 +103,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             boolean dbExists = mDbHelper.doesDatabaseExist();
 
             SQLiteDatabase db;
-            if(!dbExists){
+
+            // Database file이 없거나, version이 맞지 않으면..
+            String version = PrefUtil.getVersion(getApplicationContext());
+            Log.d("tag", "original version :"+version + " latest Version : " + PrefUtil.VERSION);
+
+            if(!dbExists || !version.equals(PrefUtil.VERSION)){
+                PrefUtil.setVersion(getApplicationContext());
                 //get database, we will override it in next steep
                 //but folders containing the database are created
                 db = mDbHelper.getWritableDatabase();
