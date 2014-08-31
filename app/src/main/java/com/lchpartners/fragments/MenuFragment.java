@@ -161,14 +161,17 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
 
         restaurant = db.getRestaurant((long)res_id);
 
-        ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)restaurant.server_id);
+        ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)restaurant.id);
         int menu_size = menus.size();
 
         sectionList = new ArrayList<String>();
         menuList = new ArrayList<ArrayList<String>>();
         priceList = new ArrayList<ArrayList<String>>();
 
-        String current_sec = menus.get(0).getSection();
+        String current_sec = null;
+        if(menu_size != 0){
+            current_sec = menus.get(0).getSection();
+        }
         ArrayList<String> menuList_i = new ArrayList<String>();
         ArrayList<String> priceList_i = new ArrayList<String>();
 

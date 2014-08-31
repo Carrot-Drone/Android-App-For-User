@@ -82,16 +82,16 @@ public class Server{
             try {
                 JSONArray resArray = new JSONArray(result);
                 for(int i = 0; i<resArray.length(); i++){
-                    Log.d("tag", String.valueOf(i));
-                    Log.d("tag", resArray.getJSONObject(i).getString("name"));
+//                    Log.d("tag", String.valueOf(i));
+//                    Log.d("tag", resArray.getJSONObject(i).getString("name"));
                     mDbHelper.updateRestaurant(resArray.getJSONObject(i));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("tag", String.valueOf(18));
+//                Log.d("tag", String.valueOf(18));
 
             } catch (Exception e) {
-                Log.d("tag", String.valueOf(28));
+//                Log.d("tag", String.valueOf(28));
 
                 e.printStackTrace();
             }
@@ -100,14 +100,14 @@ public class Server{
     }
     // 특정 음식점 데이터를 업데이트
     public void updateRestaurant(int restaurant_id, String updated_at){
-        Log.d("tag", "Update Res" + String.valueOf(restaurant_id));
+ //       Log.d("tag", "Update Res" + String.valueOf(restaurant_id));
         HttpAsyncRestaurant async = new HttpAsyncRestaurant();
         async.restaurant_id = restaurant_id;
         async.updated_at = updated_at;
         async.execute(WEB_BASE_URL + CHECK_FOR_UPDATE);
     }
     public void updateRestaurant(int restaurant_id, String updated_at, RestaurantsAdapter mAdapter){
-        Log.d("tag", "Update Res with Adapter" + String.valueOf(restaurant_id));
+ //       Log.d("tag", "Update Res with Adapter" + String.valueOf(restaurant_id));
         HttpAsyncRestaurant async = new HttpAsyncRestaurant();
         async.restaurant_id = restaurant_id;
         async.updated_at = updated_at;
@@ -130,7 +130,7 @@ public class Server{
         @Override
         protected void onPostExecute(String result) {
             mDbHelper = new DatabaseHelper(context);
-            Log.d("tag", result);
+ //           Log.d("tag", result);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
             try {
                 mDbHelper.updateRestaurant(new JSONObject(result));
@@ -139,7 +139,7 @@ public class Server{
             }
             mDbHelper.closeDB();
             if(mAdapter != null){
-                Log.d("tag", "Notify Data Changed");
+ //               Log.d("tag", "Notify Data Changed");
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -171,9 +171,9 @@ public class Server{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d("tag", "Update Restaurant In Category");
+//            Log.d("tag", "Update Restaurant In Category");
             if(result != null){
-                Log.d("tag", "++" + result);
+ //               Log.d("tag", "++" + result);
             }
             mDbHelper = new DatabaseHelper(context);
             try {
@@ -234,7 +234,11 @@ public class Server{
 
             }
             httpEntity = httpResponse.getEntity();
-            response = EntityUtils.toString(httpEntity, HTTP.UTF_8);
+            if(httpEntity != null){
+                response = EntityUtils.toString(httpEntity, HTTP.UTF_8);
+            }else{
+                response = null;
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
