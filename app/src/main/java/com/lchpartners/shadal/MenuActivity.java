@@ -15,6 +15,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -34,7 +36,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.lchpartners.android.adaptor.ExpandableMenuAdapter;
-import com.lchpartners.server.Server;
+import com.lchpartners.apphelper.server.Server;
 
 public class MenuActivity extends Activity implements OnClickListener {
 	private DatabaseHelper db;
@@ -88,7 +90,15 @@ public class MenuActivity extends Activity implements OnClickListener {
 		menuList_i = null;
 		priceList_i = null;
 	}
-	
+
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,8 +113,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 		setRestaurantFromDatabase(res_id);
 
         // check for update
-        Server server = new Server();
-        server.updateRestaurant(restaurant.server_id, restaurant.updated_at);
+        if(this.isConnected()){
+            Server server = new Server();
+            server.updateRestaurant(restaurant.server_id, restaurant.updated_at);
+        }
 		
 		TextView nameView = (TextView)findViewById(R.id.textview_restaurantName);
 		nameView.setText(restaurant.name);

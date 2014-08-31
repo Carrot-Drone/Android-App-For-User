@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lchpartners.server.Server;
+import com.lchpartners.apphelper.server.Server;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -227,54 +227,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-    * get single restaurant
-    */
-   public Restaurant getRestaurant(long res_id) {
-       SQLiteDatabase db = this.getReadableDatabase();
+     * get single restaurant
+     */
+    public Restaurant getRestaurant(long res_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
 
-       String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
-               + "id = " + res_id;
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
+                + "id = " + res_id;
 
-       Log.e(LOG, selectQuery);
+        Log.e(LOG, selectQuery);
 
-       Cursor c = db.rawQuery(selectQuery, null);
+        Cursor c = db.rawQuery(selectQuery, null);
 
-       if (c != null)
-           c.moveToFirst();
+        if (c != null)
+            c.moveToFirst();
 
-       Restaurant res = new Restaurant();
-       res.setId(c.getInt(c.getColumnIndex("id")));
-       res.setServer_id(c.getInt(c.getColumnIndex("server_id")));
-       res.setName((c.getString(c.getColumnIndex("name"))));       
-       res.setCategory(c.getString(c.getColumnIndex("category")));
-       res.setPhoneNumber(c.getString(c.getColumnIndex("phoneNumber")));
-       res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
-       res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-       if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
-    	   res.setFlyer(true);
-       }else{
-    	   res.setFlyer(false);
-       }
-       if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
-           res.setCoupon(true);
-       }else{
-           res.setCoupon(false);
-       }
-       if(c.getInt(c.getColumnIndex("is_new")) == 1){
-           res.setNew(true);
-       }else{
-           res.setNew(false);
-       }
-       if(c.getInt(c.getColumnIndex("is_favorite")) == 1){
-           res.setFavorite(true);
-       }else{
-           res.setFavorite(false);
-       }
-       res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
+        Restaurant res = this.getRestaurantFromCursor(c);
 
+        return res;
+    }
+    /**
+     * get single restaurant
+     */
+    public Restaurant getRandomRestaurant() {
+        SQLiteDatabase db = this.getReadableDatabase();
 
-       return res;
-   }
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " ORDER BY RANDOM() LIMIT 1";
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null){
+            c.moveToFirst();
+        }
+        else{
+            Log.e("tag", "No res in database");
+            return null;
+        }
+
+        Restaurant res = this.getRestaurantFromCursor(c);
+
+        return res;
+    }
 
    /**
     * getting all restaurants
@@ -291,25 +286,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        // looping through all rows and adding to list
        if (c.moveToFirst()) {
            do {
-               Restaurant res = new Restaurant();
-               res.setId(c.getInt((c.getColumnIndex("id"))));
-               res.setName((c.getString(c.getColumnIndex("name"))));
-               System.out.println(res.getName());
-               res.setCategory(c.getString(c.getColumnIndex("category")));
-               res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
-               res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-               if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
-            	   res.setFlyer(true);
-               }else{
-            	   res.setFlyer(false);
-               }
-               if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
-            	   res.setCoupon(true);
-               }else{
-            	   res.setCoupon(false);
-               }
-               res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
-
+               Restaurant res = this.getRestaurantFromCursor(c);
                // adding to res list
                ress.add(res);
            } while (c.moveToNext());
@@ -333,26 +310,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        // looping through all rows and adding to list
        if (c.moveToFirst()) {
            do {
-               Restaurant res = new Restaurant();
-               res.setId(c.getInt((c.getColumnIndex("id"))));
-               res.setName((c.getString(c.getColumnIndex("name"))));
-               System.out.println(res.getName());
-               res.setCategory(c.getString(c.getColumnIndex("category")));
-               res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
-               res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
-               if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
-            	   res.setFlyer(true);
-               }else{
-            	   res.setFlyer(false);
-               }
-               if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
-            	   res.setCoupon(true);
-               }else{
-            	   res.setCoupon(false);
-               }
-               res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
-
-
+               Restaurant res = this.getRestaurantFromCursor(c);
                // adding to res list
                ress.add(res);
            } while (c.moveToNext());
@@ -424,6 +382,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        db.delete(TABLE_RES, "id" + " = ?",
                new String[] { String.valueOf(res_id) });
    }
+
+    private Restaurant getRestaurantFromCursor(Cursor c){
+        Restaurant res = new Restaurant();
+        res.setId(c.getInt(c.getColumnIndex("id")));
+        res.setServer_id(c.getInt(c.getColumnIndex("server_id")));
+        res.setName((c.getString(c.getColumnIndex("name"))));
+        res.setCategory(c.getString(c.getColumnIndex("category")));
+        res.setPhoneNumber(c.getString(c.getColumnIndex("phoneNumber")));
+        res.setOpeningHours(c.getString(c.getColumnIndex("openingHours")));
+        res.setClosingHours(c.getString(c.getColumnIndex("closingHours")));
+        if(c.getInt(c.getColumnIndex("has_flyer")) == 1){
+            res.setFlyer(true);
+        }else{
+            res.setFlyer(false);
+        }
+        if(c.getInt(c.getColumnIndex("has_coupon")) == 1){
+            res.setCoupon(true);
+        }else{
+            res.setCoupon(false);
+        }
+        if(c.getInt(c.getColumnIndex("is_new")) == 1){
+            res.setNew(true);
+        }else{
+            res.setNew(false);
+        }
+        if(c.getInt(c.getColumnIndex("is_favorite")) == 1){
+            res.setFavorite(true);
+        }else{
+            res.setFavorite(false);
+        }
+        res.setCouponString(c.getString(c.getColumnIndex("coupon_string")));
+        res.setUpdated_at(c.getString(c.getColumnIndex("updated_at")));
+
+        return res;
+    }
 
    // ------------------------ "menus" table methods ----------------//
 

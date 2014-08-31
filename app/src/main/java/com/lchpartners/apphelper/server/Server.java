@@ -1,4 +1,4 @@
-package com.lchpartners.server;
+package com.lchpartners.apphelper.server;
 
 import android.app.Activity;
 import android.content.Context;
