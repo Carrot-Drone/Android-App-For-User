@@ -109,7 +109,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     
  // ------------------------ "retaurants" table methods ----------------//
-    
+    public ArrayList<Restaurant> getFavoriteRestaurant(){
+        ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE is_favorite = TRUE";
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Restaurant res = this.getRestaurantFromCursor(c);
+                // adding to res list
+                ress.add(res);
+            } while (c.moveToNext());
+        }
+        return ress;
+    }
+
+    public void toggleFavorite(long res_id){
+        ContentValues values = new ContentValues();
+        Restaurant res = this.getRestaurant(res_id);
+
+        values.put("is_favorite", !res.is_favorite);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.update(TABLE_RES, values, "id="+res_id, null);
+    }
+
+    public boolean isFavorte(long res_id){
+        Restaurant res = this.getRestaurant(res_id);
+        return res.is_favorite;
+    }
     /**
     * Creating a restaurant
     */
