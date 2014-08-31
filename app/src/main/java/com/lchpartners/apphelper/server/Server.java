@@ -70,6 +70,7 @@ public class Server{
     public class HttpAsyncAllData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
+
             return makeServiceCall(urls[0], GET);
         }
         // onPostExecute displays the results of the AsyncTask.
@@ -77,6 +78,7 @@ public class Server{
         protected void onPostExecute(String result) {
             mDbHelper = new DatabaseHelper(context);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            mDbHelper.onCreate(db);
             try {
                 JSONArray resArray = new JSONArray(result);
                 for(int i = 0; i<resArray.length(); i++){

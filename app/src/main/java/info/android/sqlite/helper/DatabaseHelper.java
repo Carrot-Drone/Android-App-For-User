@@ -152,32 +152,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         values.put("coupon_string", res.getString("coupon_string"));
 
-        JSONArray menus = res.getJSONArray("menus");
-        for(int i=0; i<menus.length(); i++){
-            createMenu(menus.getJSONObject(i));
-        }
-
-        JSONArray urls = res.getJSONArray("flyers_url");
-        for(int i=0; i<urls.length(); i++){
-            createFlyer(urls.getString(i), res.getInt("id"));
-        }
+        long res_id;
 
         // Check where the res exist already
         String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
                 + "server_id = " + res.getInt("id");
         Cursor c = db.rawQuery(selectQuery, null);
 
-        long res_id;
-
         if (c != null && c.getCount()>0) {
             c.moveToFirst();
-            Log.d("tag", "updateRestaurant1");
-            res_id = db.update(TABLE_RES, values, "server_id = ?",new String[] {  String.valueOf(res.getInt("id"))});
-            Log.d("tag", "updateRestaurant3");
+            db.update(TABLE_RES, values, "server_id = ?",new String[] {  String.valueOf(res.getInt("id"))});
+
+            res_id = c.getInt(c.getColumnIndex("id"));
         }else{
             // insert res
-            res_id = db.insert(TABLE_RES, "nullColumnHack", values);
+            res_id = db.insert(TABLE_RES, null, values);
         }
+        // delete related Menu
+        this.deleteMenu(res_id);
+        JSONArray menus = res.getJSONArray("menus");
+        for(int i=0; i<menus.length(); i++){
+            createMenu(menus.getJSONObject(i), (int)res_id);
+        }
+
+        // delete related Flyer
+        this.deleteFlyer(res_id);
+        JSONArray urls = res.getJSONArray("flyers_url");
+        Log.d("tag", "Flyer of res : " + res.getString("name") + " length : " + urls.length());
+        for(int i=0; i<urls.length(); i++){
+            Log.d("tag", "Add flyer to res_id : " + String.valueOf(res_id));
+            createFlyer(urls.getString(i), (int)res_id);
+        }
+
         return res_id;
     }
 
@@ -447,9 +453,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     */
    public void deleteRestaurant(long res_id) {
        SQLiteDatabase db = this.getWritableDatabase();
-       db.delete(TABLE_RES, "id" + " = ?",
+       db.delete(TABLE_RES, "id" + " = ? ",
                new String[] { String.valueOf(res_id) });
+
+       db.delete(TABLE_MENU, "restaurant_id " + " = ? ", new String[] {String.valueOf(res_id)});
+       db.delete(TABLE_FLYER, "restaurant_id " + " = ? ", new String[] {String.valueOf(res_id)});
    }
+    public void deleteMenu(long res_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MENU, "restaurant_id" + " = ? ",
+                new String[] { String.valueOf(res_id) });
+    }
+    public void deleteFlyer(long res_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FLYER, "restaurant_id" + " = ? ",
+                new String[] { String.valueOf(res_id) });
+    }
 
     private Restaurant getRestaurantFromCursor(Cursor c){
         Restaurant res = new Restaurant();
@@ -506,14 +525,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        return menu_id;
    }
 
-    public long createMenu(JSONObject menu) throws Exception {
+    public long createMenu(JSONObject menu, int restaurant_id) throws Exception {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("menu", menu.getString("name"));
         values.put("section", menu.getString("section"));
         values.put("price", menu.getInt("price"));
-        values.put("restaurant_id", menu.getInt("restaurant_id"));
+        values.put("restaurant_id", restaurant_id);
 
         // insert row
         long menu_id = db.insert(TABLE_MENU, null, values);
