@@ -3,7 +3,6 @@ package com.lchpartners.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,8 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.lchpartners.shadal.MainActivity;
+import com.lchpartners.shadal.MainActivity.ShadalTabsAdapter;
+import com.lchpartners.shadal.MainActivity.ShadalTabsAdapter.FragmentRecord;
 import com.lchpartners.shadal.R;
 
 /**
@@ -26,9 +27,11 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
         private int mOneLineLayout = 0;
         private Drawable[] mCategoryDrawables;
         private String[] mCategoryNames;
+        private final MainActivity mActivity;
 
-        public CategoryAdapter(Context context, int mOneLineLayout, String[] categoryNames, int[] categoryDrawableIDs) {
-            super(context, mOneLineLayout, categoryNames);
+        public CategoryAdapter(MainActivity activity, int mOneLineLayout, String[] categoryNames, int[] categoryDrawableIDs) {
+            super(activity, mOneLineLayout, categoryNames);
+            this.mActivity = activity;
 
             if(categoryNames.length != categoryDrawableIDs.length)
                 throw new IllegalArgumentException("The number of category drawables and names are not same!");
@@ -36,7 +39,7 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
             this.mOneLineLayout = mOneLineLayout;
             this.mCategoryNames = categoryNames;
             this.mCategoryDrawables = new Drawable[categoryDrawableIDs.length];
-            Resources resources = context.getResources();
+            Resources resources = activity.getResources();
 
             for (int i = 0; i < categoryDrawableIDs.length ; i++) {
                 this.mCategoryDrawables[i] = resources.getDrawable(categoryDrawableIDs[i]);
@@ -77,10 +80,9 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick (View v) {
-                    /*Intent moveToRestaurant = new Intent(getContext(), RestaurantActivity.class);
-                    moveToRestaurant.putExtra("category", position);
-                    getContext().startActivity(moveToRestaurant);*/
-                    Toast.makeText(getContext(), "TODO", Toast.LENGTH_SHORT).show();
+                    //TODO make some interface at mainActivity to change tabs
+                    ShadalTabsAdapter adapter = mActivity.getAdapter();
+                    adapter.push(MainActivity.TAB_MAIN, new FragmentRecord(RestaurantsFragment.class, position));
                 }
             });
 
@@ -96,6 +98,7 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
             R.drawable.ic_dosirak, R.drawable.ic_bossam, R.drawable.ic_noodle, R.drawable.ic_etc };
 
     private Activity mActivity;
+    private boolean updateActionBarOnCreateView = false;
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
@@ -104,12 +107,19 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = getActivity();
+        if(updateActionBarOnCreateView)
+            updateActionBar();
+
         ListView categoryListView = (ListView) inflater.inflate(R.layout.fragment_category,null);
         categoryListView.setAdapter
-                (new CategoryAdapter(getActivity(),R.layout.listview_item_category,mCategoryNames,mCategoryDrawables));
+                (new CategoryAdapter((MainActivity) getActivity(),
+                        R.layout.listview_item_category,mCategoryNames,mCategoryDrawables));
         return categoryListView;
     }
 
+    public void updateActionBarOnCreateView() {
+        this.updateActionBarOnCreateView = true;
+    }
     public void updateActionBar () {
         //Setting up the action bar
         ActionBar actionBar = mActivity.getActionBar();

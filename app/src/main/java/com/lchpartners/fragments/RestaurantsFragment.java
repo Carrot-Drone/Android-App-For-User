@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import info.android.sqlite.model.Restaurant;
  */
 public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
     private final static String EXTRA_CATEGORY_IDX = "catIdx";
-    private final static String TAG = "CategoryFragment";
+    private final static String TAG = "RestaurantsFragment";
 
     public static RestaurantsFragment newInstance(int categoryIndex) {
         RestaurantsFragment rf = new RestaurantsFragment();
@@ -40,6 +39,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
     private DatabaseHelper db;
     private String mCategoryName;
     private Activity mActivity;
+    private boolean updateActionBarOnCreateView = false;
 
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +50,9 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.mActivity = getActivity();
+        if (updateActionBarOnCreateView)
+            updateActionBar();
+
         ListView resultView = (ListView) inflater.inflate(R.layout.activity_restaurant, container, false);
 
         //Query database
@@ -64,8 +67,11 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         // check for update
         Server server = new Server(this.getActivity());
         server.updateRestaurantInCategory(mCategoryName, adapter);
-
         return resultView;
+    }
+
+    public void updateActionBarOnCreateView() {
+        this.updateActionBarOnCreateView = true;
     }
 
     public void updateActionBar () {
