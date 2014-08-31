@@ -8,7 +8,10 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Debug;
 import android.util.Log;
+import android.widget.Adapter;
 import android.widget.Toast;
+
+import com.lchpartners.android.adaptor.RestaurantsAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +39,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import info.android.sqlite.helper.DatabaseHelper;
+import info.android.sqlite.model.Restaurant;
 
 /**
  * Created by swchoi06 on 8/29/14.
@@ -56,7 +60,8 @@ public class Server{
     public static Context context;
     DatabaseHelper mDbHelper;
 
-    public Server(){
+    public Server(Context context){
+        this.context = context;
     }
     // 전체 음식점 데이터를 업데이트
     public void updateAllRestaurant(){
@@ -99,9 +104,18 @@ public class Server{
         async.updated_at = updated_at;
         async.execute(WEB_BASE_URL + CHECK_FOR_UPDATE);
     }
+    public void updateRestaurant(int restaurant_id, String updated_at, RestaurantsAdapter mAdapter){
+        Log.d("tag", "Update Res with Adapter" + String.valueOf(restaurant_id));
+        HttpAsyncRestaurant async = new HttpAsyncRestaurant();
+        async.restaurant_id = restaurant_id;
+        async.updated_at = updated_at;
+        async.mAdapter = mAdapter;
+        async.execute(WEB_BASE_URL + CHECK_FOR_UPDATE);
+    }
     public class HttpAsyncRestaurant extends AsyncTask<String, Void, String> {
         public int restaurant_id;
         public String updated_at;
+        public RestaurantsAdapter mAdapter;
         @Override
         protected String doInBackground(String... urls) {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -122,6 +136,11 @@ public class Server{
                 e.printStackTrace();
             }
             mDbHelper.closeDB();
+            if(mAdapter != null){
+                Log.d("tag", "Notify Data Changed");
+
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
     public void updateRestaurantInCategory(String category){
@@ -129,9 +148,16 @@ public class Server{
         async.category = category;
         async.execute(WEB_BASE_URL+CHECK_FOR_RES_IN_CATEGORY);
     }
+    public void updateRestaurantInCategory(String category, RestaurantsAdapter mAdapter){
+        HttpAsyncRestaurantInCategory async = new HttpAsyncRestaurantInCategory();
+        async.category = category;
+        async.mAdapter = mAdapter;
+        async.execute(WEB_BASE_URL+CHECK_FOR_RES_IN_CATEGORY);
+    }
     public class HttpAsyncRestaurantInCategory extends AsyncTask<String, Void, String> {
         public String category;
         public String campus = CAMPUS;
+        public RestaurantsAdapter mAdapter;
         @Override
         protected String doInBackground(String... urls) {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -143,16 +169,21 @@ public class Server{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            Log.d("tag", "Update Restaurant In Category");
+            if(result != null){
+                Log.d("tag", "++" + result);
+            }
             mDbHelper = new DatabaseHelper(context);
             try {
-                mDbHelper.updateRestaurantInCategory(new JSONArray(result), category);
+                mDbHelper.updateRestaurantInCategory(new JSONArray(result), category, mAdapter);
                 mDbHelper.closeDB();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("tag", result);
                 mDbHelper.closeDB();
-
+            }
+            if(mAdapter != null){
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -195,17 +226,13 @@ public class Server{
                     String paramString = URLEncodedUtils.format(params, "utf-8");
                     url += "?" + paramString;
                 }
-                Log.d("tag", "mae SErver call2 " + url );
 
                 HttpGet httpGet = new HttpGet(url);
                 httpResponse = httpClient.execute(httpGet);
-                Log.d("tag", "mae SErver call3");
 
             }
             httpEntity = httpResponse.getEntity();
             response = EntityUtils.toString(httpEntity, HTTP.UTF_8);
-
-            Log.d("Response", "res " + response);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {

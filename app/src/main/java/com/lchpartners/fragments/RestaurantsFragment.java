@@ -4,12 +4,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.lchpartners.android.adaptor.RestaurantsAdapter;
+import com.lchpartners.apphelper.server.Server;
 import com.lchpartners.shadal.R;
 import com.lchpartners.views.NamsanTextView;
 
@@ -56,6 +58,12 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
 
         adapter = new RestaurantsAdapter(mActivity, mResults);
         resultView.setAdapter(adapter);
+        db.closeDB();
+
+
+        // check for update
+        Server server = new Server(this.getActivity());
+        server.updateRestaurantInCategory(mCategoryName, adapter);
 
         return resultView;
     }

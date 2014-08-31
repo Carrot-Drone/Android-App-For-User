@@ -114,7 +114,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 
         // check for update
         if(this.isConnected()){
-            Server server = new Server();
+            Server server = new Server(this.getApplicationContext());
             server.updateRestaurant(restaurant.server_id, restaurant.updated_at);
         }
 		
