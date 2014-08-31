@@ -154,7 +154,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("coupon_string", res.getString("coupon_string"));
 
         long res_id;
-
         // Check where the res exist already
         String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
                 + "server_id = " + res.getInt("id");
