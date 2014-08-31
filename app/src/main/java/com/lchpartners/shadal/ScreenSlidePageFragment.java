@@ -70,7 +70,7 @@ public class ScreenSlidePageFragment extends Fragment{
 
         InputStream istream = null;
         try {
-            Log.d("tag", "http://www.shadal.kr" + urls.get(mPageNumber));
+  //          Log.d("tag", "http://www.shadal.kr" + urls.get(mPageNumber));
             istream = new URL("http://www.shadal.kr"+urls.get(mPageNumber)).openStream();
         } catch (MalformedURLException e) {
             e.printStackTrace();

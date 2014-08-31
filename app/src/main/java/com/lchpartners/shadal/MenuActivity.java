@@ -218,15 +218,15 @@ public class MenuActivity extends Activity implements OnClickListener {
 	}
 
 	private void sendLog(int res_id){
-		Log.d("sendLog", "sendLog");
+//		Log.d("sendLog", "sendLog");
 
 		LogSender sender = new LogSender(getApplicationContext());
 		sender.execute(String.valueOf(res_id));
 		try {
 			if(sender.get() != null)
-				Log.d("sendLog",sender.get().toString());
+//				Log.d("sendLog",sender.get().toString());
 			else
-				Log.e("sendLog","Null response returned");
+//				Log.e("sendLog","Null response returned");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
