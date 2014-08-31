@@ -3,14 +3,21 @@ package com.lchpartners.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.lchpartners.android.adaptor.RestaurantsAdapter;
 import com.lchpartners.apphelper.server.Server;
+import com.lchpartners.shadal.MainActivity;
 import com.lchpartners.shadal.R;
 import com.lchpartners.views.NamsanTextView;
 
@@ -25,6 +32,83 @@ import info.android.sqlite.model.Restaurant;
 public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
     private final static String EXTRA_CATEGORY_IDX = "catIdx";
     private final static String TAG = "RestaurantsFragment";
+
+    public static class RestaurantsAdapter extends ArrayAdapter<Restaurant> {
+        private static class RestaurantViewHolder {
+            public TextView restaurantName;
+            public ImageView flyer;
+            public ImageView coupon;
+        }
+
+        private final MainActivity mActivity;
+        private final ArrayList<Restaurant> values;
+        private final LayoutInflater mInflater;
+
+        public RestaurantsAdapter(MainActivity activity, ArrayList<Restaurant> restaurants) {
+            super(activity, R.layout.listview_item_restaurant, restaurants);
+            this.mActivity = activity;
+            this.values = restaurants;
+            this.mInflater = LayoutInflater.from(activity);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            TextView restaurantName;
+            ImageView flyer;
+            ImageView coupon;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.listview_item_restaurant, null);
+                restaurantName = (TextView) convertView.findViewById(R.id.restaurant_name);
+                flyer = (ImageView) convertView.findViewById(R.id.flyer);
+                coupon = (ImageView) convertView.findViewById(R.id.coupon);
+
+                RestaurantViewHolder viewHolder = new RestaurantViewHolder();
+                viewHolder.coupon = coupon;
+                viewHolder.flyer = flyer;
+                viewHolder.restaurantName = restaurantName;
+                convertView.setTag(viewHolder);
+            }
+            else {
+                RestaurantViewHolder viewHolder = (RestaurantViewHolder) convertView.getTag();
+                restaurantName = viewHolder.restaurantName;
+                flyer = viewHolder.flyer;
+                coupon = viewHolder.coupon;
+            }
+
+            Restaurant restaurant = getItem(position);
+            if(!restaurant.getFlyer()) {
+                flyer.setVisibility(View.INVISIBLE);
+                if(!restaurant.getCoupon()) {
+                    coupon.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    // right align coupon View
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)coupon.getLayoutParams();
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    coupon.setLayoutParams(params);
+                }
+            }
+            else {
+                if(!restaurant.getCoupon()){
+                    coupon.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            convertView.setOnClickListener(new View.OnClickListener () {
+                @Override
+                public void onClick(View v) {
+                    MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
+                    adapter.push(MainActivity.TAB_MAIN,
+                            new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, position));
+                }
+            });
+
+            return convertView;
+        }
+
+    }
+
 
     public static RestaurantsFragment newInstance(int categoryIndex) {
         RestaurantsFragment rf = new RestaurantsFragment();
@@ -59,14 +143,18 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         db = new DatabaseHelper(mActivity);
         mResults = db.getAllRestaurantsWithCategory(mCategoryName);
 
-        adapter = new RestaurantsAdapter(mActivity, mResults);
+        adapter = new RestaurantsAdapter((MainActivity) mActivity, mResults);
         resultView.setAdapter(adapter);
         db.closeDB();
 
-
         // check for update
-        Server server = new Server(this.getActivity());
-        server.updateRestaurantInCategory(mCategoryName, adapter);
+        try {
+            Server server = new Server(mActivity);
+            server.updateRestaurantInCategory(mCategoryName, adapter);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Error while communicating with server.",e);
+        }
         return resultView;
     }
 
