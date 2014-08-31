@@ -1,4 +1,4 @@
-﻿package com.lchpartners.shadal;
+package com.lchpartners.shadal;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -6,10 +6,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -27,7 +24,6 @@ import com.lchpartners.fragments.RestaurantsFragment;
 import java.io.IOException;
 
 import info.android.sqlite.helper.DatabaseHelper;
-import info.android.sqlite.model.Restaurant;
 
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
     private final static String TAG = "MainActivity";
@@ -137,9 +133,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
             finish();
         }
-
-    }
-
         mDbHelper.closeDB();
     }
 
@@ -196,6 +189,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
          * Carefully take care of behavior of the OnPageChangedListener using Logcat
          * before you change code here.
          **/
+
         if (position < mCurrPage) {
             //LEFT scroll : In this case, position value itself points the new page the user is navigating to.
             if (positionOffset > 0.5) {
@@ -210,11 +204,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else position++; // If the user scrolled enough, Make this value to point the new page.
         }
 
-        mNextPage = position;
-
-        //Update the actionbar
-        ActionBarUpdater newPageActionBarUpdater = (ActionBarUpdater) mTabsAdapter.getCachedItem(mNextPage);
-        newPageActionBarUpdater.updateActionBar();
+        if (mNextPage != position) {
+            //When mNextPage is changed, it means user changed final destination of the current scroll motion.
+            mNextPage = position;
+            //Change action bar content for the next page.
+            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getCachedItem(mNextPage);
+            nextPageFragment.updateActionBar();
+        }
 
         mSelectedPageBtn.setSelected(false);
         switch (mNextPage) {
