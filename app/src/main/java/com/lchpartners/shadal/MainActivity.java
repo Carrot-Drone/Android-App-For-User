@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.lchpartners.apphelper.preference.PrefUtil;
 import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
+import com.lchpartners.fragments.FavoriteFragment;
 import com.lchpartners.fragments.MenuFragment;
+import com.lchpartners.fragments.MoreFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
@@ -76,6 +78,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else if(record.className.equals(MenuFragment.class.getSimpleName())) {
                 return MenuFragment.newInstance(record.param0);
             }
+            else if(record.className.equals(MoreFragment.class.getSimpleName())) {
+                return MoreFragment.newInstance();
+            }
+            else if(record.className.equals(FavoriteFragment.class.getSimpleName())) {
+                return FavoriteFragment.newInstance();
+            }
             else return null;
         }
 
@@ -96,9 +104,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
             //Generate Fragments
             mFirstPageStack.push(new FragmentRecord(CategoryFragment.class));
-            mSecondPageStack.push(new FragmentRecord(CategoryFragment.class));
+            mSecondPageStack.push(new FragmentRecord(FavoriteFragment.class));
             mThirdPageStack.push(new FragmentRecord(MenuFragment.class, mDbHelper.getRandomRestaurant().id));
-            mFourthPageStack.push(new FragmentRecord(RestaurantsFragment.class, 3));
+            mFourthPageStack.push(new FragmentRecord(MoreFragment.class));
         }
 
         private FragmentManager mFragementManager;
@@ -159,7 +167,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             if (isRootLoad[tab]) {
                 isRootLoad[tab] = false;
             }
-            else ((ActionBarUpdater) result).updateActionBarOnCreateView();
+            else ((ActionBarUpdater) result).setUpdateActionBarOnCreateView();
 
             setValidity(tab, true);
             mCurrentFragments.put(tab, result);
@@ -199,19 +207,29 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
 
         //TODO : notify user before finishing!
+        private long mLastBackPressTime = System.currentTimeMillis();
         public void pop(int tab) {
 //            Log.e(TAG, "pop "+Integer.valueOf(tab).toString());
-            Fragment previousTop = getCurrentFragment(tab);
-            mFragementManager.beginTransaction().remove(previousTop).commit();
-            mFragementManager.executePendingTransactions();
-            mCurrentFragments.put(tab, null);
             Stack<FragmentRecord> currStack = getStack(tab);
-            currStack.pop(); //Remove current Fragment's record from the stack.
 
-            if (currStack.size() == 0) {
-                mActivity.finish();
+            if (currStack.size() == 1) {
+                if (mActivity.isFinishing()) return;
+
+                long currTime = System.currentTimeMillis();
+                if (currTime - mLastBackPressTime > 2000) {
+                    Toast.makeText(mActivity,mActivity.getString(R.string.msg_press_again_to_exit)
+                            ,Toast.LENGTH_SHORT).show();
+                    mLastBackPressTime = currTime;
+                }
+                else mActivity.finish();
             }
             else {
+                Fragment previousTop = getCurrentFragment(tab);
+                mFragementManager.beginTransaction().remove(previousTop).commit();
+                mFragementManager.executePendingTransactions();
+                mCurrentFragments.put(tab, null);
+
+                currStack.pop(); //Remove current Fragment's record from the stack.
                 setValidity(tab, false);
                 notifyDataSetChanged();
             }
@@ -227,15 +245,10 @@ public class MainActivity extends Activity implements View.OnClickListener, View
      * TODO : track user's navigation and store it in one LARGE stack.
      * and pop it if the user presses back button.
      */
-    private long mLastBackPressTime = System.currentTimeMillis();
+
     @Override
     public void onBackPressed() {
-        long currTime = System.currentTimeMillis();
-        if (currTime - mLastBackPressTime > 2000) {
-            Toast.makeText(this,getString(R.string.msg_press_again_to_exit),Toast.LENGTH_SHORT).show();
-            mLastBackPressTime = currTime;
-        }
-        else mTabsAdapter.pop(mCurrTab);
+        mTabsAdapter.pop(mCurrTab);
     }
 
     public ShadalTabsAdapter getAdapter() {

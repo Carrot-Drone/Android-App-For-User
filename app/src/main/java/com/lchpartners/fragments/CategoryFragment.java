@@ -118,7 +118,7 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
         return categoryListView;
     }
 
-    public void updateActionBarOnCreateView() {
+    public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;
     }
     public void updateActionBar () {

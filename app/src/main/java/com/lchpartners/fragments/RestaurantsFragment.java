@@ -160,7 +160,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         return resultView;
     }
 
-    public void updateActionBarOnCreateView() {
+    public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;
     }
 

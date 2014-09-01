@@ -9,5 +9,5 @@ public interface ActionBarUpdater {
      * This method must not be called before this fragment instance is attached to activity.
      */
     public void updateActionBar();
-    public void updateActionBarOnCreateView();
+    public void setUpdateActionBarOnCreateView();
 }

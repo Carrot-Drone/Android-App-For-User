@@ -298,7 +298,7 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         return resultView;
     }
 
-    public void updateActionBarOnCreateView() {
+    public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;
     }
     public void updateActionBar () {
@@ -308,9 +308,18 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
 
         NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.text_view_menus_title);
-        ImageButton starBtn = (ImageButton) titleBar.findViewById(R.id.btn_star);
+        final ImageButton starBtn = (ImageButton) titleBar.findViewById(R.id.btn_star);
         title.setText(restaurant.name);
         starBtn.setSelected(restaurant.is_favorite);
+        starBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick (View v) {
+                DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
+                dbHelper.toggleFavorite(restaurantId);
+                starBtn.setSelected(!restaurant.is_favorite);
+                dbHelper.closeDB();
+            }
+        });
 
         actionBar.setCustomView(titleBar);
         mActivity.invalidateOptionsMenu();
@@ -343,6 +352,10 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         }
     }
 
+    /**
+     * @author Sukwon Choi
+     * @since 2014.09.01
+     */
     protected static class CallLogSender extends AsyncTask<String, Void, HttpResponse> {
         private Context context;
         public CallLogSender(Context context) {
