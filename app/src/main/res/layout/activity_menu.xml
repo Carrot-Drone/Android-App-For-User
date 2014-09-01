@@ -1,88 +1,56 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:views="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MenuActivity" >
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textview_restaurantName"
+    <RelativeLayout
+        android:id="@+id/btn_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textSize="20dp"
-        android:text="NoName" />
+        android:background="@drawable/btn_call"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_margin="6dp">
+        <com.lchpartners.views.NamsanTextView
+            android:id="@+id/editText_phonenumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="phone"
+            android:textColor="@android:color/white"
+            android:textStyle="normal"
+            android:layout_marginLeft="26.5dp"
+            android:layout_marginBottom="3dp"
+            android:text="02-880-0000"
+            views:weight="extra_bold"
+            android:textSize="21sp"/>
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/editText_phonenumber"
+    <com.lchpartners.views.NamsanTextView
+        android:id="@+id/text_view_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textview_restaurantName"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="10dp"
-        android:autoLink="phone"
-        android:text="02-880-0000"
-        android:textSize="16dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="6dp"
+        android:textSize="15.3sp"
+        views:weight="extra_bold"
+        android:color="@android:color/black"
+        android:text="영업 시간: " />
 
-    <TextView
-        android:id="@+id/textView_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textview_restaurantName"
-        android:layout_below="@+id/editText_phonenumber"
-        android:layout_marginTop="10dp"
-        android:text="영업 시간 :" />
-
-    <TextView
-        android:id="@+id/textview_closeTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textview_opentime"
-        android:layout_alignBottom="@+id/textview_opentime"
-        android:layout_toRightOf="@+id/textview_fromto"
-        android:layout_marginLeft="20dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textview_opentime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView_time"
-        android:layout_alignBottom="@+id/textView_time"
-        android:layout_marginLeft="30dp"
-        android:layout_toRightOf="@+id/textView_time"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textview_fromto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textview_opentime"
-        android:layout_alignBottom="@+id/textview_opentime"
-        android:layout_toRightOf="@+id/textview_opentime"
-        android:layout_marginLeft="30dp"
-        android:text="~" />
-
-    <TextView
+    <com.lchpartners.views.NamsanTextView
         android:id="@+id/textview_couponString"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:layout_below="@+id/textView_time" />
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
+        views:weight="extra_bold"
+        android:layout_margin="10dp"
+        android:color="@android:color/black" />
 
     <ExpandableListView
         android:id="@+id/expandableListView_menus"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/textview_couponString" >
+        android:layout_height="match_parent" >
     </ExpandableListView>
 
-</RelativeLayout>
+</LinearLayout>

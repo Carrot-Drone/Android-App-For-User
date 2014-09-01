@@ -96,9 +96,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
             //Generate Fragments
             mFirstPageStack.push(new FragmentRecord(CategoryFragment.class));
-            mSecondPageStack.push(new FragmentRecord(RestaurantsFragment.class, 0));
+            mSecondPageStack.push(new FragmentRecord(CategoryFragment.class));
             mThirdPageStack.push(new FragmentRecord(MenuFragment.class, mDbHelper.getRandomRestaurant().id));
-            mFourthPageStack.push(new FragmentRecord(RestaurantsFragment.class, 2));
+            mFourthPageStack.push(new FragmentRecord(RestaurantsFragment.class, 3));
         }
 
         private FragmentManager mFragementManager;
@@ -227,9 +227,15 @@ public class MainActivity extends Activity implements View.OnClickListener, View
      * TODO : track user's navigation and store it in one LARGE stack.
      * and pop it if the user presses back button.
      */
+    private long mLastBackPressTime = System.currentTimeMillis();
     @Override
     public void onBackPressed() {
-        mTabsAdapter.pop(mCurrTab);
+        long currTime = System.currentTimeMillis();
+        if (currTime - mLastBackPressTime > 2000) {
+            Toast.makeText(this,getString(R.string.msg_press_again_to_exit),Toast.LENGTH_SHORT).show();
+            mLastBackPressTime = currTime;
+        }
+        else mTabsAdapter.pop(mCurrTab);
     }
 
     public ShadalTabsAdapter getAdapter() {
@@ -289,6 +295,10 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mPager.setAdapter(mTabsAdapter);
         mPager.setOnPageChangeListener(this);
 
+        for (int i = (TAB_COUNT-1); i >= 0; i--) {
+            mPager.setCurrentItem(i); // init items
+        }
+
         //TODO : for long clicks - 'set default page'
 
         mMainBtn = (ImageButton) findViewById(R.id.button_tab_main);
@@ -316,7 +326,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
        // if(mNextTab == 0)
-       //    getMenuInflater().inflate(R.menu.search,menu);
+       //    getMenuInflater().inflate(R.menu.search, menu);
+       // if (mNextTab == TAB_FAVORITE)
+      //      getMenuInflater().inflate(R.menu.favorite, menu);
         return true;
     }
 
@@ -324,8 +336,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     public void onClick (View v) {
         int id = v.getId();
         //When the user pressed the same tab.
-        if (id == mSelectedTabBtn.getId() && id != mRandomBtn.getId())
+        if (id == R.id.button_tab_random) {
+            //Except random button
+        }
+        else if (id == mSelectedTabBtn.getId()) {
             return;
+        }
 
         mSelectedTabBtn.setSelected(false);
         if (id == R.id.button_tab_main) {
@@ -338,9 +354,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
         else if (id == R.id.button_tab_random) {
             mPager.setCurrentItem(TAB_RANDOM, true);
-            //TODO : shake effect
-            //TODO : refresh content on Scroll?
-
+            MenuFragment menuFragment = (MenuFragment) mTabsAdapter.getCurrentFragment(TAB_RANDOM);
+            menuFragment.random();
+            menuFragment.getView().invalidate();
             mSelectedTabBtn = mRandomBtn;
         }
         else if (id == R.id.button_tab_more) {
@@ -409,6 +425,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     @Override
     public void onPageScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
+            getFragmentManager().executePendingTransactions();
 
             //Double-check action bar and bottom button update (to deal with fast scroll)
             ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getCurrentFragment(mCurrTab);

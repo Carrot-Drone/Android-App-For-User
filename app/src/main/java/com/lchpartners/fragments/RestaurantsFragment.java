@@ -3,7 +3,6 @@ package com.lchpartners.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lchpartners.apphelper.server.Server;
 import com.lchpartners.shadal.MainActivity;
@@ -76,7 +74,8 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
                 coupon = viewHolder.coupon;
             }
 
-            Restaurant restaurant = getItem(position);
+            final Restaurant restaurant = getItem(position);
+            restaurantName.setText(restaurant.name);
             if(!restaurant.getFlyer()) {
                 flyer.setVisibility(View.INVISIBLE);
                 if(!restaurant.getCoupon()) {
@@ -91,6 +90,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
             }
             else {
                 if(!restaurant.getCoupon()){
+                    //TODO : set it GONE.
                     coupon.setVisibility(View.INVISIBLE);
                 }
             }
@@ -100,15 +100,17 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
                 public void onClick(View v) {
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(MainActivity.TAB_MAIN,
-                            new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, position));
+                            new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));
                 }
             });
+
+            if(position %2 == 0) convertView.setBackgroundColor(0xfff2f2f2);
+            else convertView.setBackgroundColor(0xfffcfcfc);
 
             return convertView;
         }
 
     }
-
 
     public static RestaurantsFragment newInstance(int categoryIndex) {
         RestaurantsFragment rf = new RestaurantsFragment();
