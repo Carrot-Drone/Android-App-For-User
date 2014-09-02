@@ -83,6 +83,7 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
                     //TODO make some interface at mainActivity to change tabs
                     ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(MainActivity.TAB_MAIN, new FragmentRecord(RestaurantsFragment.class, position));
+
                 }
             });
 
@@ -117,7 +118,7 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
         return categoryListView;
     }
 
-    public void updateActionBarOnCreateView() {
+    public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;
     }
     public void updateActionBar () {

@@ -13,7 +13,7 @@ public class PrefUtil {
     private final static String PREF_NAME = "prefUtil";
 
     public final static String VERSION_KEY = "APP_VERSION";
-    public final static String VERSION = "2.0.1";
+    public final static String VERSION = "2.0.0";
 
     public static String getVersion (Context c) {
         SharedPreferences pref = c.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);

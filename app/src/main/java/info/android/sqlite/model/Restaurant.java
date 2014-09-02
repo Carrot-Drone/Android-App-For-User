@@ -1,5 +1,9 @@
 package info.android.sqlite.model;
 
+import android.util.Log;
+
+import info.android.sqlite.helper.DatabaseHelper;
+
 public class Restaurant {
 		public int id;
         public int server_id;
@@ -57,7 +61,7 @@ public class Restaurant {
 	    	this.closingHours = closingHours;
 	    }
 
-	    public void setFlyer(boolean has_flyer){ this.has_flyer = has_flyer; }
+	    public void setFlyer(boolean has_flyer){this.has_flyer = has_flyer; }
 
         public void setCoupon(boolean has_coupon){
         this.has_coupon = has_coupon;

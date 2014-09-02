@@ -1,14 +1,5 @@
 package info.android.sqlite.helper;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import info.android.sqlite.model.Restaurant;
-import info.android.sqlite.model.Menu_data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,11 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lchpartners.android.adaptor.RestaurantsAdapter;
 import com.lchpartners.apphelper.server.Server;
+import com.lchpartners.fragments.RestaurantsFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+
+import info.android.sqlite.model.Menu_data;
+import info.android.sqlite.model.Restaurant;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
@@ -81,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("tag1", "onCreate Database");
+        //Log.d("tag1", "onCreate Database");
 
         // creating required tables
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_RES);
@@ -134,9 +135,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         Restaurant res = this.getRestaurant(res_id);
 
-        values.put("is_favorite", !res.is_favorite);
+        values.put("is_favorite", (!res.is_favorite)? 1:0);
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         db.update(TABLE_RES, values, "id="+res_id, null);
     }
 
@@ -164,9 +165,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res_id;
     }
     */
+
     // Create and Update Restaurant. if exist, update if not, create.
     public long updateRestaurant(JSONObject res) throws Exception{
-        Log.d("tag", "Update Restaurant " + res.getString("name"));
+       // Log.d("tag", "Update Restaurant " + res.getString("name"));
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -211,9 +213,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // delete related Flyer
         this.deleteFlyer(res_id);
         JSONArray urls = res.getJSONArray("flyers_url");
-        Log.d("tag", "Flyer of res : " + res.getString("name") + " length : " + urls.length());
+      //  Log.d("tag", "Flyer of res : " + res.getString("name") + " length : " + urls.length());
         for(int i=0; i<urls.length(); i++){
-            Log.d("tag", "Add flyer to res_id : " + String.valueOf(res_id));
+          //  Log.d("tag", "Add flyer to res_id : " + String.valueOf(res_id));
             createFlyer(urls.getString(i), (int)res_id);
         }
 
@@ -224,7 +226,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // 없던 음식점 추가하기
         for(int i=0; i<ress.length(); i++){
-            Log.d("compare", "2 " + String.valueOf(ress.length()));
+         //   Log.d("compare", "2 " + String.valueOf(ress.length()));
             JSONObject res = ress.getJSONObject(i);
             String sql = "SELECT * FROM " + TABLE_RES + " WHERE " + "server_id =" + res.getInt("id");
             Cursor c = db.rawQuery(sql, null);
@@ -271,7 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }while(c.moveToNext());
         }
     }
-    public void updateRestaurantInCategory(JSONArray ress, String category, RestaurantsAdapter mAdapter) throws Exception{
+    public void updateRestaurantInCategory(JSONArray ress, String category, RestaurantsFragment.RestaurantsAdapter mAdapter) throws Exception{
         SQLiteDatabase db = this.getWritableDatabase();
         // 없던 음식점 추가하기
         for(int i=0; i<ress.length(); i++){
@@ -295,7 +297,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // 업데이트가 필요한 경우.
                 if(!res.getString("updated_at").equals(c.getString(c.getColumnIndex("updated_at")))){
                     Server server = new Server(this.mContext);
-                    Log.d("tag", "Update with mAdaper");
+                   // Log.d("tag", "Update with mAdaper");
                     if(mAdapter != null)
                         server.updateRestaurant(res.getInt("id"), c.getString(c.getColumnIndex("updated_at")), mAdapter);
                     else
@@ -341,7 +343,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE "
                 + "id = " + res_id;
 
-        Log.e(LOG, selectQuery);
+      //  Log.e(LOG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -360,7 +362,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  * FROM " + TABLE_RES + " ORDER BY RANDOM() LIMIT 1";
 
-        Log.e(LOG, selectQuery);
+       // Log.e(LOG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -384,7 +386,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
        String selectQuery = "SELECT  * FROM " + TABLE_RES + " ORDER BY name ASC";
 
-       Log.e(LOG, selectQuery);
+    //   Log.e(LOG, selectQuery);
 
        SQLiteDatabase db = this.getReadableDatabase();
        Cursor c = db.rawQuery(selectQuery, null);
@@ -408,7 +410,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
        ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + "' ORDER BY name ASC";
 
-       Log.e(LOG, selectQuery);
+     //  Log.e(LOG, selectQuery);
 
        SQLiteDatabase db = this.getReadableDatabase();
        Cursor c = db.rawQuery(selectQuery, null);
@@ -435,7 +437,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_MENU + " WHERE "
                 + "restaurant_id = " + res_id;
 
-        Log.e(LOG, selectQuery);
+     //   Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -466,7 +468,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_FLYER + " WHERE "
                 + "restaurant_id = " + res_id;
 
-        Log.e(LOG, selectQuery);
+       // Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
