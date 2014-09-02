@@ -40,6 +40,15 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
         return resultView;
     }
 
+    public void invalidate() {
+        DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
+        RestaurantsAdapter adapter = new RestaurantsAdapter(mActivity, dbHelper.getFavoriteRestaurant()
+                , MainActivity.TAB_FAVORITE);
+        dbHelper.closeDB();
+
+        ListView resultView = (ListView) getView();
+        resultView.setAdapter(adapter);
+    }
 
     public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;

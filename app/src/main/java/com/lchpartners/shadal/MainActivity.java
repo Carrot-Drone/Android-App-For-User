@@ -391,15 +391,10 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     @Override
     public void onClick (View v) {
         int id = v.getId();
-        //When the user pressed the same tab.
-        if (id == R.id.button_tab_random || id == R.id.button_tab_main) {
-            //Except randomize and home button
-        }
-        else if (id == mSelectedTabBtn.getId()) {
-            return;
+        if (id != mSelectedTabBtn.getId()) {
+            mSelectedTabBtn.setSelected(false);
         }
 
-        mSelectedTabBtn.setSelected(false);
         if (id == R.id.button_tab_main) {
             mPager.setCurrentItem(TAB_MAIN, true);
             mTabsAdapter.popUntilRootPage(TAB_MAIN);
@@ -407,6 +402,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
         else if (id == R.id.button_tab_favorite) {
             mPager.setCurrentItem(TAB_FAVORITE, true);
+            mTabsAdapter.popUntilRootPage(TAB_FAVORITE);
+            ((FavoriteFragment) mTabsAdapter.getCurrentFragment(TAB_FAVORITE)).invalidate();
             mSelectedTabBtn = mFavoriteBtn;
         }
         else if (id == R.id.button_tab_random) {
@@ -419,7 +416,10 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             mPager.setCurrentItem(TAB_MORE, true);
             mSelectedTabBtn = mMoreBtn;
         }
-        mSelectedTabBtn.setSelected(true);
+
+        if (id != mSelectedTabBtn.getId()) {
+            mSelectedTabBtn.setSelected(true);
+        }
     }
 
     @Override
