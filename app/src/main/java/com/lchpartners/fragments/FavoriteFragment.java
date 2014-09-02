@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.lchpartners.fragments.RestaurantsFragment.RestaurantsAdapter;
 import com.lchpartners.shadal.MainActivity;
 import com.lchpartners.shadal.R;
 
@@ -28,14 +29,14 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = (MainActivity) getActivity();
         DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-        //RestaurantsAdapter adapter = new RestaurantsAdapter(mActivity, dbHelper.getFavoriteRestaurant()
-        //                                                    , MainActivity.TAB_FAVORITE);
+        RestaurantsAdapter adapter = new RestaurantsAdapter(mActivity, dbHelper.getFavoriteRestaurant()
+                                                          , MainActivity.TAB_FAVORITE);
         dbHelper.closeDB();
 
         if (updateActionBarOnCreateView)
             updateActionBar();
         ListView resultView = (ListView) inflater.inflate(R.layout.fragment_restaurant, container, false);
-        //resultView.setAdapter(adapter);
+        resultView.setAdapter(adapter);
         return resultView;
     }
 
