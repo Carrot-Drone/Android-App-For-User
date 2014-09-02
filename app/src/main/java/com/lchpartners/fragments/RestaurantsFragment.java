@@ -109,6 +109,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
             convertView.setOnClickListener(new View.OnClickListener () {
                 @Override
                 public void onClick(View v) {
+                    Log.e("tag", "called");
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(MainActivity.TAB_MAIN,
                             new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));

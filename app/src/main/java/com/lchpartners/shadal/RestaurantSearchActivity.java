@@ -6,6 +6,7 @@ import android.os.Bundle;
 /**
  * Created by Gwangrae Kim on 2014-08-30.
  */
+
 public class RestaurantSearchActivity extends Activity {
     @Override
     protected void onCreate (Bundle savedInstanceState) {

@@ -1,12 +1,13 @@
 package info.android.sqlite.model;
 
-import java.io.Serializable;
+import java.io.Serializable; 
+import info.android.sqlite.helper.DatabaseHelper;
+import android.util.Log; 
 
 public class Restaurant implements Serializable {
-        public static final long serialVersionUID = 20140902L;
-
-		public int id;
-        public int server_id;
+      public static final long serialVersionUID = 20140902L;
+			public int id;
+      public int server_id;
 	    public String name;
 	    public String phoneNumber;
 	    public String category;
@@ -14,10 +15,10 @@ public class Restaurant implements Serializable {
 	    public String closingHours;
 	    public boolean has_flyer;
 	    public boolean has_coupon;
-        public boolean is_new;
-        public boolean is_favorite;
+      public boolean is_new;
+      public boolean is_favorite;
 	    public String coupon_string;
-        public String updated_at;
+      public String updated_at;
 
 	    // constructors
 	    public Restaurant() {
@@ -61,7 +62,7 @@ public class Restaurant implements Serializable {
 	    	this.closingHours = closingHours;
 	    }
 
-	    public void setFlyer(boolean has_flyer){ this.has_flyer = has_flyer; }
+	    public void setFlyer(boolean has_flyer){this.has_flyer = has_flyer; }
 
         public void setCoupon(boolean has_coupon){
         this.has_coupon = has_coupon;
