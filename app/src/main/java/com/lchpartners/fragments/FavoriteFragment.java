@@ -1,7 +1,6 @@
 package com.lchpartners.fragments;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.lchpartners.shadal.MainActivity;
 import com.lchpartners.shadal.R;
 
 import info.android.sqlite.helper.DatabaseHelper;
@@ -18,8 +18,7 @@ import info.android.sqlite.helper.DatabaseHelper;
  */
 public class FavoriteFragment extends Fragment implements ActionBarUpdater {
     private boolean updateActionBarOnCreateView = false;
-    private Activity mActivity;
-    private DatabaseHelper mDBHelper;
+    private MainActivity mActivity;
 
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
@@ -27,12 +26,16 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mActivity = getActivity();
-        mDBHelper = new DatabaseHelper(mActivity);
+        mActivity = (MainActivity) getActivity();
+        DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
+        //RestaurantsAdapter adapter = new RestaurantsAdapter(mActivity, dbHelper.getFavoriteRestaurant()
+        //                                                    , MainActivity.TAB_FAVORITE);
+        dbHelper.closeDB();
+
         if (updateActionBarOnCreateView)
             updateActionBar();
-        ListView resultView = (ListView) inflater.inflate(R.layout.fragment_more, container, false);
-        //mDBHelper.getFavoriteRestaurant();
+        ListView resultView = (ListView) inflater.inflate(R.layout.fragment_restaurant, container, false);
+        //resultView.setAdapter(adapter);
         return resultView;
     }
 

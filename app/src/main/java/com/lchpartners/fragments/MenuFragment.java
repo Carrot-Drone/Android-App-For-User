@@ -138,7 +138,7 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if(convertView ==  null)
                 convertView = inflater.inflate(R.layout.expandable_menu_list_category, null);
-            ((TextView) convertView).setText("   "+catList.get(groupPosition));
+            ((TextView) convertView).setText(catList.get(groupPosition));
             convertView.setBackgroundColor(0x00000000);
             return convertView;
         }

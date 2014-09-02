@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -42,7 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     public final static int TAB_MORE = 3;
 
     /**
-     * Created by Gwangrae Kim on 2014-08-25.
+     * Created by Gwangrae Kim @SNUCSE, k.gwangrae@gmail.com on 2014-08-25.
      * TODO - it's not actually serializable
      */
     public static class ShadalTabsAdapter extends FragmentPagerAdapter implements Serializable {
@@ -290,7 +289,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private static final String KEY_STACKS = "stacks";
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.e(TAG,"save");
         Stack[] stacks = new Stack [TAB_COUNT];
         for (int i = 0; i < TAB_COUNT; i++) {
             stacks[i] = mTabsAdapter.getStack(i);
@@ -348,7 +346,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         if (savedInstanceState != null) {
             Stack[] stacks = (Stack[]) savedInstanceState.getSerializable(KEY_STACKS);
             if (stacks != null) {
-                Log.e(TAG,"restore");
                 for (int i = 0; i < TAB_COUNT; i++) {
                     mTabsAdapter.setStack(i,
                             (Stack <ShadalTabsAdapter.FragmentRecord>) stacks[i]);

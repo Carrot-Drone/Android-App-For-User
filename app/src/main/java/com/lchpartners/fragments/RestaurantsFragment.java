@@ -42,11 +42,22 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         private final ArrayList<Restaurant> values;
         private final LayoutInflater mInflater;
 
+        private int TAB_TO_ATTACH_MENU_FRAGMENT = MainActivity.TAB_MAIN;
+
+        /**
+         * By Default, this class will attach MenuFragment to MainActivity.TAB_MAIN
+         */
         public RestaurantsAdapter(MainActivity activity, ArrayList<Restaurant> restaurants) {
             super(activity, R.layout.listview_item_restaurant, restaurants);
             this.mActivity = activity;
             this.values = restaurants;
             this.mInflater = LayoutInflater.from(activity);
+        }
+
+        public RestaurantsAdapter(MainActivity activity, ArrayList<Restaurant> restaurants,
+                                 int tabToAttachMenuFragment) {
+            this (activity, restaurants);
+            this.TAB_TO_ATTACH_MENU_FRAGMENT = tabToAttachMenuFragment;
         }
 
         @Override

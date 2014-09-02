@@ -15,6 +15,15 @@
     <string name="currency">원</string>
     <string name="msg_press_again_to_exit">다시 누르시면 종료합니다.</string>
 
+    <string name="version">버전 정보</string>
+    <string name="members">샤달 팀 소개</string>
+    <string name="participate">참여하기</string>
+    <string name="facebook">페이스북</string>
+    <string name="report">맛집 제보하기</string>
+    <string name="shadal_family">샤달 패밀리</string>
+    <string name="shadal_yeon_geon">샤달 : 연건 캠퍼스</string>
+
+
     <string-array name="categories">
         <item>치킨</item>
         <item>피자</item>

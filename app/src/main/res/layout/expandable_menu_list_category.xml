@@ -8,6 +8,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
+    android:paddingLeft="35dp"
+    android:paddingRight="0dp"
     android:maxLines="2"
     android:text="TextView"
     views:weight="extra_bold"

@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="7dp"
         android:textSize="15.3sp"
         views:weight="extra_bold"
         android:color="@android:color/black"
