@@ -1,7 +1,7 @@
 package info.android.sqlite.helper;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -24,8 +24,7 @@ import info.android.sqlite.model.Menu_data;
 import info.android.sqlite.model.Restaurant;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	
-	private Context mContext = null;
+	private Activity mActivity = null;
 	
     // Database Path
     private static String DATABASE_PATH;
@@ -50,10 +49,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_MENU = "create table menus (id INTEGER PRIMARY KEY, menu TEXT, section TEXT, "
             + "price INT, restaurant_id INT);";
 
-    public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.mContext = context;
-        DATABASE_PATH = "/data/data/" + mContext.getPackageName() + "/databases/";
+    public DatabaseHelper(Activity activity) {
+        super(activity, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mActivity = activity;
+        DATABASE_PATH = "/data/data/" + mActivity.getPackageName() + "/databases/";
     }
     public boolean doesDatabaseExist(){
     	File dbFile = new File(DATABASE_PATH + DATABASE_NAME);
@@ -62,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     public void copyDataBase() throws IOException {
         // Open your local db as the input stream
-        InputStream myInput = mContext.getAssets().open("databases/"+DATABASE_NAME);
+        InputStream myInput = mActivity.getAssets().open("databases/"+DATABASE_NAME);
         // Path to the just created empty db
         String outFileName = DATABASE_PATH + DATABASE_NAME;
         OutputStream myOutput = new FileOutputStream(outFileName);
@@ -96,7 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
-    		mContext.deleteDatabase(DATABASE_NAME);
+    		mActivity.deleteDatabase(DATABASE_NAME);
     	}
     	/*
         try {
@@ -233,7 +232,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // 혹시 같은 음식점 2개 이상 들어간 경우
                 if (c.getCount() > 1) {
                     db.delete(TABLE_RES, "server_id=?", new String[]{String.valueOf(res.getInt("id"))});
-                    Server server = new Server(this.mContext);
+                    Server server = new Server(this.mActivity);
                     server.updateRestaurant(res.getInt("id"), "12:00");
                 }
 
@@ -242,11 +241,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.moveToFirst();
                 // 업데이트가 필요한 경우.
                 if(!res.getString("updated_at").equals(c.getString(c.getColumnIndex("updated_at")))){
-                    Server server = new Server(this.mContext);
+                    Server server = new Server(this.mActivity);
                     server.updateRestaurant(res.getInt("id"), c.getString(c.getColumnIndex("updated_at")));
                 }
             }else{
-                Server server = new Server(this.mContext);
+                Server server = new Server(this.mActivity);
                 server.updateRestaurant(res.getInt("id"), "12:00");
             }
             c.close();
@@ -283,7 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // 혹시 같은 음식점 2개 이상 들어간 경우
                 if (c.getCount() > 1) {
                     db.delete(TABLE_RES, "server_id=?", new String[]{String.valueOf(res.getInt("id"))});
-                    Server server = new Server(this.mContext);
+                    Server server = new Server(this.mActivity);
                     if(mAdapter != null)
                         server.updateRestaurant(res.getInt("id"), "12:00", mAdapter);
                     else
@@ -295,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 c.moveToFirst();
                 // 업데이트가 필요한 경우.
                 if(!res.getString("updated_at").equals(c.getString(c.getColumnIndex("updated_at")))){
-                    Server server = new Server(this.mContext);
+                    Server server = new Server(this.mActivity);
                    // Log.d("tag", "Update with mAdaper");
                     if(mAdapter != null)
                         server.updateRestaurant(res.getInt("id"), c.getString(c.getColumnIndex("updated_at")), mAdapter);
@@ -303,7 +302,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         server.updateRestaurant(res.getInt("id"), c.getString(c.getColumnIndex("updated_at")));
                 }
             }else{
-                Server server = new Server(this.mContext);
+                Server server = new Server(this.mActivity);
                 if(mAdapter != null)
                     server.updateRestaurant(res.getInt("id"), "12:00", mAdapter);
                 else

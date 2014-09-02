@@ -139,7 +139,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         if (updateActionBarOnCreateView)
             updateActionBar();
 
-        ListView resultView = (ListView) inflater.inflate(R.layout.activity_restaurant, container, false);
+        ListView resultView = (ListView) inflater.inflate(R.layout.fragment_restaurant, container, false);
 
         //Query database
         db = new DatabaseHelper(mActivity);

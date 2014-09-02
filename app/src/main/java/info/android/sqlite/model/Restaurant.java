@@ -1,6 +1,10 @@
 package info.android.sqlite.model;
 
-public class Restaurant {
+import java.io.Serializable;
+
+public class Restaurant implements Serializable {
+        public static final long serialVersionUID = 20140902L;
+
 		public int id;
         public int server_id;
 	    public String name;

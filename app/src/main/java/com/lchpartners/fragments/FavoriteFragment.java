@@ -11,12 +11,15 @@ import android.widget.ListView;
 
 import com.lchpartners.shadal.R;
 
+import info.android.sqlite.helper.DatabaseHelper;
+
 /**
  * Created by Gwangrae Kim on 2014-09-02.
  */
 public class FavoriteFragment extends Fragment implements ActionBarUpdater {
     private boolean updateActionBarOnCreateView = false;
     private Activity mActivity;
+    private DatabaseHelper mDBHelper;
 
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
@@ -25,9 +28,11 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = getActivity();
+        mDBHelper = new DatabaseHelper(mActivity);
         if (updateActionBarOnCreateView)
             updateActionBar();
         ListView resultView = (ListView) inflater.inflate(R.layout.fragment_more, container, false);
+        //mDBHelper.getFavoriteRestaurant();
         return resultView;
     }
 

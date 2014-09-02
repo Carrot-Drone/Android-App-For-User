@@ -1,12 +1,7 @@
 package com.lchpartners.shadal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -14,7 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.lchpartners.shadal.ScreenSlidePageFragment;
+import java.util.ArrayList;
 
 import info.android.sqlite.helper.DatabaseHelper;
 import info.android.sqlite.model.Restaurant;
@@ -23,8 +18,7 @@ public class FlyerActivity extends FragmentActivity {
 	private long res_id;
     private Restaurant restaurant;
     private ArrayList<String> urls;
-    private DatabaseHelper mDbHelper;
-	
+    
 	private ViewPager mPager;
 
     private PagerAdapter mPagerAdapter;
@@ -55,10 +49,10 @@ public class FlyerActivity extends FragmentActivity {
 	    // set PhoneNumber from Restaurant Activity
 		Intent caller = getIntent();
 		res_id = caller.getIntExtra("res_id", 0);
-        Context context = getApplicationContext();
-        mDbHelper = new DatabaseHelper(context);
-        restaurant = mDbHelper.getRestaurant(res_id);
-        urls = mDbHelper.getALLURLsForRestaurant(res_id);
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        restaurant = dbHelper.getRestaurant(res_id);
+        urls = dbHelper.getALLURLsForRestaurant(res_id);
+        dbHelper.closeDB();
 
         imgCount = urls.size();
 		

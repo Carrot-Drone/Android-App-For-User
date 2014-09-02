@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.UnsupportedEncodingException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import info.android.sqlite.helper.DatabaseHelper;
@@ -40,7 +41,9 @@ import info.android.sqlite.model.Restaurant;
  * Created by Gwangrae Kim on 2014-09-01.
  */
 public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickListener {
-    public static class ExpandableMenuAdapter extends BaseExpandableListAdapter {
+    public static class ExpandableMenuAdapter extends BaseExpandableListAdapter implements Serializable {
+        public static final long serialVersionUID = 20140902L;
+
         //Data references
         private ArrayList<String> catList;
         private ArrayList<ArrayList<String>> menuList;
@@ -64,6 +67,13 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
             this.priceList = priceList;
         }
 
+        public void changeDatasetReferences(ArrayList<String> catList,
+                                     ArrayList<ArrayList<String>> menuList,
+                                     ArrayList<ArrayList<String>> priceList) {
+            this.catList = catList;
+            this.menuList = menuList;
+            this.priceList = priceList;
+        }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
@@ -80,7 +90,7 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
                                  View convertView, ViewGroup parent) {
             TextView menuText, priceText;
             if(convertView == null) {
-                convertView = inflater.inflate(R.layout.expandable_item, null);
+                convertView = inflater.inflate(R.layout.expandable_menu_list_item, null);
                 MenuViewHolder menuViewHolder = new MenuViewHolder();
 
                 menuText = (TextView)convertView.findViewById(R.id.text_view_menu_name);
@@ -127,8 +137,8 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if(convertView ==  null)
-                convertView = inflater.inflate(R.layout.expandable_category, null);
-            ((TextView) convertView).setText(catList.get(groupPosition));
+                convertView = inflater.inflate(R.layout.expandable_menu_list_category, null);
+            ((TextView) convertView).setText("   "+catList.get(groupPosition));
             convertView.setBackgroundColor(0x00000000);
             return convertView;
         }
@@ -147,18 +157,24 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
     private final static String TAG = "MenuFragment";
     protected final static String EXTRA_RESTAURANT_ID = "resId";
 
-    protected int restaurantId = -1;
-    protected DatabaseHelper db;
+    protected int mRestaurantID = -1;
     protected Restaurant restaurant;
     protected ArrayList<String> sectionList;
     protected ArrayList<ArrayList<String>> menuList;
     protected ArrayList<ArrayList<String>> priceList;
-    protected ExpandableListView elView;
+    protected ExpandableListView menuListView;
 
     protected Activity mActivity;
     protected boolean updateActionBarOnCreateView = false;
 
+    /**
+     *
+     * @param restaurantId give RESTAURANT_RANDOM to initialize the view with a random restaurant.
+     * @param rootView
+     * @param updateActionBarOnCreateView
+     */
     public void setupView (int restaurantId, View rootView, boolean updateActionBarOnCreateView) {
+        mActivity = getActivity();
         setRestaurantFromDatabase(restaurantId);
         if(updateActionBarOnCreateView)
             updateActionBar();
@@ -206,27 +222,37 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
 
         timeView.setText(timeString);
 
-        elView = (ExpandableListView) rootView.findViewById(R.id.expandableListView_menus);
-        elView.setIndicatorBounds(0, 30);
+        menuListView = (ExpandableListView) rootView.findViewById(R.id.expandableListView_menus);
 
-        elView.setAdapter(new ExpandableMenuAdapter(mActivity,sectionList,menuList,priceList));
+        ExpandableMenuAdapter adapter = new ExpandableMenuAdapter(mActivity, sectionList, menuList, priceList);
+        menuListView.setAdapter(adapter);
+
         TextView couponString = (TextView) rootView.findViewById(R.id.textview_couponString);
 
         if(restaurant.has_coupon == true)
             couponString.setText(restaurant.coupon_string);
         else
             couponString.setVisibility(View.GONE);
+
+        rootView.invalidate();
     }
-    public void random() {
-       setupView(db.getRandomRestaurant().id, this.getView(), true);
+    public void randomize() {
+        setupView(RESTAURANT_RANDOM, this.getView(), true);
     }
 
+    public final static int RESTAURANT_RANDOM = -1000;
     protected void setRestaurantFromDatabase(int res_id){
-        db = new DatabaseHelper(mActivity);
-
-        restaurant = db.getRestaurant((long)res_id);
+        DatabaseHelper db = new DatabaseHelper(mActivity);
+        if (res_id == RESTAURANT_RANDOM) {
+            restaurant = db.getRandomRestaurant();
+        }
+        else {
+            restaurant = db.getRestaurant((long)res_id);
+        }
 
         ArrayList<Menu_data> menus = db.getAllMenusByRestaurant((long)restaurant.id);
+        db.closeDB();
+
         int menu_size = menus.size();
 
         sectionList = new ArrayList<String>();
@@ -259,10 +285,6 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         sectionList.add(current_sec);
         menuList.add(menuList_i);
         priceList.add(priceList_i);
-
-        // release memory
-        menuList_i = null;
-        priceList_i = null;
     }
 
     public boolean isConnected(){
@@ -287,14 +309,14 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mActivity = getActivity();
-        this.restaurantId = getArguments().getInt(EXTRA_RESTAURANT_ID);
-        this.setRestaurantFromDatabase(restaurantId);
+        this.mRestaurantID = getArguments().getInt(EXTRA_RESTAURANT_ID);
+        this.setRestaurantFromDatabase(mRestaurantID);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View resultView = inflater.inflate(R.layout.activity_menu,null);
-        setupView(this.restaurantId, resultView, updateActionBarOnCreateView);
+        View resultView = inflater.inflate(R.layout.fragment_menu,null);
+        setupView(this.mRestaurantID, resultView, updateActionBarOnCreateView);
         return resultView;
     }
 
@@ -309,15 +331,19 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
 
         NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.text_view_menus_title);
         final ImageButton starBtn = (ImageButton) titleBar.findViewById(R.id.btn_star);
-        title.setText(restaurant.name);
-        starBtn.setSelected(restaurant.is_favorite);
-        starBtn.setOnClickListener(new OnClickListener() {
+        title.setText(restaurant.getName());
+        starBtn.setSelected(restaurant.getFavorite());
+        starBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick (View v) {
-                DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-                dbHelper.toggleFavorite(restaurantId);
-                starBtn.setSelected(!restaurant.is_favorite);
-                dbHelper.closeDB();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
+                    dbHelper.toggleFavorite(restaurant.getId());
+                    restaurant.setFavorite(!restaurant.getFavorite());
+                    v.setSelected(restaurant.getFavorite());
+                    dbHelper.closeDB();
+                }
+                return false;
             }
         });
 
@@ -329,47 +355,38 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
     @Override
     public void onClick(View callBtn) {
         switch(callBtn.getId()){
-            case R.id.editText_phonenumber : sendLog(restaurant.id);break;
-            default : break;
+            case R.id.editText_phonenumber :
+                sendLog(restaurant.id);
+                break;
         }
     }
 
     protected void sendLog(int restaurantId){
-        //Log.d("sendLog", "sendLog");
         CallLogSender sender = new CallLogSender(mActivity);
         sender.execute(String.valueOf(restaurantId));
-        try {
-            if(sender.get() != null)
-                Log.d("sendLog",sender.get().toString());
-            else
-                Log.e("sendLog","Null response returned");
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
+     * TODO - refactor (names and so on...)
      * @author Sukwon Choi
      * @since 2014.09.01
      */
     protected static class CallLogSender extends AsyncTask<String, Void, HttpResponse> {
-        private Context context;
-        public CallLogSender(Context context) {
-            this.context = context;
+        private final static String TAG = "CallLogSender";
+
+        private Activity mActivity;
+        public CallLogSender(Activity activity) {
+            this.mActivity = activity;
         }
 
         @Override
         protected HttpResponse doInBackground(String... arg0) {
             int res_id = Integer.parseInt(arg0[0]);
 
-            DatabaseHelper db = new DatabaseHelper(context);
-            Restaurant res = db.getRestaurant((long)res_id);
+            DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
+            Restaurant res = dbHelper.getRestaurant((long)res_id);
 
-            try{
+            try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost("http://services.snu.ac.kr:3111/new_call");
                 ArrayList<BasicNameValuePair> value = new ArrayList<BasicNameValuePair>();
@@ -377,19 +394,16 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
                 value.add(new BasicNameValuePair("name", res.getName()));
                 value.add(new BasicNameValuePair("device", "android"));
                 value.add(new BasicNameValuePair("campus", Server.CAMPUS));
-
-                try {
-                    httppost.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
-                }
-                catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                httppost.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
 
                 return httpclient.execute(httppost);
-
             }
-            catch(Exception e){
+            catch (Exception e) {
+                Log.e(TAG,"",e);
                 return null;
+            }
+            finally {
+                dbHelper.closeDB();
             }
         }
 

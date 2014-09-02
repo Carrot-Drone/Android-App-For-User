@@ -3,12 +3,12 @@ package com.lchpartners.shadal;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -25,6 +25,7 @@ import com.lchpartners.fragments.MoreFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Stack;
 
 import info.android.sqlite.helper.DatabaseHelper;
@@ -42,12 +43,16 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     /**
      * Created by Gwangrae Kim on 2014-08-25.
+     * TODO - it's not actually serializable
      */
-    public static class ShadalTabsAdapter extends FragmentPagerAdapter {
+    public static class ShadalTabsAdapter extends FragmentPagerAdapter implements Serializable {
+        public static final long serialVersionUID = 20140902L;
+
         /**
          * Simple record for generating a new fragment instance.
          */
-        public static class FragmentRecord {
+        public static class FragmentRecord implements Serializable {
+            public static final long serialVersionUID = 20140902L;
             public String className;
             public int param0;
 
@@ -97,7 +102,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         public ShadalTabsAdapter(FragmentManager fm, MainActivity activity) {
             super(fm);
             this.mActivity = activity;
-            this.mDbHelper = mActivity.mDbHelper;
             this.mFragementManager = fm;
             for (int i = 0; i < isRootLoad.length ; i++) {
                 isRootLoad[i] = true;
@@ -105,13 +109,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             //Generate Fragments
             mFirstPageStack.push(new FragmentRecord(CategoryFragment.class));
             mSecondPageStack.push(new FragmentRecord(FavoriteFragment.class));
-            mThirdPageStack.push(new FragmentRecord(MenuFragment.class, mDbHelper.getRandomRestaurant().id));
+            mThirdPageStack.push(new FragmentRecord(MenuFragment.class, MenuFragment.RESTAURANT_RANDOM));
             mFourthPageStack.push(new FragmentRecord(MoreFragment.class));
         }
 
         private FragmentManager mFragementManager;
         private MainActivity mActivity;
-        private DatabaseHelper mDbHelper;
 
         //Back stacks for each page
         private Stack<FragmentRecord> mFirstPageStack = new Stack<FragmentRecord>();
@@ -128,13 +131,20 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         //TODO - convert above declarations (too much..) to array like below.
         private boolean[] isRootLoad = new boolean[4]; //Used to suppress updateActionBar() for the first launch.
 
-        private Stack<FragmentRecord> getStack(int tab) {
+        public Stack<FragmentRecord> getStack(int tab) {
 //            Log.e(TAG, "getStack "+Integer.valueOf(tab).toString());
             if (tab == TAB_MAIN) return mFirstPageStack;
             else if (tab == TAB_FAVORITE) return mSecondPageStack;
             else if (tab == TAB_RANDOM) return mThirdPageStack;
             else if (tab == TAB_MORE) return mFourthPageStack;
             else return null;
+        }
+
+        public void setStack(int tab, Stack<FragmentRecord> stack) {
+            Stack<FragmentRecord> currentTarget = getStack(tab);
+            currentTarget.clear();
+            currentTarget.addAll(stack);
+            //TODO : safety checks
         }
 
         private boolean isValid(int tab) {
@@ -146,8 +156,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else return false;
         }
 
-        private boolean isAllTabsValid() {
-//            Log.e(TAG, "isAllTabsValid");
+        private boolean areAllTabsValid() {
+//            Log.e(TAG, "areAllTabsValid");
             return isFirstPageValid && isSecondPageValid && isThirdPageValid && isFourthPageValid;
         }
 
@@ -182,7 +192,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         @Override
         public int getItemPosition(Object object) {
  //           Log.e(TAG, "getItemPosition");
-            if (isAllTabsValid()) {
+            if (areAllTabsValid()) {
  //               Log.e(TAG, "No change");
                 return POSITION_UNCHANGED;
             }
@@ -235,6 +245,22 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
         }
 
+        public void popUntilRootPage(int tab) {
+//            Log.e(TAG, "pop "+Integer.valueOf(tab).toString());
+            Stack<FragmentRecord> currStack = getStack(tab);
+
+            while (currStack.size() > 1) {
+                Fragment previousTop = getCurrentFragment(tab);
+                mFragementManager.beginTransaction().remove(previousTop).commit();
+                mFragementManager.executePendingTransactions();
+                mCurrentFragments.put(tab, null);
+
+                currStack.pop(); //Remove current Fragment's record from the stack.
+                setValidity(tab, false);
+                notifyDataSetChanged();
+            }
+        }
+
         public Fragment getCurrentFragment(int tab) {
 //            Log.e(TAG, "getCurrentFragment "+Integer.valueOf(tab).toString());
             return mCurrentFragments.get(tab);
@@ -261,8 +287,17 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private ImageButton mSelectedTabBtn, mMainBtn, mFavoriteBtn, mRandomBtn, mMoreBtn;
     private int mCurrTab = 0, mNextTab = 0;
 
-    //For handling data
-    DatabaseHelper mDbHelper;
+    private static final String KEY_STACKS = "stacks";
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.e(TAG,"save");
+        Stack[] stacks = new Stack [TAB_COUNT];
+        for (int i = 0; i < TAB_COUNT; i++) {
+            stacks[i] = mTabsAdapter.getStack(i);
+        }
+        outState.putSerializable(KEY_STACKS, stacks);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,26 +306,27 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         // 처음 설치시 assets/databases/Shadal 파일로 디비 설정
         try{
-            Context context = getApplicationContext();
-            mDbHelper = new DatabaseHelper(context);
-            boolean dbExists = mDbHelper.doesDatabaseExist();
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            boolean dbExists = dbHelper.doesDatabaseExist();
 
             SQLiteDatabase db;
 
             // Database file이 없거나, version이 맞지 않으면..
-            String version = PrefUtil.getVersion(getApplicationContext());
+            String version = PrefUtil.getVersion(this);
 //            Log.d("tag", "original version :"+version + " latest Version : " + PrefUtil.VERSION);
 
             if(!dbExists || !version.equals(PrefUtil.VERSION)){
                 PrefUtil.setVersion(getApplicationContext());
                 //get database, we will override it in next steep
                 //but folders containing the database are created
-                db = mDbHelper.getWritableDatabase();
+                db = dbHelper.getWritableDatabase();
                 db.close();
                 //copy database
-                mDbHelper.copyDataBase();
+                dbHelper.copyDataBase();
             }
-            db = mDbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
+            //TODO - the variable db is not used anymore after this.
+            dbHelper.closeDB();
         }
         catch(SQLException eSQL){
 //            Log.e(TAG,"Cannot open database");
@@ -307,6 +343,19 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mTabsAdapter);
         mPager.setOnPageChangeListener(this);
+
+        //Restore fragment backstacks (if exists)
+        if (savedInstanceState != null) {
+            Stack[] stacks = (Stack[]) savedInstanceState.getSerializable(KEY_STACKS);
+            if (stacks != null) {
+                Log.e(TAG,"restore");
+                for (int i = 0; i < TAB_COUNT; i++) {
+                    mTabsAdapter.setStack(i,
+                            (Stack <ShadalTabsAdapter.FragmentRecord>) stacks[i]);
+                }
+            }
+        }
+
 
         for (int i = (TAB_COUNT-1); i >= 0; i--) {
             mPager.setCurrentItem(i); // init items
@@ -327,12 +376,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mSelectedTabBtn = mMainBtn;
     }
 
-    @Override
-    public void onDestroy() {
-        mDbHelper.closeDB();
-        super.onDestroy();
-    }
-
     /**
      * NOTE : Each fragment is responsible for refreshing the options menu on scroll events.
      */
@@ -349,8 +392,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     public void onClick (View v) {
         int id = v.getId();
         //When the user pressed the same tab.
-        if (id == R.id.button_tab_random) {
-            //Except random button
+        if (id == R.id.button_tab_random || id == R.id.button_tab_main) {
+            //Except randomize and home button
         }
         else if (id == mSelectedTabBtn.getId()) {
             return;
@@ -359,6 +402,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mSelectedTabBtn.setSelected(false);
         if (id == R.id.button_tab_main) {
             mPager.setCurrentItem(TAB_MAIN, true);
+            mTabsAdapter.popUntilRootPage(TAB_MAIN);
             mSelectedTabBtn = mMainBtn;
         }
         else if (id == R.id.button_tab_favorite) {
@@ -368,8 +412,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         else if (id == R.id.button_tab_random) {
             mPager.setCurrentItem(TAB_RANDOM, true);
             MenuFragment menuFragment = (MenuFragment) mTabsAdapter.getCurrentFragment(TAB_RANDOM);
-            menuFragment.random();
-            menuFragment.getView().invalidate();
+            menuFragment.randomize();
             mSelectedTabBtn = mRandomBtn;
         }
         else if (id == R.id.button_tab_more) {
