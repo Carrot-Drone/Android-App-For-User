@@ -111,7 +111,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
                 public void onClick(View v) {
                     Log.e("tag", "called");
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
-                    adapter.push(MainActivity.TAB_MAIN,
+                    adapter.push(TAB_TO_ATTACH_MENU_FRAGMENT,
                             new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));
                 }
             });
