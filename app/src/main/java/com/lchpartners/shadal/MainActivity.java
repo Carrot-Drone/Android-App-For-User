@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -18,15 +17,19 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.lchpartners.apphelper.preference.PrefUtil;
+import com.lchpartners.apphelper.server.Server;
 import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
+import com.lchpartners.fragments.MoreFragment;
 import com.lchpartners.fragments.MenuFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import info.android.sqlite.helper.DatabaseHelper;
+import info.android.sqlite.model.Restaurant;
 
 
 public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
@@ -76,6 +79,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
             else if(record.className.equals(MenuFragment.class.getSimpleName())) {
                 return MenuFragment.newInstance(record.param0);
+            }else if(record.className.equals(MoreFragment.class.getSimpleName())){
+                return MoreFragment.newInstance(record.param0);
             }
             else return null;
         }
@@ -99,7 +104,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             mFirstPageStack.push(new FragmentRecord(CategoryFragment.class));
             mSecondPageStack.push(new FragmentRecord(RestaurantsFragment.class, 0));
             mThirdPageStack.push(new FragmentRecord(MenuFragment.class, mDbHelper.getRandomRestaurant().id));
-            mFourthPageStack.push(new FragmentRecord(RestaurantsFragment.class, 2));
+            mFourthPageStack.push(new FragmentRecord(MoreFragment.class, 0));
         }
 
         private FragmentManager mFragementManager;
@@ -251,6 +256,10 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Context context2 = getApplicationContext();
+        mDbHelper = new DatabaseHelper(context2);
+        mDbHelper.getFavoriteRestaurant();
+
         // 처음 설치시 assets/databases/Shadal 파일로 디비 설정
         try{
             Context context = getApplicationContext();
@@ -285,6 +294,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             finish();
         }
 
+
         mTabsAdapter = new ShadalTabsAdapter(getFragmentManager(), this);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mTabsAdapter);
@@ -303,6 +313,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mMoreBtn.setOnClickListener(this);
 
         mSelectedTabBtn = mMainBtn;
+
+
     }
 
     @Override

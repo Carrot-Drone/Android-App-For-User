@@ -44,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_FLYER = "flyers";
 
     private static final String CREATE_TABLE_RESTAURANT = "create table restaurants (id INTEGER PRIMARY KEY, server_id INT, name TEXT, category TEXT, "
-            + "openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer BOOL, has_coupon BOOL, is_new BOOL, is_favorite BOOL, coupon_string TEXT, updated_at TEXT);";
+            + "openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer INTEGER, has_coupon INTEGER, is_new INTEGER, is_favorite INTEGER, coupon_string TEXT, updated_at TEXT);";
     private static final String CREATE_TABLE_FLYERS = "create table flyers (id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT);";
     private static final String CREATE_TABLE_MENU = "create table menus (id INTEGER PRIMARY KEY, menu TEXT, section TEXT, "
             + "price INT, restaurant_id INT);";
@@ -112,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Restaurant> getFavoriteRestaurant(){
         ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE is_favorite = TRUE";
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE is_favorite = 1";
 
         Log.e(LOG, selectQuery);
 
@@ -179,10 +179,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("openingHours", res.getString("openingHours"));
         values.put("closingHours", res.getString("closingHours"));
 
-        values.put("has_flyer", res.getBoolean("has_flyer"));
-        values.put("has_coupon", res.getBoolean("has_coupon"));
-        values.put("is_new", false);
-        values.put("is_favorite", false);
+        values.put("has_flyer", (res.getBoolean("has_flyer"))? 1:0);
+        values.put("has_coupon", (res.getBoolean("has_coupon"))? 1:0);
+        values.put("is_new", (res.getBoolean("is_new"))? 1:0);
+        values.put("is_favorite", 0);
 
         values.put("coupon_string", res.getString("coupon_string"));
 
