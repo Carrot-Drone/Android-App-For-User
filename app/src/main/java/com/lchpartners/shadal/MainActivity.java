@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             //May cause memory issue if used with fragments with large images
         }
 
-        private SparseArray<Fragment> mCurrentFragments = new SparseArray<Fragment>();
+        private SparseArray<Fragment> mCurrentTopFragments = new SparseArray<Fragment>();
         public ShadalTabsAdapter(FragmentManager fm, MainActivity activity) {
             super(fm);
             this.mActivity = activity;
@@ -168,6 +168,11 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else if (tab == TAB_MORE) isFourthPageValid = isValid;
         }
 
+        public void invalidate(int tab) {
+            setValidity(tab, false);
+            notifyDataSetChanged();
+        }
+
         @Override
         public Fragment getItem(int tab) {
 //            Log.e(TAG, "getItem "+Integer.valueOf(tab).toString());
@@ -179,7 +184,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else ((ActionBarUpdater) result).setUpdateActionBarOnCreateView();
 
             setValidity(tab, true);
-            mCurrentFragments.put(tab, result);
+            mCurrentTopFragments.put(tab, result);
             return result;
         }
 
@@ -204,15 +209,14 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         public void push(int tab, FragmentRecord newFragmentRecord) {
  //           Log.e(TAG, "push "+Integer.valueOf(tab).toString()+" "+newFragmentRecord.className);
 
-            Fragment previousTop = getCurrentFragment(tab);
+            Fragment previousTop = getTopFragment(tab);
             mFragementManager.beginTransaction().remove(previousTop).commit();
             mFragementManager.executePendingTransactions();
-            mCurrentFragments.put(tab, null);
+            mCurrentTopFragments.put(tab, null);
 
             Stack<FragmentRecord> currStack = getStack(tab);
             currStack.push(newFragmentRecord);
-            setValidity(tab, false);
-            notifyDataSetChanged();
+            invalidate(tab);
         }
 
         //TODO : notify user before finishing!
@@ -233,14 +237,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 else mActivity.finish();
             }
             else {
-                Fragment previousTop = getCurrentFragment(tab);
+                Fragment previousTop = getTopFragment(tab);
                 mFragementManager.beginTransaction().remove(previousTop).commit();
                 mFragementManager.executePendingTransactions();
-                mCurrentFragments.put(tab, null);
+                mCurrentTopFragments.put(tab, null);
 
                 currStack.pop(); //Remove current Fragment's record from the stack.
-                setValidity(tab, false);
-                notifyDataSetChanged();
+                invalidate(tab);
             }
         }
 
@@ -249,20 +252,21 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             Stack<FragmentRecord> currStack = getStack(tab);
 
             while (currStack.size() > 1) {
-                Fragment previousTop = getCurrentFragment(tab);
+                Fragment previousTop = getTopFragment(tab);
                 mFragementManager.beginTransaction().remove(previousTop).commit();
                 mFragementManager.executePendingTransactions();
-                mCurrentFragments.put(tab, null);
+                mCurrentTopFragments.put(tab, null);
 
                 currStack.pop(); //Remove current Fragment's record from the stack.
-                setValidity(tab, false);
-                notifyDataSetChanged();
+                invalidate(tab);
             }
+            if (currStack.size() == 1)
+                invalidate(tab);
         }
 
-        public Fragment getCurrentFragment(int tab) {
-//            Log.e(TAG, "getCurrentFragment "+Integer.valueOf(tab).toString());
-            return mCurrentFragments.get(tab);
+        public Fragment getTopFragment(int tab) {
+//            Log.e(TAG, "getTopFragment "+Integer.valueOf(tab).toString());
+            return mCurrentTopFragments.get(tab);
         }
     }
 
@@ -403,16 +407,18 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         else if (id == R.id.button_tab_favorite) {
             mPager.setCurrentItem(TAB_FAVORITE, true);
             mTabsAdapter.popUntilRootPage(TAB_FAVORITE);
-            ((FavoriteFragment) mTabsAdapter.getCurrentFragment(TAB_FAVORITE)).invalidate();
             mSelectedTabBtn = mFavoriteBtn;
+            ((FavoriteFragment) mTabsAdapter.getTopFragment(TAB_FAVORITE)).invalidate();
         }
         else if (id == R.id.button_tab_random) {
             mPager.setCurrentItem(TAB_RANDOM, true);
-            MenuFragment menuFragment = (MenuFragment) mTabsAdapter.getCurrentFragment(TAB_RANDOM);
+            MenuFragment menuFragment = (MenuFragment) mTabsAdapter.getTopFragment(TAB_RANDOM);
             menuFragment.randomize();
             mSelectedTabBtn = mRandomBtn;
         }
         else if (id == R.id.button_tab_more) {
+            mTabsAdapter.invalidate(TAB_MORE);
+            //It often get removed by FragmentManager, so it needs to be redrawed before scroll
             mPager.setCurrentItem(TAB_MORE, true);
             mSelectedTabBtn = mMoreBtn;
         }
@@ -456,7 +462,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
             mNextTab = position;
             //Change action bar content for the next page.
-            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getCurrentFragment(mNextTab);
+            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getTopFragment(mNextTab);
             nextPageFragment.updateActionBar();
 
             mSelectedTabBtn.setSelected(false);
@@ -484,7 +490,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             getFragmentManager().executePendingTransactions();
 
             //Double-check action bar and bottom button update (to deal with fast scroll)
-            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getCurrentFragment(mCurrTab);
+            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getTopFragment(mCurrTab);
             nextPageFragment.updateActionBar();
 
             mSelectedTabBtn.setSelected(false);

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:views="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,39 +16,114 @@
         android:id="@+id/tabs"
         android:layout_below="@id/pager"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="60dp"
         android:weightSum="4"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:background="@color/shadal_default">
-        <ImageButton
-            android:id="@+id/button_tab_main"
-            android:layout_height="match_parent"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:src="@drawable/selector_bot_ic_main"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/button_tab_favorite"
             android:layout_height="match_parent"
-            android:layout_width="0dp"
             android:layout_weight="1"
-            android:src="@drawable/selector_bot_ic_star"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/button_tab_random"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/button_tab_main"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:scaleType="fitCenter"
+                android:paddingTop="4dp"
+                android:src="@drawable/selector_bot_ic_main"
+                android:background="@android:color/transparent"/>
+            <com.lchpartners.views.NamsanTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                views:weight="bold"
+                android:textSize="12sp"
+                android:text="@string/title_main"
+                android:textColor="@drawable/selector_text_color"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_width="0dp"
             android:layout_weight="1"
-            android:src="@drawable/selector_bot_ic_random"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/button_tab_more"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/button_tab_favorite"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:paddingTop="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/selector_bot_ic_star"
+                android:background="@android:color/transparent"/>
+            <com.lchpartners.views.NamsanTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                views:weight="bold"
+                android:textSize="12sp"
+                android:text="@string/title_favorite"
+                android:textColor="@drawable/selector_text_color"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_width="0dp"
             android:layout_weight="1"
-            android:src="@drawable/selector_bot_ic_more"
-            android:background="@android:color/transparent"/>
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/button_tab_random"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:paddingTop="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/selector_bot_ic_random"
+                android:background="@android:color/transparent"/>
+            <com.lchpartners.views.NamsanTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                views:weight="bold"
+                android:textSize="12sp"
+                android:text="@string/title_random"
+                android:textColor="@drawable/selector_text_color"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/button_tab_more"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:paddingTop="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/selector_bot_ic_more"
+                android:background="@android:color/transparent"/>
+            <com.lchpartners.views.NamsanTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                views:weight="bold"
+                android:textSize="12sp"
+                android:text="@string/title_more"
+                android:textColor="@drawable/selector_text_color"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                />
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
+

@@ -4,10 +4,11 @@
     <string name="app_name">샤달</string>
     <string name="app_subtitle">: 서울대학교 대표 배달음식앱</string>
     <!-- previously the string above was : 서울대 배달음식 어플리케이션-->
+    <string name="title_main">메인화면</string>
     <string name="title_flyer">전단지</string>
     <string name="title_favorite">즐겨찾기</string>
     <string name="title_random">아무거나</string>
-    <string name="title_more">더 보기</string>
+    <string name="title_more">더보기</string>
     <string name="title_restaurant_search">음식점 검색</string>
     <string name="title_restaurant_search_hint">음식점 이름을 입력하세요!</string>
     <string name="title_menu">메뉴</string>
@@ -22,7 +23,7 @@
     <string name="report">맛집 제보하기</string>
     <string name="shadal_family">샤달 패밀리</string>
     <string name="shadal_yeon_geon">샤달 : 연건 캠퍼스</string>
-
+    <string name="no_info">정보 없음</string>
 
     <string-array name="categories">
         <item>치킨</item>

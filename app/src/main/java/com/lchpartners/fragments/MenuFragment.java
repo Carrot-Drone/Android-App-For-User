@@ -105,8 +105,11 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
                 priceText = menuViewHolder.priceText;
             }
             menuText.setText(menuList.get(groupPosition).get(childPosition));
-            priceText.setText(new StringBuffer(priceList.get(groupPosition).get(childPosition))
-                    .append(mContext.getString(R.string.currency)));
+            String price = priceList.get(groupPosition).get(childPosition);
+            if (Integer.valueOf(price) > 0) {
+                priceText.setText(new StringBuffer(price).append(mContext.getString(R.string.currency)));
+            }
+            else priceText.setText(mContext.getString(R.string.no_info));
 
             if(childPosition %2 == 0) convertView.setBackgroundColor(0xfffcfcfc);
             else convertView.setBackgroundColor(0xfff9f9f9);
@@ -332,15 +335,15 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
         NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.text_view_menus_title);
         final ImageButton starBtn = (ImageButton) titleBar.findViewById(R.id.btn_star);
         title.setText(restaurant.getName());
-        starBtn.setSelected(restaurant.getFavorite());
+        starBtn.setSelected(restaurant.isFavorite());
         starBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
                     dbHelper.toggleFavorite(restaurant.getId());
-                    restaurant.setFavorite(!restaurant.getFavorite());
-                    v.setSelected(restaurant.getFavorite());
+                    restaurant.setFavorite(!restaurant.isFavorite());
+                    v.setSelected(restaurant.isFavorite());
                     dbHelper.closeDB();
                 }
                 return false;

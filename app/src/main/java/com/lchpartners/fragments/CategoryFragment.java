@@ -98,6 +98,15 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
             { R.drawable.ic_chic, R.drawable.ic_pizza, R.drawable.ic_chinese, R.drawable.ic_bob,
             R.drawable.ic_dosirak, R.drawable.ic_bossam, R.drawable.ic_noodle, R.drawable.ic_etc };
 
+    public final static int getCategoryDrawableByName (String name) {
+        for (int i = 0; i < mCategoryDrawables.length ; i++) {
+            if(name.equals(mCategoryNames[i])) {
+                return mCategoryDrawables[i];
+            }
+        }
+        return -1;
+    }
+
     private Activity mActivity;
     private boolean updateActionBarOnCreateView = false;
 
