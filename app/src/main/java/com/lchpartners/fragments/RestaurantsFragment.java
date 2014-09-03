@@ -164,7 +164,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater, L
 
         //Query database
         db = new DatabaseHelper(mActivity);
-        mResults = db.getAllRestaurantsWithCategory(mCategoryName);
+        mResults = db.getAllRestaurantWithCategoryInOrder(mCategoryName);
 
         adapter = new RestaurantsAdapter((MainActivity) mActivity, mResults);
         resultView.setAdapter(adapter);

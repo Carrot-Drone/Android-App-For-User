@@ -256,7 +256,7 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
             showFlyerBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getActivity(), FlyerActivity.class).putExtra("res_id",restaurantId));
+                    startActivity(new Intent(getActivity(), FlyerActivity.class).putExtra("res_id",(int) restaurant.getId()));
                 }
             });
         }

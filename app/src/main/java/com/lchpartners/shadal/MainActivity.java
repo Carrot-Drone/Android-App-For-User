@@ -311,7 +311,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        //finish();
     }
 
     @Override

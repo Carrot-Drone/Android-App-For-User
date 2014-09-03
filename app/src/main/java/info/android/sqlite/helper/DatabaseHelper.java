@@ -167,8 +167,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList <Restaurant> getAllRestaurantWithCategoryInOrder(String category){
         ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
-        String selectFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + " AND has_flyer = 1 " + "' ORDER BY name ASC";
-        String selectNoneFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + " AND has_flyer = 0 " + "' ORDER BY name ASC";
+        String selectFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + "' AND has_flyer = 1 " + " ORDER BY name ASC";
+        String selectNoneFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + "' AND has_flyer = 0 " + " ORDER BY name ASC";
 
         //  Log.e(LOG, selectQuery);
 
@@ -179,17 +179,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (c_flyer.moveToFirst()) {
             do {
-                Restaurant res = this.getRestaurantFromCursor(c);
+                Restaurant res = this.getRestaurantFromCursor(c_flyer);
                 // adding to res list
                 ress.add(res);
-            } while (c.moveToNext());
+            } while (c_flyer.moveToNext());
         }
         if (c_non_flyer.moveToFirst()) {
             do {
-                Restaurant res = this.getRestaurantFromCursor(c);
+                Restaurant res = this.getRestaurantFromCursor(c_non_flyer);
                 // adding to res list
                 ress.add(res);
-            } while (c.moveToNext());
+            } while (c_non_flyer.moveToNext());
         }
         db.close();
 
