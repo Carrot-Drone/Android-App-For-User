@@ -1,8 +1,10 @@
-package com.lchpartners.fragments;
+package com.lchpatners.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lchpartners.shadal.MainActivity;
-import com.lchpartners.shadal.R;
+import com.lchpatners.apphelper.server.Server;
+import com.lchpatners.shadal.MainActivity;
+import com.lchpatners.shadal.R;
+import com.lchpatners.views.NamsanTextView;
 
 import java.util.ArrayList;
 
@@ -20,12 +24,11 @@ import info.android.sqlite.helper.DatabaseHelper;
 import info.android.sqlite.model.Restaurant;
 
 /**
- * Created by Gwangrae Kim on 2014-09-02.
+ * Created by Gwangrae Kim on 2014-08-30.
  */
-public class FavoriteFragment extends Fragment implements ActionBarUpdater, Locatable {
-    private boolean updateActionBarOnCreateView = false;
-    private MainActivity mActivity;
-    private static final String TAG = "FavoriteFragment";
+public class RestaurantsFragment extends Fragment implements ActionBarUpdater, Locatable {
+    private final static String EXTRA_CATEGORY_IDX = "catIdx";
+    private final static String TAG = "RestaurantsFragment";
     public String tag() {
         return TAG;
     }
@@ -38,30 +41,30 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater, Loca
         this.attachedPage = page;
     }
 
-    public static class FavoritesAdapter extends ArrayAdapter<Restaurant> {
-        private static class FavoriteViewHolder {
+    public static class RestaurantsAdapter extends ArrayAdapter<Restaurant> {
+        private static class RestaurantViewHolder {
             public TextView restaurantName;
-            public ImageView flyer, category, coupon, newRestaurant;
+            public ImageView flyer, favorite, coupon, newRestaurant;
         }
 
         private final MainActivity mActivity;
         private final ArrayList<Restaurant> values;
         private final LayoutInflater mInflater;
 
-        private int TAB_TO_ATTACH_MENU_FRAGMENT = MainActivity.TAB_FAVORITE;
+        private int TAB_TO_ATTACH_MENU_FRAGMENT = MainActivity.TAB_MAIN;
 
         /**
          * By Default, this class will attach MenuFragment to MainActivity.TAB_MAIN
          */
-        public FavoritesAdapter(MainActivity activity, ArrayList<Restaurant> restaurants) {
+        public RestaurantsAdapter(MainActivity activity, ArrayList<Restaurant> restaurants) {
             super(activity, R.layout.listview_item_restaurant, restaurants);
             this.mActivity = activity;
             this.values = restaurants;
             this.mInflater = LayoutInflater.from(activity);
         }
 
-        public FavoritesAdapter(MainActivity activity, ArrayList<Restaurant> restaurants,
-                                int tabToAttachMenuFragment) {
+        public RestaurantsAdapter(MainActivity activity, ArrayList<Restaurant> restaurants,
+                                 int tabToAttachMenuFragment) {
             this (activity, restaurants);
             this.TAB_TO_ATTACH_MENU_FRAGMENT = tabToAttachMenuFragment;
         }
@@ -69,19 +72,19 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater, Loca
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             TextView restaurantName;
-            ImageView flyer, category, coupon, newRestaurant;
+            ImageView flyer, favorite, coupon, newRestaurant;
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.listview_item_favorite, null);
+                convertView = mInflater.inflate(R.layout.listview_item_restaurant, null);
                 restaurantName = (TextView) convertView.findViewById(R.id.restaurant_name);
                 flyer = (ImageView) convertView.findViewById(R.id.flyer);
-                category = (ImageView) convertView.findViewById(R.id.category);
+                favorite = (ImageView) convertView.findViewById(R.id.favorite);
                 coupon = (ImageView) convertView.findViewById(R.id.coupon);
                 newRestaurant = (ImageView) convertView.findViewById(R.id.newRestaurant);
 
-                FavoriteViewHolder viewHolder = new FavoriteViewHolder();
+                RestaurantViewHolder viewHolder = new RestaurantViewHolder();
                 viewHolder.flyer = flyer;
-                viewHolder.category = category;
+                viewHolder.favorite = favorite;
                 viewHolder.coupon = coupon;
                 viewHolder.newRestaurant = newRestaurant;
 
@@ -89,21 +92,21 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater, Loca
                 convertView.setTag(viewHolder);
             }
             else {
-                FavoriteViewHolder viewHolder = (FavoriteViewHolder) convertView.getTag();
+                RestaurantViewHolder viewHolder = (RestaurantViewHolder) convertView.getTag();
                 restaurantName = viewHolder.restaurantName;
                 flyer = viewHolder.flyer;
-                category = viewHolder.category;
+                favorite = viewHolder.favorite;
                 coupon = viewHolder.coupon;
                 newRestaurant = viewHolder.newRestaurant;
             }
 
             final Restaurant restaurant = getItem(position);
-            int currentCategoryDrawable = CategoryFragment.getCategoryDrawableByName(restaurant.getCategory());
-            category.setImageDrawable(mActivity.getResources().getDrawable(currentCategoryDrawable));
-
             restaurantName.setText(restaurant.name);
             if(restaurant.hasFlyer()) {
                 flyer.setVisibility(View.VISIBLE);
+            }
+            if(restaurant.isFavorite()) {
+                favorite.setVisibility(View.VISIBLE);
             }
             if(restaurant.getCoupon()) {
                 coupon.setVisibility(View.VISIBLE);
@@ -115,6 +118,7 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater, Loca
             convertView.setOnClickListener(new View.OnClickListener () {
                 @Override
                 public void onClick(View v) {
+                    //Log.e("tag", "called");
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(TAB_TO_ATTACH_MENU_FRAGMENT,
                             new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));
@@ -129,68 +133,65 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater, Loca
 
     }
 
+    public static RestaurantsFragment newInstance(int categoryIndex) {
+        RestaurantsFragment rf = new RestaurantsFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putInt(EXTRA_CATEGORY_IDX, categoryIndex);
+        rf.setArguments(bdl);
+        return rf;
+    }
 
-    public static FavoriteFragment newInstance() {
-        return new FavoriteFragment();
+    private RestaurantsAdapter adapter;
+    private ArrayList<Restaurant> mResults = new ArrayList<Restaurant>();
+    private DatabaseHelper db;
+    private String mCategoryName;
+    private Activity mActivity;
+    private boolean updateActionBarOnCreateView = false;
+
+    public void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int categoryIndex = getArguments().getInt(EXTRA_CATEGORY_IDX);
+        this.mCategoryName = getResources().getStringArray(R.array.categories)[categoryIndex];
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mActivity = (MainActivity) getActivity();
-        DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-        ArrayList<Restaurant> restaurants = dbHelper.getFavoriteRestaurant();
-        dbHelper.closeDB();
-
+        this.mActivity = getActivity();
         if (updateActionBarOnCreateView)
             updateActionBar();
 
-        View resultView = inflater.inflate(R.layout.fragment_favorite, container, false);
-        ListView favoritesListView = (ListView) resultView.findViewById(R.id.list_favorite_view);
-        View noFavoritesView = resultView.findViewById(R.id.image_view_star_null);
+        ListView resultView = (ListView) inflater.inflate(R.layout.fragment_restaurant, container, false);
 
-        if (restaurants.size() == 0) {
-            favoritesListView.setVisibility(View.INVISIBLE);
-            noFavoritesView.setVisibility(View.VISIBLE);
+        //Query database
+        db = new DatabaseHelper(mActivity);
+        mResults = db.getAllRestaurantWithCategoryInOrder(mCategoryName);
+
+        adapter = new RestaurantsAdapter((MainActivity) mActivity, mResults);
+        resultView.setAdapter(adapter);
+        db.closeDB();
+
+        // check for update
+        try {
+            Server server = new Server(mActivity);
+            server.updateRestaurantInCategory(mCategoryName, adapter);
         }
-        else {
-            favoritesListView.setVisibility(View.VISIBLE); // null
-            noFavoritesView.setVisibility(View.INVISIBLE);
-            FavoritesAdapter adapter = new FavoritesAdapter(mActivity, restaurants, MainActivity.TAB_FAVORITE);
-            favoritesListView.setAdapter(adapter);
+        catch (Exception e) {
+            Log.e(TAG, "Error while communicating with server.",e);
         }
         return resultView;
-    }
-
-    public void invalidateContent() {
-        View resultView = getView();
-        View noFavoritesView = resultView.findViewById(R.id.image_view_star_null);
-        ListView favoritesListView = (ListView) resultView.findViewById(R.id.list_favorite_view);
-
-        DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-        ArrayList<Restaurant> restaurants = dbHelper.getFavoriteRestaurant();
-        dbHelper.closeDB();
-
-        if (restaurants.size() == 0) {
-            favoritesListView.setVisibility(View.GONE);
-            noFavoritesView.setVisibility(View.VISIBLE);
-        }
-        else {
-            favoritesListView.setVisibility(View.VISIBLE);
-            noFavoritesView.setVisibility(View.GONE);
-            FavoritesAdapter adapter = new FavoritesAdapter(mActivity, restaurants, MainActivity.TAB_FAVORITE);
-            favoritesListView.setAdapter(adapter);
-        }
     }
 
     public void setUpdateActionBarOnCreateView() {
         this.updateActionBarOnCreateView = true;
     }
+
     public void updateActionBar () {
         ActionBar actionBar = mActivity.getActionBar();
         //actionBar.setDisplayHomeAsUpEnabled(true);
-        ViewGroup titleBar = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.action_bar_favorite, null);
+        ViewGroup titleBar = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.action_bar_restaurant, null);
         titleBar.setLayoutParams(actionBar.getCustomView().getLayoutParams());
-
+        NamsanTextView title = (NamsanTextView) titleBar.findViewById(R.id.textview_restaurant_title);
+        title.setText(mCategoryName);
         actionBar.setCustomView(titleBar);
         mActivity.invalidateOptionsMenu();
     }

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/text_view_menu_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         views:weight="medium"
         android:textColor="@android:color/black"/>
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/text_view_menu_name"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/text_view_menu_price"

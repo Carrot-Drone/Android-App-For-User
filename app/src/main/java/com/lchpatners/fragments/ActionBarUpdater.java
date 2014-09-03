@@ -1,4 +1,4 @@
-package com.lchpartners.fragments;
+package com.lchpatners.fragments;
 
 /**
  * Created by Gwangrae Kim on 2014-08-31.

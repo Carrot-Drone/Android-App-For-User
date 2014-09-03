@@ -21,7 +21,7 @@
         android:background="#fffcfcfc"
         android:gravity="center_vertical">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:id="@+id/text_view_version_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textColor="@color/shadal_default"
             android:text="2.0.0"/>
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -57,7 +57,7 @@
         android:background="#fffcfcfc"
         android:gravity="center_vertical">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -81,7 +81,7 @@
         android:gravity="bottom"
         android:paddingBottom="6dp">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -104,7 +104,7 @@
         android:background="#fffcfcfc"
         android:gravity="center_vertical">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -127,7 +127,7 @@
         android:background="#fffcfcfc"
         android:gravity="center_vertical">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -150,7 +150,7 @@
         android:gravity="bottom"
         android:paddingBottom="6dp">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"
@@ -173,7 +173,7 @@
         android:background="#fffcfcfc"
         android:gravity="center_vertical">
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             views:weight="medium"

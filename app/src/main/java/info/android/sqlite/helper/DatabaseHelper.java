@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lchpartners.apphelper.server.Server;
-import com.lchpartners.fragments.RestaurantsFragment;
+import com.lchpatners.apphelper.server.Server;
+import com.lchpatners.fragments.RestaurantsFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

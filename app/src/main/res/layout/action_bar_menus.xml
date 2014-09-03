@@ -15,7 +15,7 @@
         android:background="#00000000"
         android:layout_alignParentRight="true"/>
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/text_view_menus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

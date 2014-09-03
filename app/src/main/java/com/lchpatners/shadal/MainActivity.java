@@ -1,4 +1,4 @@
-package com.lchpartners.shadal;
+package com.lchpatners.shadal;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -16,14 +15,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.lchpartners.apphelper.preference.PrefUtil;
-import com.lchpartners.fragments.ActionBarUpdater;
-import com.lchpartners.fragments.CategoryFragment;
-import com.lchpartners.fragments.FavoriteFragment;
-import com.lchpartners.fragments.Locatable;
-import com.lchpartners.fragments.MenuFragment;
-import com.lchpartners.fragments.MoreFragment;
-import com.lchpartners.fragments.RestaurantsFragment;
+import com.lchpatners.apphelper.preference.PrefUtil;
+import com.lchpatners.fragments.ActionBarUpdater;
+import com.lchpatners.fragments.CategoryFragment;
+import com.lchpatners.fragments.FavoriteFragment;
+import com.lchpatners.fragments.Locatable;
+import com.lchpatners.fragments.MenuFragment;
+import com.lchpatners.fragments.MoreFragment;
+import com.lchpatners.fragments.RestaurantsFragment;
 
 import java.io.IOException;
 import java.io.Serializable;

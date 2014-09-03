@@ -1,11 +1,11 @@
-package com.lchpartners.apphelper.server;
+package com.lchpatners.apphelper.server;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.lchpartners.fragments.RestaurantsFragment.RestaurantsAdapter;
+import com.lchpatners.fragments.RestaurantsFragment.RestaurantsAdapter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

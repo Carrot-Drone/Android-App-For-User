@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_margin="6dp">
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:id="@+id/editText_phonenumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:textSize="21sp"/>
     </RelativeLayout>
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/text_view_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:color="@android:color/black"
         android:text="영업 시간: " />
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/textview_couponString"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/flyer"/>
 
-        <com.lchpartners.views.NamsanTextView
+        <com.lchpatners.views.NamsanTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/image_view_show_flyer"

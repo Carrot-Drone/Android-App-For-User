@@ -1,4 +1,4 @@
-package com.lchpartners.shadal;
+package com.lchpatners.shadal;
 
 import android.app.Activity;
 import android.os.Bundle;

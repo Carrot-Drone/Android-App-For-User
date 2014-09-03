@@ -4,7 +4,7 @@ android {
     compileSdkVersion 19
     buildToolsVersion '19.1'
     defaultConfig {
-        applicationId 'com.lchpartners.shadal'
+        applicationId 'com.lchpatners.shadal'
         minSdkVersion 14
         targetSdkVersion 19
     }

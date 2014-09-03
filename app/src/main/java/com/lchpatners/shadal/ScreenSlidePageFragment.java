@@ -1,5 +1,5 @@
 
-package com.lchpartners.shadal;
+package com.lchpatners.shadal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +12,10 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import info.android.sqlite.model.Restaurant;
 

@@ -35,7 +35,7 @@
                 android:paddingTop="4dp"
                 android:src="@drawable/selector_bot_ic_main"
                 android:background="@android:color/transparent"/>
-            <com.lchpartners.views.NamsanTextView
+            <com.lchpatners.views.NamsanTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 views:weight="bold"
@@ -61,7 +61,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/selector_bot_ic_star"
                 android:background="@android:color/transparent"/>
-            <com.lchpartners.views.NamsanTextView
+            <com.lchpatners.views.NamsanTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 views:weight="bold"
@@ -87,7 +87,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/selector_bot_ic_random"
                 android:background="@android:color/transparent"/>
-            <com.lchpartners.views.NamsanTextView
+            <com.lchpatners.views.NamsanTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 views:weight="bold"
@@ -113,7 +113,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/selector_bot_ic_more"
                 android:background="@android:color/transparent"/>
-            <com.lchpartners.views.NamsanTextView
+            <com.lchpatners.views.NamsanTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 views:weight="bold"

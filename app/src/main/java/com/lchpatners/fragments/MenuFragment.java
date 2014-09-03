@@ -1,4 +1,4 @@
-package com.lchpartners.fragments;
+package com.lchpatners.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -21,10 +21,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lchpartners.apphelper.server.Server;
-import com.lchpartners.shadal.FlyerActivity;
-import com.lchpartners.shadal.R;
-import com.lchpartners.views.NamsanTextView;
+import com.lchpatners.apphelper.server.Server;
+import com.lchpatners.shadal.FlyerActivity;
+import com.lchpatners.shadal.R;
+import com.lchpatners.views.NamsanTextView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

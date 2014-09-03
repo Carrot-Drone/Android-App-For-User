@@ -1,10 +1,8 @@
-package com.lchpartners.apphelper.preference;
+package com.lchpatners.apphelper.preference;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.view.animation.AccelerateInterpolator;
 
 /**
  * Created by swchoi06 on 8/31/14.

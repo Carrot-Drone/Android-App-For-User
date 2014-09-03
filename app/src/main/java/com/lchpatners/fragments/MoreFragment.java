@@ -1,4 +1,4 @@
-package com.lchpartners.fragments;
+package com.lchpatners.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lchpartners.shadal.R;
+import com.lchpatners.shadal.R;
 
 /**
  * TODO - move all xml constants into dimens.xml

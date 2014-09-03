@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id = "@+id/restaurant_name"
         android:layout_width = "wrap_content"
         android:layout_height= "wrap_content"

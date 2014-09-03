@@ -5,7 +5,7 @@
     xmlns:views="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/textview_main_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -16,7 +16,7 @@
         android:text="@string/app_name"
         views:weight="extra_bold"
         android:textColor="@android:color/white"/>
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/textview_sub_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

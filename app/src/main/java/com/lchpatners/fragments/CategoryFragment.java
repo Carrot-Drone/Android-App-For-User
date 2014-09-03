@@ -1,4 +1,4 @@
-package com.lchpartners.fragments;
+package com.lchpatners.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lchpartners.shadal.MainActivity;
-import com.lchpartners.shadal.MainActivity.ShadalTabsAdapter;
-import com.lchpartners.shadal.MainActivity.ShadalTabsAdapter.FragmentRecord;
-import com.lchpartners.shadal.R;
+import com.lchpatners.shadal.MainActivity;
+import com.lchpatners.shadal.MainActivity.ShadalTabsAdapter;
+import com.lchpatners.shadal.MainActivity.ShadalTabsAdapter.FragmentRecord;
+import com.lchpatners.shadal.R;
 
 /**
  * Created by Gwangrae Kim on 2014-08-27.

@@ -4,7 +4,7 @@
     xmlns:views="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/textview_favorite_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

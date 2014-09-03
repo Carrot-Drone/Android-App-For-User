@@ -16,7 +16,7 @@
         android:scaleX="0.9"
         android:scaleY="0.9"
         />
-    <com.lchpartners.views.NamsanTextView
+    <com.lchpatners.views.NamsanTextView
         android:id="@+id/text_view_category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.lchpartners.views;
+package com.lchpatners.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -6,7 +6,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.lchpartners.shadal.R;
+import com.lchpatners.shadal.R;
 
 /**
  * TextView styled with Seoul Namsan Font family.
