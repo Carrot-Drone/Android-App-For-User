@@ -165,6 +165,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     */
 
+    public ArrayList <Restaurant> getAllRestaurantWithCategoryInOrder(String category){
+        ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
+        String selectFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + " AND has_flyer = 1 " + "' ORDER BY name ASC";
+        String selectNoneFlyerQuery = "SELECT  * FROM " + TABLE_RES + " WHERE category = '" + category + " AND has_flyer = 0 " + "' ORDER BY name ASC";
+
+        //  Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c_flyer = db.rawQuery(selectFlyerQuery, null);
+        Cursor c_non_flyer = db.rawQuery(selectNoneFlyerQuery, null);
+
+        // looping through all rows and adding to list
+        if (c_flyer.moveToFirst()) {
+            do {
+                Restaurant res = this.getRestaurantFromCursor(c);
+                // adding to res list
+                ress.add(res);
+            } while (c.moveToNext());
+        }
+        if (c_non_flyer.moveToFirst()) {
+            do {
+                Restaurant res = this.getRestaurantFromCursor(c);
+                // adding to res list
+                ress.add(res);
+            } while (c.moveToNext());
+        }
+        db.close();
+
+        return ress;
+    }
+
     // Create and Update Restaurant. if exist, update if not, create.
     public long updateRestaurant(JSONObject res) throws Exception{
        // Log.d("tag", "Update Restaurant " + res.getString("name"));
