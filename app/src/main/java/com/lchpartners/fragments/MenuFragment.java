@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,9 +18,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lchpartners.apphelper.server.Server;
+import com.lchpartners.shadal.FlyerActivity;
 import com.lchpartners.shadal.R;
 import com.lchpartners.views.NamsanTextView;
 
@@ -40,7 +43,7 @@ import info.android.sqlite.model.Restaurant;
 /**
  * Created by Gwangrae Kim on 2014-09-01.
  */
-public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickListener {
+public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickListener, Locatable {
     public static class ExpandableMenuAdapter extends BaseExpandableListAdapter implements Serializable {
         public static final long serialVersionUID = 20140902L;
 
@@ -158,6 +161,9 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
 
     }
     private final static String TAG = "MenuFragment";
+    public String tag() {
+        return TAG;
+    }
     protected final static String EXTRA_RESTAURANT_ID = "resId";
 
     protected int mRestaurantID = -1;
@@ -170,13 +176,21 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
     protected Activity mActivity;
     protected boolean updateActionBarOnCreateView = false;
 
+    private int attachedPage = -1;
+    public int getAttachedPage() {
+        return attachedPage;
+    }
+    public void setAttachedPage(int page) {
+        this.attachedPage = page;
+    }
+
     /**
      *
      * @param restaurantId give RESTAURANT_RANDOM to initialize the view with a random restaurant.
      * @param rootView
      * @param updateActionBarOnCreateView
      */
-    public void setupView (int restaurantId, View rootView, boolean updateActionBarOnCreateView) {
+    public void setupView (final int restaurantId, View rootView, boolean updateActionBarOnCreateView) {
         mActivity = getActivity();
         setRestaurantFromDatabase(restaurantId);
         if(updateActionBarOnCreateView)
@@ -236,6 +250,19 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
             couponString.setText(restaurant.coupon_string);
         else
             couponString.setVisibility(View.GONE);
+
+        RelativeLayout showFlyerBtn = (RelativeLayout) rootView.findViewById(R.id.entry_menu_show_flyer);
+        if(restaurant.hasFlyer()) {
+            showFlyerBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), FlyerActivity.class).putExtra("res_id",restaurantId));
+                }
+            });
+        }
+        else {
+            showFlyerBtn.setVisibility(View.GONE);
+        }
 
         rootView.invalidate();
     }

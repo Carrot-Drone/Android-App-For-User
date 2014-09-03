@@ -4,14 +4,15 @@
     xmlns:views="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="20dp"
     android:background="#fff2f2f2"
     android:orientation="vertical">
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#ff999999"/>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/entry_more_version"
         android:layout_width="match_parent"
         android:layout_height="@dimen/listview_height"
@@ -42,10 +43,12 @@
     </RelativeLayout>
 
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#ff999999"/>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/entry_more_members"
         android:layout_width="match_parent"
         android:layout_height="@dimen/listview_height"
@@ -65,6 +68,7 @@
     </RelativeLayout>
 
     <View
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#ff999999"/>

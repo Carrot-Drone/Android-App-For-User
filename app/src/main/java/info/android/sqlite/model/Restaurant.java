@@ -105,7 +105,7 @@ public class Restaurant implements Serializable {
 	    	return this.closingHours;
 	    }
 	    
-	    public boolean getFlyer(){
+	    public boolean hasFlyer(){
 	    	return this.has_flyer;
 	    }
 

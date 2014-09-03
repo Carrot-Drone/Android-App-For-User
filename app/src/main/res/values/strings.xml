@@ -6,6 +6,7 @@
     <!-- previously the string above was : 서울대 배달음식 어플리케이션-->
     <string name="title_main">메인화면</string>
     <string name="title_flyer">전단지</string>
+    <string name="show_flyer">전단지 보기</string>
     <string name="title_favorite">즐겨찾기</string>
     <string name="title_random">아무거나</string>
     <string name="title_more">더보기</string>
@@ -16,7 +17,7 @@
     <string name="currency">원</string>
     <string name="msg_press_again_to_exit">다시 누르시면 종료합니다.</string>
 
-    <string name="version">버전 정보</string>
+    <string name="version">버전</string>
     <string name="members">샤달 팀 소개</string>
     <string name="participate">참여하기</string>
     <string name="facebook">페이스북</string>

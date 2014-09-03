@@ -3,7 +3,6 @@ package com.lchpartners.fragments;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,21 @@ import info.android.sqlite.model.Restaurant;
 /**
  * Created by Gwangrae Kim on 2014-09-02.
  */
-public class FavoriteFragment extends Fragment implements ActionBarUpdater {
+public class FavoriteFragment extends Fragment implements ActionBarUpdater, Locatable {
     private boolean updateActionBarOnCreateView = false;
     private MainActivity mActivity;
+    private static final String TAG = "FavoriteFragment";
+    public String tag() {
+        return TAG;
+    }
+
+    private int attachedPage = -1;
+    public int getAttachedPage() {
+        return attachedPage;
+    }
+    public void setAttachedPage(int page) {
+        this.attachedPage = page;
+    }
 
     public static class FavoritesAdapter extends ArrayAdapter<Restaurant> {
         private static class FavoriteViewHolder {
@@ -37,7 +48,7 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
         private final ArrayList<Restaurant> values;
         private final LayoutInflater mInflater;
 
-        private int TAB_TO_ATTACH_MENU_FRAGMENT = MainActivity.TAB_MAIN;
+        private int TAB_TO_ATTACH_MENU_FRAGMENT = MainActivity.TAB_FAVORITE;
 
         /**
          * By Default, this class will attach MenuFragment to MainActivity.TAB_MAIN
@@ -91,7 +102,7 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
             category.setImageDrawable(mActivity.getResources().getDrawable(currentCategoryDrawable));
 
             restaurantName.setText(restaurant.name);
-            if(restaurant.getFlyer()) {
+            if(restaurant.hasFlyer()) {
                 flyer.setVisibility(View.VISIBLE);
             }
             if(restaurant.getCoupon()) {
@@ -104,7 +115,6 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
             convertView.setOnClickListener(new View.OnClickListener () {
                 @Override
                 public void onClick(View v) {
-                    Log.e("tag", "called");
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(TAB_TO_ATTACH_MENU_FRAGMENT,
                             new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));
@@ -128,25 +138,48 @@ public class FavoriteFragment extends Fragment implements ActionBarUpdater {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = (MainActivity) getActivity();
         DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-        FavoritesAdapter adapter = new FavoritesAdapter(mActivity, dbHelper.getFavoriteRestaurant()
-                                                          , MainActivity.TAB_FAVORITE);
+        ArrayList<Restaurant> restaurants = dbHelper.getFavoriteRestaurant();
         dbHelper.closeDB();
 
         if (updateActionBarOnCreateView)
             updateActionBar();
-        ListView resultView = (ListView) inflater.inflate(R.layout.fragment_restaurant, container, false);
-        resultView.setAdapter(adapter);
+
+        View resultView = inflater.inflate(R.layout.fragment_favorite, container, false);
+        ListView favoritesListView = (ListView) resultView.findViewById(R.id.list_favorite_view);
+        View noFavoritesView = resultView.findViewById(R.id.image_view_star_null);
+
+        if (restaurants.size() == 0) {
+            favoritesListView.setVisibility(View.INVISIBLE);
+            noFavoritesView.setVisibility(View.VISIBLE);
+        }
+        else {
+            favoritesListView.setVisibility(View.VISIBLE); // null
+            noFavoritesView.setVisibility(View.INVISIBLE);
+            FavoritesAdapter adapter = new FavoritesAdapter(mActivity, restaurants, MainActivity.TAB_FAVORITE);
+            favoritesListView.setAdapter(adapter);
+        }
         return resultView;
     }
 
-    public void invalidate() {
+    public void invalidateContent() {
+        View resultView = getView();
+        View noFavoritesView = resultView.findViewById(R.id.image_view_star_null);
+        ListView favoritesListView = (ListView) resultView.findViewById(R.id.list_favorite_view);
+
         DatabaseHelper dbHelper = new DatabaseHelper(mActivity);
-        FavoritesAdapter adapter = new FavoritesAdapter(mActivity, dbHelper.getFavoriteRestaurant()
-                , MainActivity.TAB_FAVORITE);
+        ArrayList<Restaurant> restaurants = dbHelper.getFavoriteRestaurant();
         dbHelper.closeDB();
 
-        ListView resultView = (ListView) getView();
-        resultView.setAdapter(adapter);
+        if (restaurants.size() == 0) {
+            favoritesListView.setVisibility(View.GONE);
+            noFavoritesView.setVisibility(View.VISIBLE);
+        }
+        else {
+            favoritesListView.setVisibility(View.VISIBLE);
+            noFavoritesView.setVisibility(View.GONE);
+            FavoritesAdapter adapter = new FavoritesAdapter(mActivity, restaurants, MainActivity.TAB_FAVORITE);
+            favoritesListView.setAdapter(adapter);
+        }
     }
 
     public void setUpdateActionBarOnCreateView() {

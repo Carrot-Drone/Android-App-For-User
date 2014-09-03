@@ -26,9 +26,20 @@ import info.android.sqlite.model.Restaurant;
 /**
  * Created by Gwangrae Kim on 2014-08-30.
  */
-public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
+public class RestaurantsFragment extends Fragment implements ActionBarUpdater, Locatable {
     private final static String EXTRA_CATEGORY_IDX = "catIdx";
     private final static String TAG = "RestaurantsFragment";
+    public String tag() {
+        return TAG;
+    }
+
+    private int attachedPage = -1;
+    public int getAttachedPage() {
+        return attachedPage;
+    }
+    public void setAttachedPage(int page) {
+        this.attachedPage = page;
+    }
 
     public static class RestaurantsAdapter extends ArrayAdapter<Restaurant> {
         private static class RestaurantViewHolder {
@@ -91,7 +102,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
 
             final Restaurant restaurant = getItem(position);
             restaurantName.setText(restaurant.name);
-            if(restaurant.getFlyer()) {
+            if(restaurant.hasFlyer()) {
                 flyer.setVisibility(View.VISIBLE);
             }
             if(restaurant.isFavorite()) {
@@ -107,7 +118,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
             convertView.setOnClickListener(new View.OnClickListener () {
                 @Override
                 public void onClick(View v) {
-                    Log.e("tag", "called");
+                    //Log.e("tag", "called");
                     MainActivity.ShadalTabsAdapter adapter = mActivity.getAdapter();
                     adapter.push(TAB_TO_ATTACH_MENU_FRAGMENT,
                             new MainActivity.ShadalTabsAdapter.FragmentRecord(MenuFragment.class, restaurant.id));

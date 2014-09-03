@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.lchpartners.apphelper.preference.PrefUtil;
 import com.lchpartners.fragments.ActionBarUpdater;
 import com.lchpartners.fragments.CategoryFragment;
 import com.lchpartners.fragments.FavoriteFragment;
+import com.lchpartners.fragments.Locatable;
 import com.lchpartners.fragments.MenuFragment;
 import com.lchpartners.fragments.MoreFragment;
 import com.lchpartners.fragments.RestaurantsFragment;
@@ -42,6 +44,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     /**
      * Created by Gwangrae Kim @SNUCSE, k.gwangrae@gmail.com on 2014-08-25.
+     * NOTE : Don't create or destroy Fragment by yourself
+     * just let the system manage it.
      * TODO - it's not actually serializable
      */
     public static class ShadalTabsAdapter extends FragmentPagerAdapter implements Serializable {
@@ -93,8 +97,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            //Prevent items being destroyed for faster scroll performance.
-            //May cause memory issue if used with fragments with large images
+            //super.destroyItem(container, position, object);
+            //mCurrentTopFragments.put(position, null);
+            //invalidateFragment(position);
         }
 
         private SparseArray<Fragment> mCurrentTopFragments = new SparseArray<Fragment>();
@@ -155,11 +160,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else return false;
         }
 
-        private boolean areAllTabsValid() {
-//            Log.e(TAG, "areAllTabsValid");
-            return isFirstPageValid && isSecondPageValid && isThirdPageValid && isFourthPageValid;
-        }
-
         private void setValidity(int tab, boolean isValid) {
 //            Log.e(TAG, "setValid "+Integer.valueOf(tab).toString()+" "+Boolean.valueOf(isValid).toString());
             if (tab == TAB_MAIN) isFirstPageValid = isValid;
@@ -168,7 +168,9 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             else if (tab == TAB_MORE) isFourthPageValid = isValid;
         }
 
-        public void invalidate(int tab) {
+        public void invalidateFragment(int tab) {
+            if(tab < 0 || tab >= TAB_COUNT)
+                return;
             setValidity(tab, false);
             notifyDataSetChanged();
         }
@@ -185,6 +187,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
             setValidity(tab, true);
             mCurrentTopFragments.put(tab, result);
+            //Log.e(TAG, ((Locatable) result).tag() + "attached at " + Integer.valueOf(tab).toString());
+            ((Locatable) result).setAttachedPage(tab);
             return result;
         }
 
@@ -195,13 +199,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         @Override
         public int getItemPosition(Object object) {
- //           Log.e(TAG, "getItemPosition");
-            if (areAllTabsValid()) {
- //               Log.e(TAG, "No change");
+            //Log.e(TAG, "getItemPos");
+            int position = ((Locatable) object).getAttachedPage();
+            if (isValid(position)) {
+                //Log.e(TAG,new StringBuffer(((Locatable) object).tag()+Integer.valueOf(position).toString()).append(isValid(position)).toString());
                 return POSITION_UNCHANGED;
             }
             else {
- //               Log.e(TAG, "refresh screens");
                 return POSITION_NONE;
             }
         }
@@ -216,7 +220,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
             Stack<FragmentRecord> currStack = getStack(tab);
             currStack.push(newFragmentRecord);
-            invalidate(tab);
+            invalidateFragment(tab);
         }
 
         //TODO : notify user before finishing!
@@ -243,25 +247,28 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 mCurrentTopFragments.put(tab, null);
 
                 currStack.pop(); //Remove current Fragment's record from the stack.
-                invalidate(tab);
+                invalidateFragment(tab);
             }
         }
 
         public void popUntilRootPage(int tab) {
 //            Log.e(TAG, "pop "+Integer.valueOf(tab).toString());
             Stack<FragmentRecord> currStack = getStack(tab);
+            if (currStack.size() == 1) {
+                //Already at root page. Do nothing.
+                return;
+            }
+
+            Fragment previousTop = getTopFragment(tab);
+            mFragementManager.beginTransaction().remove(previousTop).commit();
+            mFragementManager.executePendingTransactions();
+            mCurrentTopFragments.put(tab, null);
 
             while (currStack.size() > 1) {
-                Fragment previousTop = getTopFragment(tab);
-                mFragementManager.beginTransaction().remove(previousTop).commit();
-                mFragementManager.executePendingTransactions();
-                mCurrentTopFragments.put(tab, null);
-
                 currStack.pop(); //Remove current Fragment's record from the stack.
-                invalidate(tab);
             }
             if (currStack.size() == 1)
-                invalidate(tab);
+                invalidateFragment(tab);
         }
 
         public Fragment getTopFragment(int tab) {
@@ -299,6 +306,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         }
         outState.putSerializable(KEY_STACKS, stacks);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     @Override
@@ -341,7 +354,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             finish();
         }
 
-
         mTabsAdapter = new ShadalTabsAdapter(getFragmentManager(), this);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mTabsAdapter);
@@ -358,11 +370,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
         }
 
-
-        for (int i = (TAB_COUNT-1); i >= 0; i--) {
-            mPager.setCurrentItem(i); // init items
-        }
-
         //TODO : for long clicks - 'set default page'
 
         mMainBtn = (ImageButton) findViewById(R.id.button_tab_main);
@@ -376,8 +383,6 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         mMoreBtn.setOnClickListener(this);
 
         mSelectedTabBtn = mMainBtn;
-
-
     }
 
     /**
@@ -392,123 +397,78 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         return true;
     }
 
+    private boolean scrollByClick = false;
     @Override
     public void onClick (View v) {
         int id = v.getId();
-        if (id != mSelectedTabBtn.getId()) {
+        scrollByClick = true;
             mSelectedTabBtn.setSelected(false);
-        }
 
         if (id == R.id.button_tab_main) {
-            mPager.setCurrentItem(TAB_MAIN, true);
+            //Log.e(TAG, "main page button is pressed");
             mTabsAdapter.popUntilRootPage(TAB_MAIN);
+            mPager.setCurrentItem(TAB_MAIN, false);
+            ((CategoryFragment) mTabsAdapter.getTopFragment(TAB_MAIN)).getView().invalidate();
             mSelectedTabBtn = mMainBtn;
         }
         else if (id == R.id.button_tab_favorite) {
-            mPager.setCurrentItem(TAB_FAVORITE, true);
             mTabsAdapter.popUntilRootPage(TAB_FAVORITE);
+            mPager.setCurrentItem(TAB_FAVORITE, false);
+            ((FavoriteFragment) mTabsAdapter.getTopFragment(TAB_FAVORITE)).invalidateContent();
             mSelectedTabBtn = mFavoriteBtn;
-            ((FavoriteFragment) mTabsAdapter.getTopFragment(TAB_FAVORITE)).invalidate();
         }
         else if (id == R.id.button_tab_random) {
-            mPager.setCurrentItem(TAB_RANDOM, true);
+            mPager.setCurrentItem(TAB_RANDOM, false);
             MenuFragment menuFragment = (MenuFragment) mTabsAdapter.getTopFragment(TAB_RANDOM);
             menuFragment.randomize();
             mSelectedTabBtn = mRandomBtn;
         }
         else if (id == R.id.button_tab_more) {
-            mTabsAdapter.invalidate(TAB_MORE);
-            //It often get removed by FragmentManager, so it needs to be redrawed before scroll
-            mPager.setCurrentItem(TAB_MORE, true);
+            mPager.setCurrentItem(TAB_MORE, false);
+            ((MoreFragment) mTabsAdapter.getTopFragment(TAB_MORE)).getView().invalidate();
             mSelectedTabBtn = mMoreBtn;
         }
 
-        if (id != mSelectedTabBtn.getId()) {
             mSelectedTabBtn.setSelected(true);
-        }
+        scrollByClick = false;
     }
 
     @Override
     public void onPageSelected(int position) {
-        mCurrTab = position;
-        mNextTab = position;
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        /**Determine scroll direction and check whether the user scrolled enough.
-         * Note that positionOffset is always positive, and position value is given quite weirdly.
-         * Carefully take care of behavior of the OnPageChangedListener using Logcat
-         * before you change code here.
-         **/
-
-        if (position < mCurrTab) {
-            //LEFT scroll : In this case, position value itself points the new page the user is navigating to.
-            if (positionOffset > 0.5) {
-                position++; //Retain currentPageIndex.
-            }
-        }
-        else {
-            //RIGHT scroll : In this case, position value points the previous page.
-            if (positionOffset < 0.5) {
-                //Retain curentPageIndex.
-            }
-            else position++; // If the user scrolled enough, Make this value to point the new page.
-        }
-
-        if (mNextTab != position) {
-            //When mNextTab is changed, it means user changed final destination of the current scroll motion.
-            //Re-drawing of the action bar and bottom buttons only should happen in this case.
-
-            mNextTab = position;
-            //Change action bar content for the next page.
-            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getTopFragment(mNextTab);
-            nextPageFragment.updateActionBar();
-
-            mSelectedTabBtn.setSelected(false);
-            switch (mNextTab) {
-                case TAB_MAIN:
-                    mSelectedTabBtn = mMainBtn;
-                    break;
-                case TAB_FAVORITE:
-                    mSelectedTabBtn = mFavoriteBtn;
-                    break;
-                case TAB_RANDOM:
-                    mSelectedTabBtn = mRandomBtn;
-                    break;
-                case TAB_MORE:
-                    mSelectedTabBtn = mMoreBtn;
-                    break;
-            }
-            mSelectedTabBtn.setSelected(true);
-        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        if (state == ViewPager.SCROLL_STATE_IDLE) {
-            getFragmentManager().executePendingTransactions();
+        this.state = state;
+    }
 
-            //Double-check action bar and bottom button update (to deal with fast scroll)
-            ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getTopFragment(mCurrTab);
-            nextPageFragment.updateActionBar();
+    private void onPageChanged() {
+        ActionBarUpdater nextPageFragment = (ActionBarUpdater) mTabsAdapter.getTopFragment(currTab);
+        nextPageFragment.updateActionBar();
+        switch (currTab) {
+            case TAB_MAIN:
+                onClick(mMainBtn);
+                break;
+            case TAB_FAVORITE:
+                onClick(mFavoriteBtn);
+                break;
+            case TAB_RANDOM:
+                onClick(mRandomBtn);
+                break;
+            case TAB_MORE:
+                onClick(mMoreBtn);
+                break;
+        }
+    }
 
-            mSelectedTabBtn.setSelected(false);
-            switch (mCurrTab) {
-                case TAB_MAIN:
-                    mSelectedTabBtn = mMainBtn;
-                    break;
-                case TAB_FAVORITE:
-                    mSelectedTabBtn = mFavoriteBtn;
-                    break;
-                case TAB_RANDOM:
-                    mSelectedTabBtn = mRandomBtn;
-                    break;
-                case TAB_MORE:
-                    mSelectedTabBtn = mMoreBtn;
-                    break;
-            }
-            mSelectedTabBtn.setSelected(true);
+    private int state = ViewPager.SCROLL_STATE_IDLE;
+    private int currTab = TAB_MAIN;
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        position = mPager.getCurrentItem();
+        if (currTab != position) {
+            currTab = position;
+            onPageChanged();
         }
     }
 }

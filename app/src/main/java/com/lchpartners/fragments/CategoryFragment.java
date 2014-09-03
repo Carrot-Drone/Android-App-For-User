@@ -22,7 +22,7 @@ import com.lchpartners.shadal.R;
 /**
  * Created by Gwangrae Kim on 2014-08-27.
  */
-public class CategoryFragment extends Fragment implements ActionBarUpdater {
+public class CategoryFragment extends Fragment implements ActionBarUpdater, Locatable {
     private static class CategoryAdapter extends ArrayAdapter <String> {
         private int mOneLineLayout = 0;
         private Drawable[] mCategoryDrawables;
@@ -92,6 +92,9 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
     }
 
     private final static String TAG = "CategoryFragment";
+    public String tag() {
+        return TAG;
+    }
     private final static String[] mCategoryNames
         = { "치킨", "피자", "중국집", "한식/분식", "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
     private final static int [] mCategoryDrawables =
@@ -109,6 +112,13 @@ public class CategoryFragment extends Fragment implements ActionBarUpdater {
 
     private Activity mActivity;
     private boolean updateActionBarOnCreateView = false;
+    private int attachedPage = -1;
+    public int getAttachedPage() {
+        return attachedPage;
+    }
+    public void setAttachedPage(int page) {
+        this.attachedPage = page;
+    }
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();

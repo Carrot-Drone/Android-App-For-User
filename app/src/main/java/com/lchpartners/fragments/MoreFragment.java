@@ -16,10 +16,22 @@ import com.lchpartners.shadal.R;
  * TODO - move all xml constants into dimens.xml
  * Created by Gwangrae Kim on 2014-09-02.
  */
-public class MoreFragment extends Fragment implements ActionBarUpdater {
+public class MoreFragment extends Fragment implements ActionBarUpdater, Locatable {
+    private static final String TAG = "MoreFragment";
+    public String tag() {
+        return TAG;
+    }
+
     private boolean updateActionBarOnCreateView = false;
     private Activity mActivity;
 
+    private int attachedPage = -1;
+    public int getAttachedPage() {
+        return attachedPage;
+    }
+    public void setAttachedPage(int page) {
+        this.attachedPage = page;
+    }
     public static MoreFragment newInstance() {
         return new MoreFragment();
     }
