@@ -3,11 +3,14 @@ package com.lchpatners.shadal;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
@@ -318,13 +321,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String errString = null;
         // 처음 설치시 assets/databases/Shadal 파일로 디비 설정
         try{
             DatabaseHelper dbHelper = new DatabaseHelper(this);
             boolean dbExists = dbHelper.doesDatabaseExist();
 
             SQLiteDatabase db;
-
             // Database file이 없거나, version이 맞지 않으면..
             String version = PrefUtil.getVersion(this);
 //            Log.d("tag", "original version :"+version + " latest Version : " + PrefUtil.VERSION);
@@ -343,14 +346,32 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             dbHelper.closeDB();
         }
         catch(SQLException eSQL){
-//            Log.e(TAG,"Cannot open database");
+            Log.e(TAG,"Cannot open database", eSQL);
+            errString = Log.getStackTraceString(eSQL);
             Toast.makeText(this,"데이터베이스를 여는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
-            finish();
         }
         catch (IOException IOe) {
-//            Log.e(TAG,"Cannot copy initial database");
+            Log.e(TAG, "Cannot copy initial database", IOe);
+            errString = Log.getStackTraceString(IOe);
             Toast.makeText(this,"초기 데이터베이스를 복사하는 데 실패했습니다.",Toast.LENGTH_SHORT).show();
-            finish();
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Unknown error occurred", e);
+            errString = Log.getStackTraceString(e);
+            Toast.makeText(this,"알 수 없는 에러가 발생했습니다.",Toast.LENGTH_SHORT).show();
+        }
+        finally {
+            if (errString != null) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "partnerslch@gmail.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "(긴급) 샤달 오류 제보!");
+                emailIntent.putExtra(Intent.EXTRA_TEXT,
+                   "불편을 끼쳐드려 정말 죄송합니다. 아래 본문을 저희 팀에 보내주시면 오류 해결에 큰 도움이 됩니다. " +
+                   "본 메일의 내용은 샤달 앱의 오류를 개선하는 데에만 사용된 후 즉시 삭제됩니다." +
+                   errString);
+                startActivity(Intent.createChooser(emailIntent, "오류 해결에 도움을 주세요!"));
+                finish();
+            }
         }
 
         mTabsAdapter = new ShadalTabsAdapter(getFragmentManager(), this);
