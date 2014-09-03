@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lchpartners.apphelper.server.Server;
@@ -34,8 +33,7 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
     public static class RestaurantsAdapter extends ArrayAdapter<Restaurant> {
         private static class RestaurantViewHolder {
             public TextView restaurantName;
-            public ImageView flyer;
-            public ImageView coupon;
+            public ImageView flyer, favorite, coupon, newRestaurant;
         }
 
         private final MainActivity mActivity;
@@ -63,18 +61,22 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             TextView restaurantName;
-            ImageView flyer;
-            ImageView coupon;
+            ImageView flyer, favorite, coupon, newRestaurant;
 
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.listview_item_restaurant, null);
                 restaurantName = (TextView) convertView.findViewById(R.id.restaurant_name);
                 flyer = (ImageView) convertView.findViewById(R.id.flyer);
+                favorite = (ImageView) convertView.findViewById(R.id.favorite);
                 coupon = (ImageView) convertView.findViewById(R.id.coupon);
+                newRestaurant = (ImageView) convertView.findViewById(R.id.newRestaurant);
 
                 RestaurantViewHolder viewHolder = new RestaurantViewHolder();
-                viewHolder.coupon = coupon;
                 viewHolder.flyer = flyer;
+                viewHolder.favorite = favorite;
+                viewHolder.coupon = coupon;
+                viewHolder.newRestaurant = newRestaurant;
+
                 viewHolder.restaurantName = restaurantName;
                 convertView.setTag(viewHolder);
             }
@@ -82,28 +84,24 @@ public class RestaurantsFragment extends Fragment implements ActionBarUpdater {
                 RestaurantViewHolder viewHolder = (RestaurantViewHolder) convertView.getTag();
                 restaurantName = viewHolder.restaurantName;
                 flyer = viewHolder.flyer;
+                favorite = viewHolder.favorite;
                 coupon = viewHolder.coupon;
+                newRestaurant = viewHolder.newRestaurant;
             }
 
             final Restaurant restaurant = getItem(position);
             restaurantName.setText(restaurant.name);
-            if(!restaurant.getFlyer()) {
-                flyer.setVisibility(View.INVISIBLE);
-                if(!restaurant.getCoupon()) {
-                    coupon.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    // right align coupon View
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)coupon.getLayoutParams();
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    coupon.setLayoutParams(params);
-                }
+            if(restaurant.getFlyer()) {
+                flyer.setVisibility(View.VISIBLE);
             }
-            else {
-                if(!restaurant.getCoupon()){
-                    //TODO : set it GONE.
-                    coupon.setVisibility(View.INVISIBLE);
-                }
+            if(restaurant.isFavorite()) {
+                favorite.setVisibility(View.VISIBLE);
+            }
+            if(restaurant.getCoupon()) {
+                coupon.setVisibility(View.VISIBLE);
+            }
+            if(restaurant.isNew()) {
+                newRestaurant.setVisibility(View.VISIBLE);
             }
 
             convertView.setOnClickListener(new View.OnClickListener () {

@@ -1,8 +1,6 @@
 package info.android.sqlite.model;
 
-import java.io.Serializable; 
-import info.android.sqlite.helper.DatabaseHelper;
-import android.util.Log; 
+import java.io.Serializable;
 
 public class Restaurant implements Serializable {
       public static final long serialVersionUID = 20140902L;
@@ -115,9 +113,9 @@ public class Restaurant implements Serializable {
         return this.has_coupon;
     }
 
-        public boolean getNew() { return this.is_new;}
+        public boolean isNew() { return this.is_new;}
 
-        public boolean getFavorite() { return this.is_favorite; }
+        public boolean isFavorite() { return this.is_favorite; }
 
 	    public String getCouponString(){
 	    	return this.coupon_string;
