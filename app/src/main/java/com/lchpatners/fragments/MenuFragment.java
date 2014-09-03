@@ -246,13 +246,16 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
 
         TextView couponString = (TextView) rootView.findViewById(R.id.textview_couponString);
 
-        if(restaurant.has_coupon == true)
+        if(restaurant.has_coupon == true){
             couponString.setText(restaurant.coupon_string);
+            couponString.setVisibility(View.VISIBLE);
+        }
         else
             couponString.setVisibility(View.GONE);
 
         RelativeLayout showFlyerBtn = (RelativeLayout) rootView.findViewById(R.id.entry_menu_show_flyer);
         if(restaurant.hasFlyer()) {
+            showFlyerBtn.setVisibility(View.VISIBLE);
             showFlyerBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
