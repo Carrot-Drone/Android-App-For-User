@@ -112,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Restaurant> getFavoriteRestaurant(){
         ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
 
-        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE is_favorite = 1";
+        String selectQuery = "SELECT  * FROM " + TABLE_RES + " WHERE is_favorite = 1 ORDER BY is_favorite DESC, name ASC";
 
         //Log.e(LOG, selectQuery);
 
