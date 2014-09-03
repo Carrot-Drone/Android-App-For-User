@@ -424,6 +424,7 @@ public class MenuFragment extends Fragment implements ActionBarUpdater, OnClickL
                 value.add(new BasicNameValuePair("name", res.getName()));
                 value.add(new BasicNameValuePair("device", "android"));
                 value.add(new BasicNameValuePair("campus", Server.CAMPUS));
+                value.add(new BasicNameValuePair("server_id", String.valueOf(res.getServer_id())));
                 httppost.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
 
                 return httpclient.execute(httppost);
