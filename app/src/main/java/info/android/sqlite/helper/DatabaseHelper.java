@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
  
     // Database Version
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 1;
  
     // Database Name
     private static final String DATABASE_NAME = "Shadal";
@@ -94,20 +94,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) {
-    		mActivity.deleteDatabase(DATABASE_NAME);
-    	}
-    	/*
-        try {
-			copyDataBase();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+        Log.d("tag", "new Version");
     }
-    
-    
+
+    @Override
+
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+        Log.d("tag", "old Version");
+    }
+
  // ------------------------ "retaurants" table methods ----------------//
     public ArrayList<Restaurant> getFavoriteRestaurant(){
         ArrayList<Restaurant> ress = new ArrayList<Restaurant>();
