@@ -22,12 +22,14 @@ public class RestaurantListAdapter extends BaseAdapter {
 
     private Context context;
     private String category;
-    private ArrayList<Object> data = new ArrayList<>();
-    private ArrayList<String> headers = new ArrayList<>();
+    private ArrayList<Object> data;
+    private ArrayList<String> headers;
 
     public RestaurantListAdapter(Context context, String category) {
         this.context = context;
         this.category = category;
+        data = new ArrayList<>();
+        headers = new ArrayList<>();
         reloadData();
     }
 
@@ -40,16 +42,6 @@ public class RestaurantListAdapter extends BaseAdapter {
     @Override
     public int getViewTypeCount() {
         return 2;
-    }
-
-    public void add(Restaurant restaurant) {
-        data.add(restaurant);
-        notifyDataSetChanged();
-    }
-
-    public void remove(Restaurant restaurant) {
-        data.remove(restaurant);
-        notifyDataSetChanged();
     }
 
     public void reloadData() {

@@ -23,7 +23,7 @@ public class CategoryListAdapter extends BaseAdapter {
     public static final int ETC = 7;
     public static final int CATEGORIES_NUMBER = 8;
 
-    public static String[] categories = new String[CATEGORIES_NUMBER];
+    public static String[] categories;
 
     private Context context;
 

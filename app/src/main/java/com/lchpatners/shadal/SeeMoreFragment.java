@@ -44,7 +44,7 @@ public class SeeMoreFragment extends Fragment {
                         }
                         startActivity(intent);
                     } else if (item.getText().equals(context.getString(R.string.report))) {
-                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","partnerslch@gmail.com", null));
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","campusdal@gmail.com", null));
                         intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.report_title));
                         intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.report_content));
                         startActivity(Intent.createChooser(intent, context.getString(R.string.select_app)));

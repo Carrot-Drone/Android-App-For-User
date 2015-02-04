@@ -11,15 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.util.List;
-
 /**
  * Created by Guanadah on 2015-01-23.
  */
 public class BookmarkFragment extends Fragment {
 
     private static Context context;
-    public static RestaurantListAdapter adapter;
+    public static RestaurantListAdapter latestAdapter;
 
     public static BookmarkFragment newInstance(Context context) {
         BookmarkFragment.context = context;
@@ -31,21 +29,22 @@ public class BookmarkFragment extends Fragment {
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
 
-        List<Restaurant> bookmarks = DatabaseHelper.getInstance(context).getFavoriteRestaurants();
-        if (bookmarks == null || bookmarks.size() == 0) {
-            ImageView img = new ImageView(context);
-            img.setImageResource(R.drawable.no_bookmarks);
-            ((ViewGroup)view).addView(img);
-        }
+        ImageView img = new ImageView(context);
+        img.setImageResource(R.drawable.no_bookmarks);
+        img.setVisibility(View.GONE);
+        ((ViewGroup)listView.getParent()).addView(img);
+        listView.setEmptyView(img);
 
-        adapter = new RestaurantListAdapter(BookmarkFragment.context, RestaurantListAdapter.BOOKMARK);
+        final RestaurantListAdapter adapter
+                = new RestaurantListAdapter(BookmarkFragment.context, RestaurantListAdapter.BOOKMARK);
+        latestAdapter = adapter;
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (adapter.getItem(position) instanceof Restaurant) {
                     Intent intent = new Intent(context, MenuListActivity.class);
-                    intent.putExtra("RESTAURANT", (Restaurant)adapter.getItem(position));
+                    intent.putExtra("RESTAURANT", (Restaurant) adapter.getItem(position));
                     intent.putExtra("REFERRER", "BookmarkFragment");
                     startActivity(intent);
                 }

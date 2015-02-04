@@ -44,6 +44,9 @@ public class MainActivity extends ActionBarActivity {
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == PagerAdapter.MAIN) {
+                    // TODO remove an RLF instance when pressed MAIN on the MAIN page
+                }
             }
 
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {

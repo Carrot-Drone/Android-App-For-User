@@ -15,14 +15,16 @@ import java.util.ArrayList;
 public class SeeMoreListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<String> data = new ArrayList<>();
-    private ArrayList<String> headers = new ArrayList<>();
+    private ArrayList<String> data;
+    private ArrayList<String> headers;
 
     private static final int HEADER = 0;
     private static final int ITEM = 1;
 
     public SeeMoreListAdapter(Context context) {
         this.context = context;
+        data = new ArrayList<>();
+        headers = new ArrayList<>();
         addHeader(context.getString(R.string.participate_in));
         addItem(context.getString(R.string.facebook_page));
         addItem(context.getString(R.string.report));

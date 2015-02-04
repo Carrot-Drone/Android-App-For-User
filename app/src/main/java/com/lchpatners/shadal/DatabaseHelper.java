@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void updateRestaurant(JSONObject restaurantJson) {
         updateRestaurant(restaurantJson, null);
-        reloadRestaurantListAdapter(RestaurantListFragment.adapter);
+        reloadRestaurantListAdapter(RestaurantListFragment.latestAdapter);
     }
 
     public void updateRestaurant(JSONObject restaurantJson, final MenuListActivity activity) {
@@ -184,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         RESTAURANTS, restaurant.getInt("id")
                 ), null);
                 // if there is an existing data, check if the data is outdated
-                // else, if the restaurant is a new one, put it into the database and notify adapter
+                // else, if the restaurant is a new one, put it into the database and notify latestAdapter
                 if (cursor != null && cursor.moveToFirst()) {
                     // if the existing data is outdated, update from the server
                     // else, do nothing
@@ -234,7 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 cursor.close();
             }
-            reloadRestaurantListAdapter(RestaurantListFragment.adapter);
+            reloadRestaurantListAdapter(RestaurantListFragment.latestAdapter);
         }
     }
 
@@ -272,7 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Restaurant restaurant = getRestaurantFromId(restaurantId);
         values.put("is_favorite", (!restaurant.isFavorite()) ? 1 : 0);
         db.update(RESTAURANTS, values, "id = " + restaurantId, null);
-        reloadRestaurantListAdapter(RestaurantListFragment.bookmarkAdapter);
+        reloadRestaurantListAdapter(BookmarkFragment.latestAdapter);
     }
 
     public ArrayList<Restaurant> getRestaurantsByCategory(String category) {

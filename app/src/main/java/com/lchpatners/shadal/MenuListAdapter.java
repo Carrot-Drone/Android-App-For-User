@@ -16,8 +16,8 @@ public class MenuListAdapter extends BaseAdapter {
 
     private Context context;
     private Restaurant restaurant;
-    private ArrayList<Object> data = new ArrayList<>();
-    private ArrayList<String> headers = new ArrayList<>();
+    private ArrayList<Object> data;
+    private ArrayList<String> headers;
 
     private static final int HEADER = 0;
     private static final int ITEM = 1;
@@ -26,6 +26,8 @@ public class MenuListAdapter extends BaseAdapter {
     public MenuListAdapter(Context context, Restaurant restaurant) {
         this.context = context;
         this.restaurant = restaurant;
+        data = new ArrayList<>();
+        headers = new ArrayList<>();
         reloadData();
     }
 

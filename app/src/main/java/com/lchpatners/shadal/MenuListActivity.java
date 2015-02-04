@@ -82,11 +82,6 @@ public class MenuListActivity extends ActionBarActivity {
             helper.toggleFavoriteById(restaurant.getId());
             boolean bookmarked = helper.getRestaurantFromId(restaurant.getId()).isFavorite();
             setMenuItemChecked(item, bookmarked);
-            if (bookmarked) {
-                BookmarkFragment.adapter.add(restaurant);
-            } else {
-                BookmarkFragment.adapter.remove(restaurant);
-            }
             return true;
         } else if (id == R.id.see_flyer) {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
@@ -188,7 +183,7 @@ public class MenuListActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             try {
                 HttpClient client = new DefaultHttpClient();
-                HttpPost post = new HttpPost("http://services.snu.ac.kr:3111/new_call");
+                HttpPost post = new HttpPost("http://shadal.kr/new_call");
                 ArrayList<BasicNameValuePair> value = new ArrayList<>();
                 value.add(new BasicNameValuePair("phoneNumber", restaurant.getPhoneNumber()));
                 value.add(new BasicNameValuePair("name", restaurant.getName()));
