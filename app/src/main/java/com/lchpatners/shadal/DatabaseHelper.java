@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "Shadal";
+    public static final String DATABASE_NAME = "Gwanak";
     private static final int VERSION = 17;
 
     private static final String RESTAURANTS = "restaurants";
@@ -34,6 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, menu TEXT, section TEXT, " +
             "price INT, restaurant_id INT)";
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
+
+    public static final String LEGACY_DATABASE_NAME = "Shadal";
+    public static ArrayList<Integer> legacyBookmarks = new ArrayList<>();
 
     private static DatabaseHelper instance;
 
@@ -81,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             OutputStream output = new FileOutputStream(databasePath);
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = input.read(buffer))>0){
+            while ((length = input.read(buffer)) > 0){
                 output.write(buffer, 0, length);
             }
             output.flush();
@@ -104,6 +107,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues values;
 
+            boolean isLegacyBookmark = legacyBookmarks.contains(restaurantJson.getInt("id"));
+
             values = new ContentValues();
             values.put("server_id", restaurantJson.getInt("id"));
             values.put("updated_at", restaurantJson.getString("updated_at"));
@@ -115,7 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put("has_flyer", (restaurantJson.getBoolean("has_flyer")) ? 1 : 0);
             values.put("has_coupon", (restaurantJson.getBoolean("has_coupon")) ? 1 : 0);
             values.put("is_new", (restaurantJson.getBoolean("is_new")) ? 1 : 0);
-            values.put("is_favorite", 0);
+            values.put("is_favorite", isLegacyBookmark ? 1 : 0);
             values.put("coupon_string", restaurantJson.getString("coupon_string"));
 
             cursor = db.rawQuery(String.format(
@@ -127,6 +132,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.update(RESTAURANTS, values, "server_id = ?", new String[]{String.valueOf(restaurantServerId)});
             } else {
                 db.insert(RESTAURANTS, null, values);
+                if (isLegacyBookmark) {
+                    reloadRestaurantListAdapter(BookmarkFragment.latestAdapter);
+                }
             }
 
             // update menus and leaflet urls corresponding to the restaurant

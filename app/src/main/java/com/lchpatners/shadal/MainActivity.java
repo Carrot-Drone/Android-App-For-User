@@ -3,6 +3,8 @@ package com.lchpatners.shadal;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
+
+import java.io.File;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -29,6 +33,27 @@ public class MainActivity extends ActionBarActivity {
 
         hasNoDatabase = !DatabaseHelper.getInstance(this).checkDatabase();
         if (hasNoDatabase) {
+            Cursor cursor = null;
+            try {
+                if (getDatabasePath(DatabaseHelper.LEGACY_DATABASE_NAME).exists()) {
+                    File legacyFile = getDatabasePath(DatabaseHelper.LEGACY_DATABASE_NAME);
+                    SQLiteDatabase legacyDb = SQLiteDatabase.openDatabase(legacyFile.getPath(), null, 0); // EXCEPTION OCCURS
+                    cursor = legacyDb.rawQuery("SELECT server_id FROM restaurants WHERE is_favorite = 1;", null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        do {
+                            int id = cursor.getInt(cursor.getColumnIndex("server_id"));
+                            DatabaseHelper.legacyBookmarks.add(id);
+                        } while (cursor.moveToNext());
+                    }
+                    legacyFile.delete();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
             //helper.loadFromAssets();
             tryLoadingFromServer();
         }
