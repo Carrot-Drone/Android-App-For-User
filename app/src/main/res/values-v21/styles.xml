@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="BaseAppTheme">
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
+        <item name="actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
+        <item name="android:actionBarDivider">@color/transparent</item>
+        <item name="actionBarDivider">@color/transparent</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">?android:colorPrimary</item>
+        <item name="background">?android:colorPrimary</item>
+        <item name="android:elevation">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TabView" parent="Widget.AppCompat.Light.ActionBar.TabView.Inverse">
+        <item name="android:background">@drawable/actionbar_tab</item>
+        <item name="background">@drawable/actionbar_tab</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+</resources>

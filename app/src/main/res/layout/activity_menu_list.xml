@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/menu_list_background">
+
+        <TextView
+            android:id="@+id/phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingTop="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="8dp"
+            android:text="@string/hello_world"
+            android:textSize="22sp"
+            android:textColor="@color/white100"
+            android:drawableLeft="@drawable/icon_phone"
+            android:drawableStart="@drawable/icon_phone"
+            android:drawablePadding="20dp"
+            android:background="@drawable/button_call"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/open_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/open_time"
+            android:textSize="16sp"
+            android:textColor="@color/black54"/>
+
+        <TextView
+            android:id="@+id/coupon_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/hello_world"
+            android:textSize="16sp"
+            android:textColor="@color/black87"/>
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/transparent"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/random_button"
+        android:visibility="invisible"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/bg_random"
+        android:scaleType="fitCenter"/>
+
+</RelativeLayout>

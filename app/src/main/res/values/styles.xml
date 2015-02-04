@@ -1,30 +1,31 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme.NoActionBar" parent="BaseAppTheme">
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
+        <item name="actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
+        <item name="android:actionBarDivider">@color/transparent</item>
+        <item name="actionBarDivider">@color/transparent</item>
     </style>
 
-    <!-- ActionBar styles -->
-    <style name="AppTheme.ActionBar"
-           parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:height">56dp</item>
-        <item name="android:background">@color/shadal_default</item>
-        <item name="android:icon">@android:color/transparent</item>
-        <item name="android:displayOptions">showCustom|homeAsUp</item>
-        <item name="android:customNavigationLayout">@layout/action_bar</item>
+    <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/primary</item>
+        <item name="background">@color/primary</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TabView" parent="Widget.AppCompat.Light.ActionBar.TabView.Inverse">
+        <item name="android:background">@drawable/actionbar_tab</item>
+        <item name="background">@drawable/actionbar_tab</item>
+        <item name="android:paddingBottom">4dp</item>
     </style>
 
 </resources>
