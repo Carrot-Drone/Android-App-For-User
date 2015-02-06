@@ -175,16 +175,16 @@ public class MainActivity extends ActionBarActivity {
             Fragment fragment = null;
             switch (position) {
                 case MAIN:
-                    fragment = CategoryListFragment.newInstance(context);
+                    fragment = CategoryListFragment.newInstance();
                     break;
                 case BOOKMARK:
-                    fragment = BookmarkFragment.newInstance(context);
+                    fragment = BookmarkFragment.newInstance();
                     break;
                 case RANDOM:
-                    fragment = RandomFragment.newInstance(context);
+                    fragment = RandomFragment.newInstance();
                     break;
                 case SEE_MORE:
-                    fragment = SeeMoreFragment.newInstance(context);
+                    fragment = SeeMoreFragment.newInstance();
                     break;
             }
             return fragment;

@@ -1,6 +1,6 @@
 package com.lchpatners.shadal;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,11 +13,15 @@ import android.view.ViewGroup;
  */
 public class RandomFragment extends Fragment {
 
-    private static Context context;
+    private Activity activity;
 
-    public static RandomFragment newInstance(Context context) {
-        RandomFragment.context = context;
+    public static RandomFragment newInstance() {
         return new RandomFragment();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
@@ -26,8 +30,8 @@ public class RandomFragment extends Fragment {
         view.findViewById(R.id.random_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Restaurant restaurant = DatabaseHelper.getInstance(context).getRandomRestaurant();
-                Intent intent = new Intent(context, MenuListActivity.class);
+                Restaurant restaurant = DatabaseHelper.getInstance(activity).getRandomRestaurant();
+                Intent intent = new Intent(activity, MenuListActivity.class);
                 intent.putExtra("RESTAURANT", restaurant);
                 intent.putExtra("REFERRER", "RandomFragment");
                 startActivity(intent);

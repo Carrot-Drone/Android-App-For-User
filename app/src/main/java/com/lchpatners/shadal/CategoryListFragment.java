@@ -1,6 +1,6 @@
 package com.lchpatners.shadal;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,28 +16,32 @@ import android.widget.TextView;
  */
 public class CategoryListFragment extends Fragment {
 
-    private static Context context;
+    private Activity activity;
 
-    public static CategoryListFragment newInstance(Context context) {
-        CategoryListFragment.context = context;
+    public static CategoryListFragment newInstance() {
         return new CategoryListFragment();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
-        final CategoryListAdapter adapter = new CategoryListAdapter(context);
+        final CategoryListAdapter adapter = new CategoryListAdapter(activity);
         listView.setAdapter(adapter);
         // known issue : duplicated onItemClick when double tapping
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String category = ((TextView)view.findViewById(R.id.category_text)).getText().toString();
-                ((FragmentActivity)context).getSupportFragmentManager()
+                ((FragmentActivity)activity).getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right)
-                        .add(R.id.fragment_list_frame, RestaurantListFragment.newInstance(context, category))
+                        .add(R.id.fragment_list_frame, RestaurantListFragment.newInstance(activity, category))
                         .addToBackStack(null)
                         .commit();
             }

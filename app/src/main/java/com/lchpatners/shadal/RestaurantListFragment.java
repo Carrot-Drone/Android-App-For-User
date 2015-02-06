@@ -1,6 +1,6 @@
 package com.lchpatners.shadal;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,10 +17,9 @@ public class RestaurantListFragment extends Fragment {
 
     public static RestaurantListAdapter latestAdapter;
 
-    private static Context context;
+    private Activity activity;
 
-    public static RestaurantListFragment newInstance(Context context, String category) {
-        RestaurantListFragment.context = context;
+    public static RestaurantListFragment newInstance(String category) {
         RestaurantListFragment rlf = new RestaurantListFragment();
         Bundle args = new Bundle();
         args.putString("CATEGORY", category);
@@ -29,13 +28,18 @@ public class RestaurantListFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        this.activity = activity;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String category = getArguments().getString("CATEGORY");
 
-        RestaurantListAdapter adapter = new RestaurantListAdapter(RestaurantListFragment.context, category);
+        RestaurantListAdapter adapter = new RestaurantListAdapter(activity, category);
         latestAdapter = adapter;
 
-        Server server = new Server(context, Server.GWANAK);
+        Server server = new Server(activity, Server.GWANAK);
         server.updateCategory(category, adapter);
 
         View view = inflater.inflate(R.layout.list_view, container, false);
@@ -45,7 +49,7 @@ public class RestaurantListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (latestAdapter.getItem(position) instanceof Restaurant) {
-                    Intent intent = new Intent(context, MenuListActivity.class);
+                    Intent intent = new Intent(activity, MenuListActivity.class);
                     intent.putExtra("RESTAURANT", (Restaurant)latestAdapter.getItem(position));
                     intent.putExtra("REFERRER", "RestaurantListFragment");
                     startActivity(intent);
