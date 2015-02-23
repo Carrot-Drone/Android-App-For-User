@@ -1,13 +1,8 @@
 package com.lchpatners.shadal;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,46 +11,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
-
-import java.io.File;
 
 
 public class MainActivity extends ActionBarActivity {
 
     ViewPager viewPager;
-    boolean hasNoDatabase = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        hasNoDatabase = !DatabaseHelper.getInstance(this).checkDatabase();
-        if (hasNoDatabase) {
-            Cursor cursor = null;
-            try {
-                if (getDatabasePath(DatabaseHelper.LEGACY_DATABASE_NAME).exists()) {
-                    File legacyFile = getDatabasePath(DatabaseHelper.LEGACY_DATABASE_NAME);
-                    SQLiteDatabase legacyDb = SQLiteDatabase.openDatabase(legacyFile.getPath(), null, 0); // EXCEPTION OCCURS
-                    cursor = legacyDb.rawQuery("SELECT server_id FROM restaurants WHERE is_favorite = 1;", null);
-                    if (cursor != null && cursor.moveToFirst()) {
-                        do {
-                            int id = cursor.getInt(cursor.getColumnIndex("server_id"));
-                            DatabaseHelper.legacyBookmarks.add(id);
-                        } while (cursor.moveToNext());
-                    }
-                    legacyFile.delete();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-            //helper.loadFromAssets();
-            tryLoadingFromServer();
+        if (Preferences.getDeviceUuid(this) == null) {
+            startActivity(new Intent(this, InitializationActivity.class));
+            finish();
+            return;
         }
 
         viewPager = (ViewPager)findViewById(R.id.main_pager);
@@ -109,50 +79,6 @@ public class MainActivity extends ActionBarActivity {
         } else {
             viewPager.setCurrentItem(PagerAdapter.MAIN, true);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (hasNoDatabase) {
-            cancelInitialDownload();
-        }
-        super.onDestroy();
-    }
-
-    public void tryLoadingFromServer() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new Server(this, Server.GWANAK).updateAll();
-            hasNoDatabase = false;
-            Toast.makeText(this, getString(R.string.initial_download_guide), Toast.LENGTH_LONG).show();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.please_check_connectivity)
-                    .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            tryLoadingFromServer();
-                        }
-                    })
-                    .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            cancelInitialDownload();
-                        }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    cancelInitialDownload();
-                }
-            });
-            dialog.show();
-        }
-    }
-
-    public void cancelInitialDownload() {
-        deleteDatabase(DatabaseHelper.DATABASE_NAME);
-        finish();
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {

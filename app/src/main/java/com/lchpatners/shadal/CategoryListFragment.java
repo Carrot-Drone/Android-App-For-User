@@ -24,6 +24,7 @@ public class CategoryListFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        super.onAttach(activity);
         this.activity = activity;
     }
 
@@ -41,7 +42,7 @@ public class CategoryListFragment extends Fragment {
                 ((FragmentActivity)activity).getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right)
-                        .add(R.id.fragment_list_frame, RestaurantListFragment.newInstance(activity, category))
+                        .add(R.id.fragment_list_frame, RestaurantListFragment.newInstance(category))
                         .addToBackStack(null)
                         .commit();
             }

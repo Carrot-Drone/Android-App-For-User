@@ -27,9 +27,10 @@ public class SeeMoreListAdapter extends BaseAdapter {
         headers = new ArrayList<>();
         addHeader(context.getString(R.string.participate_in));
         addItem(context.getString(R.string.facebook_page));
-        addItem(context.getString(R.string.report));
-        addHeader(context.getString(R.string.family));
-        addItem(context.getString(R.string.yongon));
+        addItem(context.getString(R.string.report_restaurant));
+        addItem(context.getString(R.string.report_to_camdal));
+        addHeader(context.getString(R.string.settings));
+        addItem(context.getString(R.string.change_campus));
     }
 
     public void addItem(String item) {

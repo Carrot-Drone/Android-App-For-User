@@ -11,9 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +18,6 @@ import java.util.ArrayList;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "Gwanak";
     private static final int VERSION = 17;
 
     private static final String RESTAURANTS = "restaurants";
@@ -39,12 +35,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<Integer> legacyBookmarks = new ArrayList<>();
 
     private static DatabaseHelper instance;
+    private static String loadedCampus;
 
     private Context context;
 
     public static DatabaseHelper getInstance(Context context) {
-        if (instance == null) {
+        String selectedCampus = Preferences.getCampusEnglishName(context);
+        //Log.d("SHADAL", "selectedCampus is " + selectedCampus);
+        //Log.d("SHADAL", "loadedCampus is " + loadedCampus);
+        if (instance == null || !loadedCampus.equals(selectedCampus)) {
+            //Log.d("SHADAL", "Instantiating a new instance");
             synchronized (DatabaseHelper.class) {
+                loadedCampus = selectedCampus;
                 instance = new DatabaseHelper(context);
             }
         }
@@ -52,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private DatabaseHelper(Context context) {
-        super(context.getApplicationContext(), DATABASE_NAME, null, VERSION);
+        super(context.getApplicationContext(), Preferences.getCampusEnglishName(context), null, VERSION);
         this.context = context;
     }
 
@@ -72,27 +74,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkDatabase() {
-        File dbFile = context.getDatabasePath(DATABASE_NAME);
+        File dbFile = context.getDatabasePath(Preferences.getCampusEnglishName(context));
         return dbFile.exists();
-    }
-
-    public void loadFromAssets() {
-        try {
-            getReadableDatabase();
-            InputStream input = context.getAssets().open(DATABASE_NAME);
-            String databasePath = context.getDatabasePath(DATABASE_NAME).getPath();
-            OutputStream output = new FileOutputStream(databasePath);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = input.read(buffer)) > 0){
-                output.write(buffer, 0, length);
-            }
-            output.flush();
-            output.close();
-            input.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void updateRestaurant(JSONObject restaurantJson) {
@@ -183,7 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateCategory(JSONArray restaurants, String category, final RestaurantListAdapter adapter) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
-        Server server = new Server(context, Server.GWANAK);
+        Server server = new Server(context);
         try {
             for (int i = 0; i < restaurants.length(); i++) {
                 JSONObject restaurant = restaurants.getJSONObject(i);

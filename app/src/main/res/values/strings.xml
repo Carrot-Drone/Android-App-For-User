@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">샤달</string>
+    <string name="app_name">캠퍼스:달</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="app_subtitle">우리 학교 배달앱</string>
+    <string name="select_campus">캠퍼스 선택하기</string>
+    
     <string name="main">메인</string>
     <string name="bookmark">즐겨찾기</string>
     <string name="random">아무거나</string>
     <string name="see_more">더 보기</string>
+
     <string-array name="categories">
         <item>치킨</item>
         <item>피자</item>
@@ -18,6 +24,7 @@
         <item>냉면</item>
         <item>기타</item>
     </string-array>
+
     <string name="title_activity_info">상세 정보</string>
     <string name="open_time">영업시간</string>
     <string name="won">원</string>
@@ -26,11 +33,15 @@
 주사위를 던져 보세요!"</string>
     <string name="participate_in">참여하기</string>
     <string name="facebook_page">페이스북 페이지</string>
-    <string name="report">맛집 제보하기</string>
-    <string name="family">샤달 패밀리</string>
-    <string name="yongon">샤달 : 연건 캠퍼스</string>
-    <string name="report_title">[서울대 관악캠][Android][맛집제보]</string>
-    <string name="report_content">이 가게도 추가해 주세요!</string>
+    <string name="report_restaurant">맛집 제보하기</string>
+    <string name="report_to_camdal">캠달에 건의/문의하기</string>
+    <string name="settings">설정</string>
+    <string name="change_campus">캠퍼스 변경하기</string>
+
+    <string name="report_camdal_title">캠달에게 건의/문의합니다!</string>
+    <string name="report_camdal_content" />
+    <string name="report_restaurant_title">[Android][맛집제보]</string>
+    <string name="report_restaurant_content">이 가게도 추가해 주세요!</string>
     <string name="select_app">사용할 앱을 선택하세요.</string>
     <string name="title_activity_flyer">전단지 보기</string>
     <string name="please_check_connectivity">인터넷 연결을 확인해 주세요.</string>
@@ -38,5 +49,6 @@
     <string name="exit">종료</string>
     <string name="initial_download_guide">"초기 다운로드를 시작합니다.
 완료까지 30초 정도 소요됩니다."</string>
+    <string name="title_activity_intro">IntroActivity</string>
 
 </resources>

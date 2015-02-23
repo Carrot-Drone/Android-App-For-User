@@ -29,6 +29,7 @@ public class RestaurantListFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        super.onAttach(activity);
         this.activity = activity;
     }
 
@@ -39,7 +40,7 @@ public class RestaurantListFragment extends Fragment {
         RestaurantListAdapter adapter = new RestaurantListAdapter(activity, category);
         latestAdapter = adapter;
 
-        Server server = new Server(activity, Server.GWANAK);
+        Server server = new Server(activity);
         server.updateCategory(category, adapter);
 
         View view = inflater.inflate(R.layout.list_view, container, false);

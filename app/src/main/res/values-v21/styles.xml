@@ -6,8 +6,9 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="BaseAppTheme">
-        <item name="android:windowActionBar">false</item>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">

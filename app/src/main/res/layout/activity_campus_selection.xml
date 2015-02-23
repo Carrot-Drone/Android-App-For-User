@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:theme="@style/AppTheme.NoActionBar">
+
+    <TextView
+        android:id="@+id/select_campus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:text="@string/select_campus"
+        android:textSize="24sp"
+        android:textColor="@color/white100"/>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="210dp"
+        android:layout_height="36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="72dp"
+        android:background="@drawable/bg_long_white_button"
+        android:text="GO!"
+        android:textSize="15sp"
+        android:textColor="@color/primary"
+        android:alpha="0.5"
+        android:clickable="false"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/select_campus"
+        android:layout_above="@id/confirm"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"/>
+
+</RelativeLayout>

@@ -4,8 +4,8 @@
 
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="BaseAppTheme">
-        <item name="android:windowActionBar">false</item>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">

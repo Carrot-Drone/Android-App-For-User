@@ -25,6 +25,7 @@ public class BookmarkFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        super.onAttach(activity);
         this.activity = activity;
     }
 
@@ -34,7 +35,7 @@ public class BookmarkFragment extends Fragment {
         ListView listView = (ListView)view.findViewById(R.id.list_view);
 
         ImageView img = new ImageView(activity);
-        img.setImageResource(R.drawable.no_bookmarks);
+        img.setImageResource(R.drawable.bg_bookmarks_empty);
         img.setVisibility(View.GONE);
         ((ViewGroup)listView.getParent()).addView(img);
         listView.setEmptyView(img);

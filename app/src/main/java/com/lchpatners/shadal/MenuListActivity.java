@@ -7,21 +7,16 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 
@@ -48,6 +43,12 @@ public class MenuListActivity extends ActionBarActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    RotateAnimation anim =
+                            new RotateAnimation(0, 360,
+                                    Animation.RELATIVE_TO_SELF, 0.5f,
+                                    Animation.RELATIVE_TO_SELF, 0.5f);
+                    anim.setDuration(500);
+                    v.startAnimation(anim);
                     DatabaseHelper helper = DatabaseHelper.getInstance(MenuListActivity.this);
                     restaurant = helper.getRandomRestaurant();
                     setView();
@@ -102,7 +103,7 @@ public class MenuListActivity extends ActionBarActivity {
 
             getSupportActionBar().setTitle(restaurant.getName());
 
-            Server server = new Server((this), Server.GWANAK);
+            final Server server = new Server(this);
             server.updateRestaurant(restaurant.getServerId(), restaurant.getUpdatedTime(), this);
 
             if (menu != null) {
@@ -119,7 +120,7 @@ public class MenuListActivity extends ActionBarActivity {
             phoneNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new CallLoggingTask().execute();
+                    server.sendCallLog(restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));
                     startActivity(intent);
@@ -139,7 +140,7 @@ public class MenuListActivity extends ActionBarActivity {
     }
 
     public void setMenuItemChecked(MenuItem item, boolean checked) {
-        Drawable drawable = getResources().getDrawable(R.drawable.actionbar_star);
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_action_star);
         drawable = resizeDrawable(drawable, 0.8f);
         if (checked) {
             drawable.mutate().setColorFilter(Color.YELLOW, PorterDuff.Mode.MULTIPLY);
@@ -175,28 +176,5 @@ public class MenuListActivity extends ActionBarActivity {
         close = String.format("%02d:%02d", hour, 0);
 
         return getString(R.string.open_time) + ": " + open + " ~ " + close;
-    }
-
-    private class CallLoggingTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                HttpClient client = new DefaultHttpClient();
-                HttpPost post = new HttpPost("http://shadal.kr/new_call");
-                ArrayList<BasicNameValuePair> value = new ArrayList<>();
-                value.add(new BasicNameValuePair("phoneNumber", restaurant.getPhoneNumber()));
-                value.add(new BasicNameValuePair("name", restaurant.getName()));
-                value.add(new BasicNameValuePair("device", "android"));
-                value.add(new BasicNameValuePair("campus", Server.GWANAK));
-                value.add(new BasicNameValuePair("server_id", Integer.toString(restaurant.getServerId())));
-                post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
-                client.execute(post);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 }

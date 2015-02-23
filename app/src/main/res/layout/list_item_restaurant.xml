@@ -22,7 +22,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/recent"/>
+            android:src="@drawable/ic_new"/>
         <ImageView
             android:id="@+id/coupon"
             android:layout_width="24dp"
@@ -33,7 +33,7 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/coupon"/>
+            android:src="@drawable/ic_coupon"/>
         <ImageView
             android:id="@+id/flyer"
             android:layout_width="24dp"
@@ -44,7 +44,7 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/actionbar_flyer"/>
+            android:src="@drawable/ic_action_flyer"/>
         <ImageView
             android:id="@+id/bookmark"
             android:layout_width="24dp"
@@ -55,7 +55,7 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/actionbar_star"
+            android:src="@drawable/ic_action_star"
             android:tint="#FFDD00"/>
     </RelativeLayout>
 

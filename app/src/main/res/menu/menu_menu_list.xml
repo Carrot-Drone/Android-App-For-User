@@ -4,13 +4,13 @@
     tools:context="com.lchpatners.shadal.MenuListActivity">
     <item android:id="@+id/bookmark"
         android:title="@string/bookmark"
-        android:icon="@drawable/actionbar_star"
+        android:icon="@drawable/ic_action_star"
         android:orderInCategory="200"
         app:showAsAction="always" />
 
     <item android:id="@+id/see_flyer"
         android:title="@string/see_flyer"
-        android:icon="@drawable/actionbar_flyer"
+        android:icon="@drawable/ic_action_flyer"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
 </menu>
