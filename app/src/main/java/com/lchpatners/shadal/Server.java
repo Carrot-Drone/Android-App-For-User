@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -90,8 +89,7 @@ public class Server {
                 params.add(new BasicNameValuePair("uuid", getDeviceUuid(context)));
                 params.add(new BasicNameValuePair("campus", Preferences.getCampusEnglishName(context)));
                 params.add(new BasicNameValuePair("device", "android"));
-                String serviceCall = makeServiceCall(urls[0], GET, params);
-                Log.d("SERVER", serviceCall);
+                makeServiceCall(urls[0], GET, params);
                 return null;
             }
         }.execute(BASE_URL + UPDATE_DEVICE);

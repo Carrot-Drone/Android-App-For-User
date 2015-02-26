@@ -9,8 +9,6 @@ import android.widget.Button;
 
 public class InitializationActivity extends Activity {
 
-    static Button confirm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +19,6 @@ public class InitializationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(InitializationActivity.this, CampusSelectionActivity.class));
-            }
-        });
-        confirm = (Button)findViewById(R.id.confirm);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(InitializationActivity.this, MainActivity.class));
                 finish();
             }
         });

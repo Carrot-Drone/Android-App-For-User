@@ -129,8 +129,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             for (int i = 0; i < menus.length(); i++) {
                 JSONObject menu = menus.getJSONObject(i);
                 db.execSQL(String.format(
-                        "DELETE FROM %s WHERE restaurant_id = %d AND menu = '%s';",
-                        MENUS, restaurantServerId, menu.getString("name")
+                        "DELETE FROM %s WHERE restaurant_id = %d AND section = '%s' AND menu = '%s';",
+                        MENUS, restaurantServerId, menu.getString("section"), menu.getString("name")
                 ));
                 values = new ContentValues();
                 values.put("menu", menu.getString("name"));

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -50,6 +51,7 @@ public class CampusSelectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 initializeDatabase();
+                startActivity(new Intent(CampusSelectionActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -134,10 +136,6 @@ public class CampusSelectionActivity extends Activity {
                         if (confirm != null) {
                             confirm.setAlpha(1.0f);
                             confirm.setClickable(true);
-                        }
-                        if (InitializationActivity.confirm != null) {
-                            InitializationActivity.confirm.setAlpha(1.0f);
-                            InitializationActivity.confirm.setClickable(true);
                         }
 
                         Server server = new Server(CampusSelectionActivity.this);
