@@ -36,6 +36,13 @@ public class FlyerActivity extends ActionBarActivity {
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), urls));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+        helper.sendScreen("전단지 화면");
+    }
+
     private class PagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<String> urls;

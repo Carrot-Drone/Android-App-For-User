@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 17;
+    private static final int VERSION = 18;
 
     private static final String RESTAURANTS = "restaurants";
     private static final String MENUS = "menus";
@@ -41,10 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static DatabaseHelper getInstance(Context context) {
         String selectedCampus = Preferences.getCampusEnglishName(context);
-        //Log.d("SHADAL", "selectedCampus is " + selectedCampus);
-        //Log.d("SHADAL", "loadedCampus is " + loadedCampus);
-        if (instance == null || !loadedCampus.equals(selectedCampus)) {
-            //Log.d("SHADAL", "Instantiating a new instance");
+        if (instance == null || (loadedCampus != null && !loadedCampus.equals(selectedCampus))) {
             synchronized (DatabaseHelper.class) {
                 loadedCampus = selectedCampus;
                 instance = new DatabaseHelper(context);
@@ -74,7 +71,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkDatabase() {
-        File dbFile = context.getDatabasePath(Preferences.getCampusEnglishName(context));
+        String dbName = Preferences.getCampusEnglishName(context);
+        if (dbName == null) return false;
+        File dbFile = context.getDatabasePath(dbName);
         return dbFile.exists();
     }
 
@@ -97,7 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put("updated_at", restaurantJson.getString("updated_at"));
             values.put("name", restaurantJson.getString("name"));
             values.put("phoneNumber", restaurantJson.getString("phone_number"));
-            values.put("category", restaurantJson.getString("category"));
+            values.put("category", restaurantJson.getString("category").trim());
             values.put("openingHours", restaurantJson.getString("openingHours"));
             values.put("closingHours", restaurantJson.getString("closingHours"));
             values.put("has_flyer", (restaurantJson.getBoolean("has_flyer")) ? 1 : 0);
@@ -128,10 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             JSONArray menus = restaurantJson.getJSONArray("menus");
             for (int i = 0; i < menus.length(); i++) {
                 JSONObject menu = menus.getJSONObject(i);
-                db.execSQL(String.format(
-                        "DELETE FROM %s WHERE restaurant_id = %d AND section = '%s' AND menu = '%s';",
-                        MENUS, restaurantServerId, menu.getString("section"), menu.getString("name")
-                ));
+
                 values = new ContentValues();
                 values.put("menu", menu.getString("name"));
                 values.put("section", menu.getString("section"));
@@ -293,22 +289,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Menu> getMenusByRestaurantServerId(long restaurantServerId) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Menu> list = new ArrayList<>();
+        ArrayList<String> sections = new ArrayList<>();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE restaurant_id = %d;",
+                   "SELECT section FROM %s WHERE restaurant_id = %d;",
                     MENUS, restaurantServerId
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    Menu menu = new Menu();
-                    menu.setId(cursor.getInt((cursor.getColumnIndex("id"))));
-                    menu.setItem((cursor.getString(cursor.getColumnIndex("menu"))));
-                    menu.setSection(cursor.getString(cursor.getColumnIndex("section")));
-                    menu.setPrice(cursor.getInt(cursor.getColumnIndex("price")));
-                    menu.setRestaurantId(cursor.getInt(cursor.getColumnIndex("restaurant_id")));
-                    list.add(menu);
+                    String section = cursor.getString(cursor.getColumnIndex("section"));
+                    if (!sections.contains(section)) {
+                        sections.add(section);
+                    }
                 } while (cursor.moveToNext());
+            }
+            for (String section : sections) {
+                cursor = db.rawQuery(String.format(
+                        "SELECT * FROM %s WHERE restaurant_id = %d AND section = '%s';",
+                        MENUS, restaurantServerId, section
+                ), null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    do {
+                        Menu menu = new Menu();
+                        menu.setId(cursor.getInt((cursor.getColumnIndex("id"))));
+                        menu.setItem((cursor.getString(cursor.getColumnIndex("menu"))));
+                        menu.setSection(cursor.getString(cursor.getColumnIndex("section")));
+                        menu.setPrice(cursor.getInt(cursor.getColumnIndex("price")));
+                        menu.setRestaurantId(cursor.getInt(cursor.getColumnIndex("restaurant_id")));
+                        list.add(menu);
+                    } while (cursor.moveToNext());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

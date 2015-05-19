@@ -49,6 +49,8 @@
     <string name="exit">종료</string>
     <string name="initial_download_guide">"초기 다운로드를 시작합니다.
 완료까지 30초 정도 소요됩니다."</string>
+    <string name="too_old_version">"애플리케이션의 버전이 너무 낮습니다.
+스토어에서 업데이트를 해주세요."</string>
     <string name="title_activity_intro">IntroActivity</string>
 
 </resources>

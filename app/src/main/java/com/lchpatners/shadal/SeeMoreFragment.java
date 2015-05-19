@@ -32,6 +32,23 @@ public class SeeMoreFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
+            helper.sendScreen("더보기 화면");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isResumed()) {
+            onResume();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RelativeLayout layout = new RelativeLayout(activity);
         View view = inflater.inflate(R.layout.list_view, null, false);
@@ -44,6 +61,9 @@ public class SeeMoreFragment extends Fragment {
                     TextView item = (TextView)view.findViewById(R.id.item);
                     CharSequence content = item.getText();
                     if (content.equals(getString(R.string.facebook_page))) {
+                        AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                        helper.sendEvent("UX", "link_to_facebook_clicked", "facebook");
+
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         try {
                             activity.getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -53,15 +73,21 @@ public class SeeMoreFragment extends Fragment {
                         }
                         startActivity(intent);
                     } else if (content.equals(getString(R.string.report_restaurant))) {
+                        AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                        helper.sendEvent("UX", "send_email", "individual");
+
                         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",
                                 Preferences.getCampusEmail(activity)
-                        , null));
+                                , null));
                         intent.putExtra(Intent.EXTRA_SUBJECT,
                                 "[" + Preferences.getCampusKoreanShortName(activity) + "]" +
                                 activity.getString(R.string.report_restaurant_title));
                         intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.report_restaurant_content));
                         startActivity(Intent.createChooser(intent, activity.getString(R.string.select_app)));
                     } else if (content.equals(getString(R.string.report_to_camdal))) {
+                        AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                        helper.sendEvent("UX", "send_email", "campusdal");
+
                         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",
                                 "campusdal@gmail.com"
                                 , null));
@@ -87,6 +113,9 @@ public class SeeMoreFragment extends Fragment {
         banner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                helper.sendEvent("UX", "talkparty", "talkparty");
+
                 Intent intent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://talkparty.net/company/board_view.asp?ctype=1&idx=102"));
                 startActivity(intent);

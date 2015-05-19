@@ -14,6 +14,8 @@ public class InitializationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initialization);
 
+        new CampusSelectionActivity.CampusesLoadingTask().execute();
+
         Button selectCampus = (Button)findViewById(R.id.select_campus);
         selectCampus.setOnClickListener(new View.OnClickListener() {
             @Override

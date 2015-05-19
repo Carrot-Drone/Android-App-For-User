@@ -59,12 +59,12 @@ public class Preferences {
 
     public static String getCampusKoreanShortName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-        return settings.getString("CAMPUS_KOR_SHORT", "서울대 관악캠");
+        return settings.getString("CAMPUS_KOR_SHORT", null);
     }
 
     public static String getCampusEnglishName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-        return settings.getString("CAMPUS_ENG", "Gwanak");
+        return settings.getString("CAMPUS_ENG", null);
     }
 
     public static void setDeviceUuid(Context context, String id) {

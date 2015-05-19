@@ -34,6 +34,24 @@ public class RestaurantListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
+            helper.sendScreen("음식점 리스트 화면");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isResumed()) {
+            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
+            helper.sendScreen("음식점 리스트 화면");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final String category = getArguments().getString("CATEGORY");
 
@@ -50,8 +68,13 @@ public class RestaurantListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (latestAdapter.getItem(position) instanceof Restaurant) {
+                    Restaurant restaurant = (Restaurant)latestAdapter.getItem(position);
+
+                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
+
                     Intent intent = new Intent(activity, MenuListActivity.class);
-                    intent.putExtra("RESTAURANT", (Restaurant)latestAdapter.getItem(position));
+                    intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "RestaurantListFragment");
                     startActivity(intent);
                 }

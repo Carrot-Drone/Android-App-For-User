@@ -30,6 +30,23 @@ public class BookmarkFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
+            helper.sendScreen("즐겨찾기 화면");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isResumed()) {
+            onResume();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
@@ -48,8 +65,13 @@ public class BookmarkFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (adapter.getItem(position) instanceof Restaurant) {
+                    Restaurant restaurant = (Restaurant) adapter.getItem(position);
+
+                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                    helper.sendEvent("UX", "res_in_favorite_clicked", restaurant.getName());
+
                     Intent intent = new Intent(activity, MenuListActivity.class);
-                    intent.putExtra("RESTAURANT", (Restaurant) adapter.getItem(position));
+                    intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "BookmarkFragment");
                     startActivity(intent);
                 }

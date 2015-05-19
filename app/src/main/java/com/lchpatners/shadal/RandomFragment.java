@@ -26,12 +26,33 @@ public class RandomFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
+            helper.sendScreen("아무거나 화면");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isResumed()) {
+            onResume();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_random, container, false);
         view.findViewById(R.id.random_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Restaurant restaurant = DatabaseHelper.getInstance(activity).getRandomRestaurant();
+
+                AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                helper.sendEvent("UX", "random_res_clicked", restaurant.getName());
+
                 Intent intent = new Intent(activity, MenuListActivity.class);
                 intent.putExtra("RESTAURANT", restaurant);
                 intent.putExtra("REFERRER", "RandomFragment");

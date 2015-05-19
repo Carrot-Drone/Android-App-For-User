@@ -1,9 +1,17 @@
 package com.lchpatners.shadal;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,6 +26,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -34,16 +43,14 @@ public class Server {
     public static final int POST = 1;
 
     public static final String BASE_URL = "http://www.shadal.kr";
-    public static final String CAMPUSES = "/campuses";
+    public static final String CAMPUSES = "/campuses_all";
     public static final String UPDATE_DEVICE = "/updateDevice";
     public static final String ALL_RESTAURANTS = "/allRestaurants?campus=";
     public static final String CHECK_FOR_UPDATE = "/checkForUpdate";
     public static final String CHECK_FOR_RES_IN_CATEGORY = "/checkForResInCategory";
+    public static final String APP_MINIMUM_VERSION = "/appMinimumVersion";
 
     private Context context;
-    private static TotalUpdateTask totalUpdateTask;
-    private static CategoryUpdateTask categoryUpdateTask;
-    private static RestaurantUpdateTask restaurantUpdateTask;
 
     public Server(Context context) {
         this.context = context;
@@ -95,7 +102,7 @@ public class Server {
         }.execute(BASE_URL + UPDATE_DEVICE);
     }
 
-    private static String getDeviceUuid(final Context context) {
+    public static String getDeviceUuid(final Context context) {
         final String id = Preferences.getDeviceUuid(context);
         UUID uuid;
         if (id != null) {
@@ -117,12 +124,53 @@ public class Server {
         return uuid.toString();
     }
 
-    public void updateAll() {
-        if (totalUpdateTask != null) {
-            totalUpdateTask.cancel(true);
+    public void checkAppMinimumVersion() {
+        new AppMinimumVersionTask().execute();
+    }
+
+    private class AppMinimumVersionTask extends AsyncTask<Void, Void, Void> {
+        int minimumVersion, appVersion;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                minimumVersion = -1;
+                String serviceCall = makeServiceCall(BASE_URL + APP_MINIMUM_VERSION, GET, null);
+                if (serviceCall == null) {
+                    return null;
+                }
+                minimumVersion = new JSONObject(serviceCall).getInt("minimum_android_version");
+                if (minimumVersion == -1) {
+                    throw new RuntimeException("failed to get minimum version code from the server");
+                }
+                appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            } catch (JSONException | PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-        totalUpdateTask = new TotalUpdateTask();
-        totalUpdateTask.execute(BASE_URL + ALL_RESTAURANTS +
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (appVersion < minimumVersion) {
+                Toast.makeText(context, context.getString(R.string.too_old_version), Toast.LENGTH_LONG).show();
+                try {
+                    Activity activity = (Activity)context;
+                    activity.startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=" + activity.getPackageName())));
+                } catch (ActivityNotFoundException e) {
+                    Activity activity = (Activity)context;
+                    activity.startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=" + activity.getPackageName())));
+                } finally {
+                    ((Activity)context).finish();
+                }
+            }
+        }
+    }
+
+    public void updateAll() {
+        new TotalUpdateTask().execute(BASE_URL + ALL_RESTAURANTS +
                 Preferences.getCampusEnglishName(context));
     }
 
@@ -151,11 +199,7 @@ public class Server {
     }
 
     public void updateRestaurant(int id, String updatedTime, MenuListActivity activity) {
-        if (restaurantUpdateTask != null) {
-            restaurantUpdateTask.cancel(true);
-        }
-        restaurantUpdateTask = new RestaurantUpdateTask(id, updatedTime, activity);
-        restaurantUpdateTask.execute(BASE_URL + CHECK_FOR_UPDATE);
+        new RestaurantUpdateTask(id, updatedTime, activity).execute(BASE_URL + CHECK_FOR_UPDATE);
     }
 
     private class RestaurantUpdateTask extends AsyncTask<String, Void, Void> {
@@ -171,11 +215,12 @@ public class Server {
 
         @Override
         protected Void doInBackground(String... urls) {
+            String serviceCall = null;
             try {
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("restaurant_id", Integer.toString(id)));
                 params.add(new BasicNameValuePair("updated_at", updatedTime));
-                String serviceCall = makeServiceCall(urls[0], GET, params);
+                serviceCall = makeServiceCall(urls[0], GET, params);
                 if (serviceCall == null) {
                     return null;
                 }
@@ -189,11 +234,7 @@ public class Server {
     }
 
     public void updateCategory(String category, RestaurantListAdapter adapter) {
-        if (categoryUpdateTask != null) {
-            categoryUpdateTask.cancel(true);
-        }
-        categoryUpdateTask = new CategoryUpdateTask(category, adapter);
-        categoryUpdateTask.execute(BASE_URL + CHECK_FOR_RES_IN_CATEGORY);
+        new CategoryUpdateTask(category, adapter).execute(BASE_URL + CHECK_FOR_RES_IN_CATEGORY);
     }
 
     private class CategoryUpdateTask extends AsyncTask<String, Void, Void> {

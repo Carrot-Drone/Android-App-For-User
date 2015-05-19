@@ -11,12 +11,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,8 @@ public class CampusSelectionActivity extends Activity {
     private static JSONArray campuses;
 
     private boolean hasNoDatabase;
+
+    ListView listView;
     private Button confirm;
 
     @Override
@@ -41,48 +46,83 @@ public class CampusSelectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_campus_selection);
 
+        listView = (ListView)findViewById(R.id.list_view);
+
+        TextView emptyView = new TextView(this);
+        emptyView.setText("loading...");
+        emptyView.setTextColor(getResources().getColor(R.color.white100));
+        emptyView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        emptyView.setLayoutParams(params);
+        emptyView.setVisibility(View.GONE);
+        ((ViewGroup)listView.getParent()).addView(emptyView);
+        listView.setEmptyView(emptyView);
+
         if (campuses != null) {
             setListView();
         }
         tryShowingCampusesFromServer();
 
         confirm = (Button)findViewById(R.id.confirm);
+        if (Preferences.getCampusKoreanShortName(this) != null) {
+            confirm.setAlpha(1.0f);
+            confirm.setClickable(true);
+        }
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initializeDatabase();
-                startActivity(new Intent(CampusSelectionActivity.this, MainActivity.class));
+                if (Preferences.getCampusKoreanShortName(CampusSelectionActivity.this) == null) {
+                    return;
+                }
+
+                boolean isFirst = initializeDatabase();
+
+                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+                helper.sendEvent("UX", isFirst ? "select_campus_start" : "select_campus",
+                        Preferences.getCampusKoreanShortName(CampusSelectionActivity.this));
+
+                Intent intent = new Intent(CampusSelectionActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+        helper.sendScreen("캠퍼스 선택하기 화면");
+    }
     public void showCampusesFromServer() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    String serviceCall = Server.makeServiceCall(
-                            Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
-                    if (serviceCall == null) {
-                        return null;
-                    }
-                    campuses = new JSONArray(serviceCall);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
+        new CampusesLoadingTask() {
             @Override
             protected void onPostExecute(Void aVoid) {
                 setListView();
             }
         }.execute();
     }
+    public static class CampusesLoadingTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String serviceCall = Server.makeServiceCall(
+                        Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
+                if (serviceCall == null) {
+                    return null;
+                }
+                campuses = new JSONArray(serviceCall);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     public void setListView() {
-        final ListView listView = (ListView)findViewById(R.id.list_view);
         BaseAdapter adapter = new BaseAdapter() {
             @Override
             public int getCount() {
@@ -119,7 +159,14 @@ public class CampusSelectionActivity extends Activity {
                 } catch (NullPointerException e) {
                     return null;
                 }
-                textView.setTextColor(getResources().getColor(R.color.black87));
+                String selected = Preferences.getCampusKoreanShortName(CampusSelectionActivity.this);
+                if (textView.getText().equals(selected)) {
+                    textView.setTextColor(getResources().getColor(R.color.white100));
+                    textView.setBackgroundColor(getResources().getColor(R.color.primary_light));
+                } else {
+                    textView.setTextColor(getResources().getColor(R.color.black87));
+                    textView.setBackgroundColor(getResources().getColor(R.color.white100));
+                }
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -177,8 +224,8 @@ public class CampusSelectionActivity extends Activity {
         }
     }
 
-    public void initializeDatabase() {
-        hasNoDatabase = !DatabaseHelper.getInstance(CampusSelectionActivity.this).checkDatabase();
+    public boolean initializeDatabase() {
+        boolean isFirst = hasNoDatabase = !DatabaseHelper.getInstance(CampusSelectionActivity.this).checkDatabase();
         if (hasNoDatabase) {
             Cursor cursor = null;
             try {
@@ -203,6 +250,7 @@ public class CampusSelectionActivity extends Activity {
             }
             tryLoadingFromServer();
         }
+        return isFirst;
     }
 
     public void tryLoadingFromServer() {

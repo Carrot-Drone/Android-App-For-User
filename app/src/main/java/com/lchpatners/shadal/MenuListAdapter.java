@@ -95,6 +95,9 @@ public class MenuListAdapter extends BaseAdapter {
                 TextView item = (TextView)convertView.findViewById(R.id.item);
                 item.setText(((Menu)data.get(position)).getItem());
                 TextView price = (TextView)convertView.findViewById(R.id.price);
+                if (price.getText().equals("0")) {
+                    price.setVisibility(View.INVISIBLE);
+                }
                 price.setText(((Menu)data.get(position)).getPrice() + context.getString(R.string.won));
                 break;
         }
