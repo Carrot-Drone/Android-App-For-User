@@ -12,11 +12,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * Displays bookmarks.
  */
 public class BookmarkFragment extends Fragment {
 
+    /**
+     * The {@link android.app.Activity Activity} to which this attaches.
+     */
     private Activity activity;
+    /**
+     * The lastly instantiated instance's {@link com.lchpatners.shadal.RestaurantListAdapter
+     * RestaurantListAdapter}. Used to reload the view from another {@link android.app.Activity Activity}.
+     */
     public static RestaurantListAdapter latestAdapter;
 
     public static BookmarkFragment newInstance() {
@@ -32,6 +39,11 @@ public class BookmarkFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        /*
+         * Without this condition check, there would be multiple onResume() calls of
+         * all the Fragments in the parent ViewPager this and they belong. This is because
+         * of the relationship of Fragment life cycle and Activity life cycle.
+         */
         if (getUserVisibleHint()) {
             AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
             helper.sendScreen("즐겨찾기 화면");
@@ -51,6 +63,7 @@ public class BookmarkFragment extends Fragment {
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
 
+        // Create and set the empty view to show up when the list is empty.
         ImageView img = new ImageView(activity);
         img.setImageResource(R.drawable.bg_bookmarks_empty);
         img.setVisibility(View.GONE);

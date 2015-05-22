@@ -8,35 +8,61 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Guanadah on 2015-01-26.
+ * {@link android.widget.Adapter Adapter} of {@link com.lchpatners.shadal.SeeMoreFragment
+ * SeeMoreFragment}.
  */
 public class SeeMoreListAdapter extends BaseAdapter {
 
+    /**
+     * {@link android.content.Context Context} this belongs to.
+     */
     private Context context;
-    private ArrayList<String> data;
-    private ArrayList<String> headers;
+    /**
+     * List of all data, including both {@link #HEADER} and {@link #ITEM}.
+     */
+    private List<String> data;
+    /**
+     * List of {@link #HEADER} data.
+     */
+    private List<String> headers;
 
+    /**
+     * Indicates the header view type.
+     * Used for {@link com.lchpatners.shadal.Restaurant#category categories},
+     * only when the data source is bookmarks.
+     */
     private static final int HEADER = 0;
+    /**
+     * Indicates the item view type.
+     * Used for {@link com.lchpatners.shadal.Restaurant#name names}.
+     */
     private static final int ITEM = 1;
+    /**
+     * The number of view types.
+     */
+    private static final int VIEW_TYPE_COUNT = 2;
 
     public SeeMoreListAdapter(Context context) {
         this.context = context;
         data = new ArrayList<>();
         headers = new ArrayList<>();
-        addHeader(context.getString(R.string.participate_in));
-        addItem(context.getString(R.string.facebook_page));
-        addItem(context.getString(R.string.report_restaurant));
-        addItem(context.getString(R.string.report_to_camdal));
-        addHeader(context.getString(R.string.settings));
-        addItem(context.getString(R.string.change_campus));
     }
 
+    /**
+     * Add an item.
+     * @param item Item to add.
+     */
     public void addItem(String item) {
         data.add(item);
     }
 
+    /**
+     * Add a header.
+     * @param header Header to add.
+     */
     public void addHeader(String header) {
         data.add(header);
         headers.add(header);
@@ -49,7 +75,7 @@ public class SeeMoreListAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return VIEW_TYPE_COUNT;
     }
 
     @Override
@@ -58,7 +84,7 @@ public class SeeMoreListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public String getItem(int position) {
         return data.get(position);
     }
 

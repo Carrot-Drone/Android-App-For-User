@@ -14,14 +14,26 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Guanadah on 2015-01-26.
+ * Manages the SQLite Database.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    /**
+     * Database version.
+     */
     private static final int VERSION = 18;
 
+    /**
+     * The restaurants table's name.
+     */
     private static final String RESTAURANTS = "restaurants";
+    /**
+     * The menu table's name.
+     */
     private static final String MENUS = "menus";
+    /**
+     * The flyer table's name.
+     */
     private static final String FLYERS = "flyers";
 
     private static final String RESTAURANT_COLUMNS = "(id INTEGER PRIMARY KEY, server_id INT, name TEXT, " +
@@ -32,26 +44,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
 
     public static final String LEGACY_DATABASE_NAME = "Shadal";
+    /**
+     * A list of bookmarks from the old version's database.
+     * Each integer value means the server-side id of restaurants.
+     */
     public static ArrayList<Integer> legacyBookmarks = new ArrayList<>();
 
+
+    /**
+     * The singleton object.
+     */
     private static DatabaseHelper instance;
+    /**
+     * The campus whose database is currently loaded to be handled..
+     */
     private static String loadedCampus;
 
     private Context context;
 
+    /**
+     * If {@link #instance} is null, or {@link #loadedCampus} is different from the
+     * user's last pick, instantiate a new object of {@link com.lchpatners.shadal.DatabaseHelper
+     * DatabaseHelper}.
+     * @param context {@link android.content.Context}
+     * @return A {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper} instance.
+     */
     public static DatabaseHelper getInstance(Context context) {
         String selectedCampus = Preferences.getCampusEnglishName(context);
         if (instance == null || (loadedCampus != null && !loadedCampus.equals(selectedCampus))) {
+            // Thread-safely
             synchronized (DatabaseHelper.class) {
                 loadedCampus = selectedCampus;
-                instance = new DatabaseHelper(context);
+                instance = new DatabaseHelper(context, selectedCampus);
             }
         }
         return instance;
     }
 
-    private DatabaseHelper(Context context) {
-        super(context.getApplicationContext(), Preferences.getCampusEnglishName(context), null, VERSION);
+    /**
+     * Constructs a {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper}.
+     * @param context {@link android.content.Context}
+     * @param selectedCampus The campus database to be handled.
+     */
+    private DatabaseHelper(Context context, String selectedCampus) {
+        super(context.getApplicationContext(), selectedCampus, null, VERSION);
         this.context = context;
     }
 
@@ -70,18 +106,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean checkDatabase() {
-        String dbName = Preferences.getCampusEnglishName(context);
+    /**
+     * @param dbName The name of database to be checked.
+     * @return If the database exists.
+     */
+    public boolean checkDatabase(String dbName) {
         if (dbName == null) return false;
         File dbFile = context.getDatabasePath(dbName);
         return dbFile.exists();
     }
 
+    /**
+     * Insert if new to the table, or otherwise update the existing data.
+     * Data are identified by the server-side id value. And then
+     * reload {@link com.lchpatners.shadal.RestaurantListFragment#latestAdapter latestAdapter}.
+     * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
+     */
     public void updateRestaurant(JSONObject restaurantJson) {
         updateRestaurant(restaurantJson, null);
         reloadRestaurantListAdapter(RestaurantListFragment.latestAdapter);
     }
 
+    /**
+     * Insert if new to the table, or otherwise update the existing data.
+     * Data are identified by the server-side id value. And then
+     * reload the {@link com.lchpatners.shadal.MenuListActivity activity}.
+     * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
+     * @param activity {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
+     */
     public void updateRestaurant(JSONObject restaurantJson, final MenuListActivity activity) {
         Cursor cursor = null;
         try {
@@ -109,7 +161,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "SELECT * FROM %s WHERE server_id = %d;",
                     RESTAURANTS, restaurantServerId
             ), null);
-            // you could simply always delete and insert, but then data would be messed up
             if (cursor != null && cursor.moveToFirst()) {
                 db.update(RESTAURANTS, values, "server_id = ?", new String[]{String.valueOf(restaurantServerId)});
             } else {
@@ -119,7 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
 
-            // update menus and leaflet urls corresponding to the restaurant
+            // Update menus and leaflet urls corresponding to the restaurant
             db.execSQL(String.format(
                     "DELETE FROM %s WHERE restaurant_id = %d;",
                     MENUS, restaurantServerId
@@ -159,7 +210,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateCategory(JSONArray restaurants, String category, final RestaurantListAdapter adapter) {
+    /**
+     * Update the category with a {@link org.json.JSONArray JSONArray}. If a single data was
+     * already in the device database, check if the device's data is outdated compared to the
+     * new data. Outdated, update the {@link com.lchpatners.shadal.Restaurant Restaurant} data
+     * with a {@link com.lchpatners.shadal.Server}.
+     * <br><strong>NOTE</strong>: This is because Server API "res_in_category" returns
+     * incomplete restaurant data which lacks some fields.
+     * Server offering complete data, you could use the JSONObject object
+     * retrieved from the Cursor e.g. <code>if (...) { updateRestaurant(jsonObjFromCursor(cursor); }</code>
+     * instead of <code>server.updatedRestaurant(...)</code> call.
+     * @param restaurants {@link org.json.JSONArray JSONArray} data to update with.
+     * @param category A category the restaurants belongs to.
+     * @see com.lchpatners.shadal.Server#updateRestaurant(int, java.lang.String) Server.updateRestaurant(int, String)
+     */
+    public void updateCategory(JSONArray restaurants, String category) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
         Server server = new Server(context);
@@ -170,11 +235,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "SELECT * FROM %s WHERE server_id = %d;",
                         RESTAURANTS, restaurant.getInt("id")
                 ), null);
-                // if there is an existing data, check if the data is outdated
-                // else, if the restaurant is a new one, put it into the database and notify latestAdapter
+                // If there is an existing data, check if the data is outdated.
+                // Else, or if the restaurant is a new one, insert it into the database.
                 if (cursor != null && cursor.moveToFirst()) {
-                    // if the existing data is outdated, update from the server
-                    // else, do nothing
+                    // If the existing data is outdated, update from the server.
+                    // Else, do nothing.
                     if (!restaurant.getString("updated_at")
                             .equals(cursor.getString(cursor.getColumnIndex("updated_at")))) {
                         server.updateRestaurant(restaurant.getInt("id"),
@@ -193,6 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
 
+            // Delete restaurants no more available from the server.
             cursor = db.rawQuery(String.format(
                     "SELECT * FROM %s WHERE category = '%s';",
                     RESTAURANTS, category
@@ -226,6 +292,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * @return Bookmarked restaurants.
+     */
     public ArrayList<Restaurant> getFavoriteRestaurants() {
         ArrayList<Restaurant> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -238,8 +307,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ), null);
                 if (cursor != null && cursor.moveToFirst()) {
                     do {
-                        Restaurant restaurant = getRestaurantFromCursor(cursor);
-                        list.add(restaurant);
+                        list.add(new Restaurant(cursor));
                     } while (cursor.moveToNext());
                 }
             }
@@ -253,15 +321,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public void toggleFavoriteById(long restaurantId){
+    /**
+     * Bookmark a restaurant if it wasn't, and do the opposite otherwise.
+     * @param restaurantId The restaurant's server-side id.
+     * @return <code>true</code> if it was bookmarked,
+     * <code>false</code> if un-bookmarked.
+     */
+    public boolean toggleFavoriteById(long restaurantId){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         Restaurant restaurant = getRestaurantFromId(restaurantId);
         values.put("is_favorite", (!restaurant.isFavorite()) ? 1 : 0);
         db.update(RESTAURANTS, values, "id = " + restaurantId, null);
         reloadRestaurantListAdapter(BookmarkFragment.latestAdapter);
+        return !restaurant.isFavorite();
     }
 
+    /**
+     * @param category Category to search by.
+     * @return Restaurants of the category.
+     */
     public ArrayList<Restaurant> getRestaurantsByCategory(String category) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Restaurant> list = new ArrayList<>();
@@ -273,7 +352,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    list.add(getRestaurantFromCursor(cursor));
+                    list.add(new Restaurant(cursor));
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -286,6 +365,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * @param restaurantServerId The restaurant's server-side id.
+     * @return Menu data of a restaurant.
+     */
     public ArrayList<Menu> getMenusByRestaurantServerId(long restaurantServerId) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Menu> list = new ArrayList<>();
@@ -331,6 +414,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * @param restaurantServerId The restaurant's server-side id.
+     * @return Flyer urls of a restaurant.
+     */
     public ArrayList<String> getFlyerUrlsByRestaurantServerId(long restaurantServerId) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<String> list = new ArrayList<>();
@@ -355,6 +442,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * A WILD RESTAURANT APPEARS!
+     * @return A randomly selected restaurant.
+     */
     public Restaurant getRandomRestaurant() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -365,7 +456,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     RESTAURANTS
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
-                restaurant = getRestaurantFromCursor(cursor);
+                restaurant = new Restaurant(cursor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,6 +468,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return restaurant;
     }
 
+    /**
+     * @param id The restaurant's server-side id.
+     * @return A restaurant with the <code>id</code>.
+     */
     public Restaurant getRestaurantFromId(long id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
@@ -387,7 +482,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     RESTAURANTS, id
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
-                restaurant = getRestaurantFromCursor(cursor);
+                restaurant = new Restaurant(cursor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -399,24 +494,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return restaurant;
     }
 
-    public Restaurant getRestaurantFromCursor(Cursor cursor) {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(cursor.getInt(cursor.getColumnIndex("id")));
-        restaurant.setServerId(cursor.getInt(cursor.getColumnIndex("server_id")));
-        restaurant.setName((cursor.getString(cursor.getColumnIndex("name"))));
-        restaurant.setCategory(cursor.getString(cursor.getColumnIndex("category")));
-        restaurant.setPhoneNumber(cursor.getString(cursor.getColumnIndex("phoneNumber")));
-        restaurant.setOpeningHour(cursor.getString(cursor.getColumnIndex("openingHours")));
-        restaurant.setClosingHour(cursor.getString(cursor.getColumnIndex("closingHours")));
-        restaurant.setHasFlyer(cursor.getInt(cursor.getColumnIndex("has_flyer")) == 1);
-        restaurant.setHasCoupon(cursor.getInt(cursor.getColumnIndex("has_coupon")) == 1);
-        restaurant.setNew(cursor.getInt(cursor.getColumnIndex("is_new")) == 1);
-        restaurant.setFavorite(cursor.getInt(cursor.getColumnIndex("is_favorite")) == 1);
-        restaurant.setCouponString(cursor.getString(cursor.getColumnIndex("coupon_string")));
-        restaurant.setUpdatedTime(cursor.getString(cursor.getColumnIndex("updated_at")));
-        return restaurant;
-    }
-
+    /**
+     * Reload a {@link com.lchpatners.shadal.RestaurantListAdapter adapter}.
+     * @param adapter An adapter to be reloaded.
+     */
     public void reloadRestaurantListAdapter(final RestaurantListAdapter adapter) {
         if (adapter != null) {
             ((Activity)context).runOnUiThread(new Runnable() {
@@ -428,6 +509,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Reload a {@link com.lchpatners.shadal.MenuListActivity activity}.
+     * @param activity An activity to be reloaded.
+     */
     public void reloadMenuListActivity(final MenuListActivity activity) {
         if (activity != null) {
             ((Activity)context).runOnUiThread(new Runnable() {

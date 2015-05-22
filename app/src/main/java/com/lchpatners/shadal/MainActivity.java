@@ -18,10 +18,20 @@ import android.support.v7.app.ActionBarActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
+/**
+ * The main {@link android.app.Activity Activity}.
+ * Displays the {@link android.support.v4.app.Fragment Fragments}.
+ */
 public class MainActivity extends ActionBarActivity {
 
+    /**
+     * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
+     * RestaurantListFragment}.
+     */
     RestaurantListFragment restaurantListFragmentCurrentlyOn;
+    /**
+     * The main {@link android.support.v4.view.ViewPager ViewPager}.
+     */
     ViewPager viewPager;
 
     @Override
@@ -31,12 +41,14 @@ public class MainActivity extends ActionBarActivity {
 
         new Server(this).checkAppMinimumVersion();
 
+        // If no campus is selected, have the user select one.
         if (Preferences.getCampusKoreanShortName(this) == null) {
             startActivity(new Intent(this, InitializationActivity.class));
             finish();
         }
 
-        if (!DatabaseHelper.getInstance(this).checkDatabase()) {
+        // If no database, get data from the server and update.
+        if (!DatabaseHelper.getInstance(this).checkDatabase(Preferences.getCampusEnglishName(this))) {
             ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -44,34 +56,8 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
-        new AsyncTask<Void, Void, Void>() {
-            JSONArray campuses;
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    String serviceCall = Server.makeServiceCall(
-                            Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
-                    if (serviceCall == null) {
-                        return null;
-                    }
-                    campuses = new JSONArray(serviceCall);
-                    for (int i = 0; i < campuses.length(); i++) {
-                        JSONObject campus = campuses.getJSONObject(i);
-                        if (campus.getString("name_kor_short").equals(
-                                Preferences.getCampusKoreanShortName(MainActivity.this))) {
-                            Preferences.setCampus(MainActivity.this, campus);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute();
-
         viewPager = (ViewPager)findViewById(R.id.main_pager);
-        final PagerAdapter adapter = new PagerAdapter(MainActivity.this, getSupportFragmentManager());
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(PagerAdapter.MAX_PAGE);
 
@@ -84,11 +70,11 @@ public class MainActivity extends ActionBarActivity {
             }
 
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // do nothing
+                // Do nothing.
             }
 
             public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // do nothing
+                // Do nothing.
             }
         };
         for (int page = 0; page < PagerAdapter.MAX_PAGE; page++) {
@@ -124,19 +110,39 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * The {@link android.support.v4.app.FragmentStatePagerAdapter
+     * FragmentStatePagerAdapter} of {@link #viewPager}.
+     */
     private class PagerAdapter extends FragmentStatePagerAdapter {
 
+        /**
+         * Indicates the main {@link android.support.v4.app.Fragment Fragment}.
+         * @see com.lchpatners.shadal.CategoryListFragment CategoryListFragment
+         */
         public static final int MAIN = 0;
+        /**
+         * Indicates the bookmark {@link android.support.v4.app.Fragment Fragment}.
+         * @see com.lchpatners.shadal.BookmarkFragment BookmarkFragment
+         */
         public static final int BOOKMARK = 1;
+        /**
+         * Indicates the random {@link android.support.v4.app.Fragment Fragment}.
+         * @see com.lchpatners.shadal.RandomFragment RandomFragment
+         */
         public static final int RANDOM = 2;
+        /**
+         * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
+         * @see com.lchpatners.shadal.SeeMoreFragment SeeMoreFragment
+         */
         public static final int SEE_MORE = 3;
+        /**
+         * The number of {@link android.support.v4.app.Fragment Fragments}.
+         */
         public static final int MAX_PAGE = 4;
 
-        private Context context;
-
-        public PagerAdapter(Context context, FragmentManager fm) {
+        public PagerAdapter(FragmentManager fm) {
             super(fm);
-            this.context = context;
         }
 
         @Override

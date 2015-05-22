@@ -9,10 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Guanadah on 2015-01-24.
+ * Shows a random {@link com.lchpatners.shadal.Restaurant Restaurant}
+ * in a new {@link com.lchpatners.shadal.MenuListActivity MenuListActivity}
+ * on clicking the dice button.
  */
 public class RandomFragment extends Fragment {
 
+    /**
+     * The {@link android.app.Activity Activity} to which this attaches.
+     */
     private Activity activity;
 
     public static RandomFragment newInstance() {

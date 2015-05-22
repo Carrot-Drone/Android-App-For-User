@@ -1,14 +1,31 @@
 package com.lchpatners.shadal;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * Model class representing a menu data.
  */
 public class Menu {
 
+    /**
+     * An instance-unique integer value.
+     */
     private int id;
+    /**
+     * The price value in Won.
+     */
     private int price;
+    /**
+     * The section this belongs to.
+     */
     private String section;
+    /**
+     * The item name.
+     */
     private String item;
+    /**
+     * Foreign key pointing to the {@link com.lchpatners.shadal.Restaurant
+     * Restaurant} this belongs to.
+     * @see com.lchpatners.shadal.Restaurant#id
+     */
     private long restaurantId;
 
     public int getId() {

@@ -8,19 +8,46 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * {@link android.widget.Adapter Adapter} of {@link com.lchpatners.shadal.MenuListActivity
+ * MenuListActivity}. Displays menus.
  */
 public class MenuListAdapter extends BaseAdapter {
 
+    /**
+     * {@link android.content.Context Context} this belongs to.
+     */
     private Context context;
+    /**
+     * {@link com.lchpatners.shadal.Restaurant Restaurant}
+     * of which {@link com.lchpatners.shadal.Menu Menu} information is
+     * to be displayed.
+     */
     private Restaurant restaurant;
-    private ArrayList<Object> data;
-    private ArrayList<String> headers;
+    /**
+     * List of all data, including both {@link #HEADER} and {@link #ITEM}.
+     */
+    private List<Object> data;
+    /**
+     * List of {@link #HEADER} data.
+     */
+    private List<String> headers;
 
+    /**
+     * Indicates the header view type.
+     * Used for {@link com.lchpatners.shadal.Menu#section sections}.
+     */
     private static final int HEADER = 0;
+    /**
+     * Indicates the item view type.
+     * Used for {@link com.lchpatners.shadal.Menu#item items}.
+     */
     private static final int ITEM = 1;
+    /**
+     * The number of view types.
+     */
     private static final int VIEW_TYPE_COUNT = 2;
 
     public MenuListAdapter(Context context, Restaurant restaurant) {
@@ -31,9 +58,13 @@ public class MenuListAdapter extends BaseAdapter {
         reloadData();
     }
 
+    /**
+     * Reload all menu data of {@link #restaurant}.
+     */
     public void reloadData() {
         data.clear();
-        ArrayList<Menu> menus = DatabaseHelper.getInstance(context).getMenusByRestaurantServerId(restaurant.getServerId());
+        List<Menu> menus = DatabaseHelper.getInstance(context)
+                .getMenusByRestaurantServerId(restaurant.getServerId());
         String header = null;
         for (Menu menu : menus) {
             if (!menu.getSection().equals(header)) {
@@ -95,10 +126,11 @@ public class MenuListAdapter extends BaseAdapter {
                 TextView item = (TextView)convertView.findViewById(R.id.item);
                 item.setText(((Menu)data.get(position)).getItem());
                 TextView price = (TextView)convertView.findViewById(R.id.price);
-                if (price.getText().equals("0")) {
+                int value = ((Menu)data.get(position)).getPrice();
+                if (value == 0) {
                     price.setVisibility(View.INVISIBLE);
                 }
-                price.setText(((Menu)data.get(position)).getPrice() + context.getString(R.string.won));
+                price.setText(value + context.getString(R.string.won));
                 break;
         }
         return convertView;

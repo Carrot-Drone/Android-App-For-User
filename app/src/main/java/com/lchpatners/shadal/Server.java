@@ -1,16 +1,12 @@
 package com.lchpatners.shadal;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -29,33 +25,68 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * Created by Guanadah on 2015-01-26.
+ * Communicates with the server.
  */
 public class Server {
 
+    /**
+     * Indicates HTTP method GET.
+     */
     public static final int GET = 0;
+    /**
+     * Indicates HTTP method POST.
+     */
     public static final int POST = 1;
 
+    /**
+     * The server's domain name.
+     */
     public static final String BASE_URL = "http://www.shadal.kr";
+    /**
+     * Campus list directory.
+     */
     public static final String CAMPUSES = "/campuses_all";
+    /**
+     * Device update directory.
+     */
     public static final String UPDATE_DEVICE = "/updateDevice";
+    /**
+     * Restaurant list directory.
+     */
     public static final String ALL_RESTAURANTS = "/allRestaurants?campus=";
+    /**
+     * A restaurant's update checking directory.
+     */
     public static final String CHECK_FOR_UPDATE = "/checkForUpdate";
+    /**
+     * A category's restaurant list directory.
+     */
     public static final String CHECK_FOR_RES_IN_CATEGORY = "/checkForResInCategory";
+    /**
+     * App version checking directory.
+     */
     public static final String APP_MINIMUM_VERSION = "/appMinimumVersion";
 
+    /**
+     * {@link android.content.Context Context} this belongs to.
+     */
     private Context context;
 
     public Server(Context context) {
         this.context = context;
     }
 
+    /**
+     * Make a service call with the arguments and return the result.
+     * @param url URL to fetch.
+     * @param method HTTP method.
+     * @param params HTTP request parameters.
+     * @return The content of the request.
+     */
     public static String makeServiceCall(String url, int method, List<NameValuePair> params) {
         String result;
         try {
@@ -88,12 +119,15 @@ public class Server {
         return result;
     }
 
+    /**
+     * Send the device UUID. Server registers if the ID's new to it.
+     */
     public void sendUuid() {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... urls) {
                 List<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("uuid", getDeviceUuid(context)));
+                params.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
                 params.add(new BasicNameValuePair("campus", Preferences.getCampusEnglishName(context)));
                 params.add(new BasicNameValuePair("device", "android"));
                 makeServiceCall(urls[0], GET, params);
@@ -102,32 +136,18 @@ public class Server {
         }.execute(BASE_URL + UPDATE_DEVICE);
     }
 
-    public static String getDeviceUuid(final Context context) {
-        final String id = Preferences.getDeviceUuid(context);
-        UUID uuid;
-        if (id != null) {
-            uuid = UUID.fromString(id);
-        } else {
-            final String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            try {
-                if (!"9774d56d682e549c".equals(androidId)) {
-                    uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-                } else {
-                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        Preferences.setDeviceUuid(context, uuid.toString());
-        return uuid.toString();
-    }
-
+    /**
+     * Check whether the app is newer or not than the minimally required version.
+     * @see com.lchpatners.shadal.Server.AppMinimumVersionTask AppMinimumVersionTask
+     */
     public void checkAppMinimumVersion() {
         new AppMinimumVersionTask().execute();
     }
 
+    /**
+     * An {@link android.os.AsyncTask} to load minimum version data from the server.
+     * If the app is too old, have the user get the latest version from the Play store.
+     */
     private class AppMinimumVersionTask extends AsyncTask<Void, Void, Void> {
         int minimumVersion, appVersion;
 
@@ -169,11 +189,21 @@ public class Server {
         }
     }
 
+    /**
+     * Update all {@link com.lchpatners.shadal.Restaurant Restaurants}
+     * of the currently selected campus.
+     * @see com.lchpatners.shadal.Server.TotalUpdateTask TotalUpdateTask
+     * @see CampusSelectionActivity#tryLoadingFromServer() CampusSelectionActivity.tryLoadingFromServer()
+     * @see com.lchpatners.shadal.MainActivity#onCreate(android.os.Bundle) MainActivity.onCreate(Bundle)
+     */
     public void updateAll() {
         new TotalUpdateTask().execute(BASE_URL + ALL_RESTAURANTS +
                 Preferences.getCampusEnglishName(context));
     }
 
+    /**
+     * An {@link android.os.AsyncTask} to update all in the campus.
+     */
     private class TotalUpdateTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... urls) {
@@ -194,14 +224,34 @@ public class Server {
         }
     }
 
+    /**
+     * Update a single {@link com.lchpatners.shadal.Restaurant Restaurant}.
+     * @param id Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     * @param updatedTime The time when the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     *                    was updated for the last time on the device.
+     * @see com.lchpatners.shadal.Server.RestaurantUpdateTask RestaurantUpdateTask
+     */
     public void updateRestaurant(int id, String updatedTime) {
         updateRestaurant(id, updatedTime, null);
     }
 
+    /**
+     * Update a single {@link com.lchpatners.shadal.Restaurant Restaurant}.
+     * @param id Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     * @param updatedTime The time when the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     *                    was updated for the last time on the device.
+     * @param activity {@link com.lchpatners.shadal.MenuListActivity MenuListActivity}
+     * to be refreshed as soon as the update is done.
+     * @see com.lchpatners.shadal.Server.RestaurantUpdateTask RestaurantUpdateTask
+     * @see MenuListActivity#setView() MenuListActivity.setView()
+     */
     public void updateRestaurant(int id, String updatedTime, MenuListActivity activity) {
         new RestaurantUpdateTask(id, updatedTime, activity).execute(BASE_URL + CHECK_FOR_UPDATE);
     }
 
+    /**
+     * An {@link android.os.AsyncTask} to update a single {@link com.lchpatners.shadal.Restaurant Restaurant}.
+     */
     private class RestaurantUpdateTask extends AsyncTask<String, Void, Void> {
         private int id;
         private String updatedTime;
@@ -215,12 +265,11 @@ public class Server {
 
         @Override
         protected Void doInBackground(String... urls) {
-            String serviceCall = null;
             try {
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("restaurant_id", Integer.toString(id)));
                 params.add(new BasicNameValuePair("updated_at", updatedTime));
-                serviceCall = makeServiceCall(urls[0], GET, params);
+                String serviceCall = makeServiceCall(urls[0], GET, params);
                 if (serviceCall == null) {
                     return null;
                 }
@@ -233,17 +282,26 @@ public class Server {
         }
     }
 
-    public void updateCategory(String category, RestaurantListAdapter adapter) {
-        new CategoryUpdateTask(category, adapter).execute(BASE_URL + CHECK_FOR_RES_IN_CATEGORY);
+    /**
+     * Update {@link com.lchpatners.shadal.Restaurant Restaurants}
+     * in a {@link com.lchpatners.shadal.Restaurant#category category}.
+     * @param category The category to be updated.
+     * @see com.lchpatners.shadal.Server.CategoryUpdateTask CategoryUpdateTask
+     */
+    public void updateCategory(String category) {
+        new CategoryUpdateTask(category).execute(BASE_URL + CHECK_FOR_RES_IN_CATEGORY);
     }
 
+    /**
+     * An {@link android.os.AsyncTask} to update {@link com.lchpatners.shadal.Restaurant Restaurants}
+     * in a {@link com.lchpatners.shadal.Restaurant#category category}.
+     * @see com.lchpatners.shadal.RestaurantListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+     */
     private class CategoryUpdateTask extends AsyncTask<String, Void, Void> {
         private String category;
-        private RestaurantListAdapter adapter;
 
-        public CategoryUpdateTask(String category, RestaurantListAdapter adapter) {
+        public CategoryUpdateTask(String category) {
             this.category = category;
-            this.adapter = adapter;
         }
 
         @Override
@@ -257,7 +315,7 @@ public class Server {
                     return null;
                 }
                 DatabaseHelper helper = DatabaseHelper.getInstance(context);
-                helper.updateCategory(new JSONArray(serviceCall), category, adapter);
+                helper.updateCategory(new JSONArray(serviceCall), category);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -265,6 +323,10 @@ public class Server {
         }
     }
 
+    /**
+     * Send a call log to the server.
+     * @param restaurant The target {@link com.lchpatners.shadal.Restaurant Restaurant}
+     */
     public void sendCallLog(final Restaurant restaurant) {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -278,7 +340,7 @@ public class Server {
                     value.add(new BasicNameValuePair("device", "android"));
                     value.add(new BasicNameValuePair("campus", Preferences.getCampusEnglishName(context)));
                     value.add(new BasicNameValuePair("server_id", Integer.toString(restaurant.getServerId())));
-                    value.add(new BasicNameValuePair("uuid", getDeviceUuid(context)));
+                    value.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
                     post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
                     client.execute(post);
                 }

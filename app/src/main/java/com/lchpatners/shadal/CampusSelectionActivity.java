@@ -30,15 +30,29 @@ import org.json.JSONObject;
 import java.io.File;
 
 /**
- * Created by Guanadah on 2015-02-22.
+ * Shows campuses list and gets the user's selection.
  */
 public class CampusSelectionActivity extends Activity {
 
+    /**
+     * A {@link org.json.JSONArray} of campus data.
+     */
     private static JSONArray campuses;
 
+    /**
+     * Indicates if the database file existed at the time when the application
+     * started. If <code>true</code>, it is likely that the user is using the
+     * app for the first time. Or he/she may have cleared the cache.
+     */
     private boolean hasNoDatabase;
 
+    /**
+     * A {@link android.widget.ListView} to display a campus list.
+     */
     ListView listView;
+    /**
+     * A confirm {@link android.widget.Button}.
+     */
     private Button confirm;
 
     @Override
@@ -97,6 +111,11 @@ public class CampusSelectionActivity extends Activity {
         AnalyticsHelper helper = new AnalyticsHelper(getApplication());
         helper.sendScreen("캠퍼스 선택하기 화면");
     }
+
+    /**
+     * Request the campus list to the server and set the view, as a callback behavior.
+     * @see com.lchpatners.shadal.CampusSelectionActivity.CampusesLoadingTask CampusesLoadingTask
+     */
     public void showCampusesFromServer() {
         new CampusesLoadingTask() {
             @Override
@@ -105,6 +124,10 @@ public class CampusSelectionActivity extends Activity {
             }
         }.execute();
     }
+
+    /**
+     * An {@link android.os.AsyncTask} to load campuses from the server.
+     */
     public static class CampusesLoadingTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -122,6 +145,9 @@ public class CampusSelectionActivity extends Activity {
         }
     }
 
+    /**
+     * Set the view of {@link #listView};
+     */
     public void setListView() {
         BaseAdapter adapter = new BaseAdapter() {
             @Override
@@ -195,6 +221,10 @@ public class CampusSelectionActivity extends Activity {
         listView.setAdapter(adapter);
     }
 
+    /**
+     * Call {@link #showCampusesFromServer()} if connected to the network
+     * or try again with an {@link android.app.AlertDialog AlertDialog};
+     */
     public void tryShowingCampusesFromServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -224,8 +254,16 @@ public class CampusSelectionActivity extends Activity {
         }
     }
 
+    /**
+     * Initialize the database by getting an instance of
+     * {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper}.
+     * Delete the database file of old versions, if any.
+     * And finally call {@link #tryLoadingFromServer()}.
+     * @return If the user uses the app for the first time.
+     */
     public boolean initializeDatabase() {
-        boolean isFirst = hasNoDatabase = !DatabaseHelper.getInstance(CampusSelectionActivity.this).checkDatabase();
+        DatabaseHelper helper = DatabaseHelper.getInstance(CampusSelectionActivity.this);
+        boolean isFirst = hasNoDatabase = !helper.checkDatabase(Preferences.getCampusEnglishName(this));
         if (hasNoDatabase) {
             Cursor cursor = null;
             try {
@@ -253,6 +291,9 @@ public class CampusSelectionActivity extends Activity {
         return isFirst;
     }
 
+    /**
+     * Get all restaurant data of the selected campus if online. Otherwise, try again.
+     */
     public void tryLoadingFromServer() {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

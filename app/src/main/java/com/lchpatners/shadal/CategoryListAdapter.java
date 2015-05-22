@@ -9,24 +9,59 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by Guanadah on 2015-01-22.
+ * {@link android.widget.Adapter Adapter} of {@link com.lchpatners.shadal.CategoryListFragment
+ * CategoryListFragment}.
  */
 public class CategoryListAdapter extends BaseAdapter {
 
+    /**
+     * Indicates the "치킨" category.
+     */
     public static final int CHICKEN = 0;
+    /**
+     * Indicates the "피자" category.
+     */
     public static final int PIZZA = 1;
+    /**
+     * Indicates the "중식" category.
+     */
     public static final int CHINESE = 2;
+    /**
+     * Indicates the "한식/분식" category.
+     */
     public static final int KOREAN = 3;
+    /**
+     * Indicates the "도시락/돈까스" category.
+     */
     public static final int DOSIRAK = 4;
+    /**
+     * Indicates the "족발/보쌈" category.
+     */
     public static final int BOSSAM = 5;
+    /**
+     * Indicates the "냉면" category.
+     */
     public static final int NAENGMYEON = 6;
+    /**
+     * Indicates the "기타" category.
+     */
     public static final int ETC = 7;
+    /**
+     * The number of all categories.
+     */
     public static final int CATEGORIES_NUMBER = 8;
 
+    /**
+     * An array of categories.
+     */
     public static String[] categories;
 
     private Context context;
 
+    /**
+     * Set {@link #context} and {@link #categories}.
+     * @param context {@link android.content.Context}
+     */
     public CategoryListAdapter(Context context) {
         this.context = context;
         categories = context.getResources().getStringArray(R.array.categories);

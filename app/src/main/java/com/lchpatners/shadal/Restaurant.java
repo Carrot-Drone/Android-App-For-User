@@ -1,37 +1,80 @@
 package com.lchpatners.shadal;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * Model class representing a restaurant data.
  */
 public class Restaurant implements Parcelable {
 
-    public static final long serialVersionUID = 20140902L;
-
+    /**
+     * An instance-unique integer value.
+     */
     private int id;
+    /**
+     * Server-side id. This works as a universal fingerprint.
+     * If two instances have the same value, then it is guaranteed that
+     * they represent the same restaurants of the real world.
+     */
     private int serverId;
-    /*
-    booleans are represented as bytes to implement the Parcelable interface
-    (Parcelable interface is needed to be a Bundle argument or an Intent extra)
-    see how getters and setters work in using byte variables for representing boolean ones
-    */
-    private byte hasFlyer; // in the server : has_flyer
-    private byte hasCoupon; // in the server : has_coupon
-    private byte isNew; // in the server : is_new
-    private byte isFavorite; // in the server : is_favorite
+    // Booleans are represented as bytes to implement the Parcelable interface.
+    // See how getters and setters work in using byte variables for representing boolean ones.
+    // NOTE: it is possible that without implementing Parcelable interface,
+    // you can just pass id or serverId as a Intent parameter like you do in the web communication.
+    /**
+     * Does this have a flyer(s)?
+     */
+    private byte hasFlyer;                                  // Server-side name: has_flyer
+    /**
+     * Does this offer a coupon(s) for orders?
+     */
+    private byte hasCoupon;                                 // Server-side name: has_coupon
+    /**
+     * Is this newly added?
+     */
+    private byte isNew;                                     // Server-side name: is_new
+    /**
+     * Is this bookmarked?
+     */
+    private byte isFavorite;                                // Server-side name: is_favorite
+    /**
+     * The restaurant's name.
+     */
     private String name;
-    private String phoneNumber; // in the server : phone_number
+    /**
+     * The restaurant's phone number.
+     */
+    private String phoneNumber;                             // Server-side name: phone_number
+    /**
+     * The restaurant's category.
+     * @see com.lchpatners.shadal.CategoryListAdapter CategoryListAdapter
+     */
     private String category;
+    /**
+     * The restaurant's opening hour.
+     */
     private String openingHour;
+    /**
+     * The restaurant's closing hour.
+     */
     private String closingHour;
-    private String couponString; // in the server : coupon_string
-    private String updatedTime; // in the server : updated_at
+    /**
+     * Describes how to get coupons if {@link #hasCoupon},
+     * displays notices otherwise.
+     */
+    private String couponString;                            // Server-side name: coupon_string
+    /**
+     * Lastly updated time.
+     */
+    private String updatedTime;                             // Server-side name: updated_at
 
-    public Restaurant() {}
-
-    // must be read by the order which it was written by
+    // Must be read by the order which it was written by.
+    /**
+     * Construct by retrieving from the {@link android.os.Parcel Parcel}.
+     * @param source {@link android.os.Parcel}
+     */
     public Restaurant(Parcel source) {
         id = source.readInt();
         serverId = source.readInt();
@@ -45,6 +88,26 @@ public class Restaurant implements Parcelable {
         closingHour = source.readString();
         couponString = source.readString();
         updatedTime = source.readString();
+    }
+
+    /**
+     * Construct by retrieving from the {@link android.database.Cursor Cursor}.
+     * @param cursor {@link android.database.Cursor}
+     */
+    public Restaurant(Cursor cursor) {
+        id = cursor.getInt(cursor.getColumnIndex("id"));
+        serverId = cursor.getInt(cursor.getColumnIndex("server_id"));
+        name = cursor.getString(cursor.getColumnIndex("name"));
+        category = cursor.getString(cursor.getColumnIndex("category"));
+        phoneNumber = cursor.getString(cursor.getColumnIndex("phoneNumber"));
+        openingHour = cursor.getString(cursor.getColumnIndex("openingHours"));
+        closingHour = cursor.getString(cursor.getColumnIndex("closingHours"));
+        hasFlyer = (byte)cursor.getInt(cursor.getColumnIndex("has_flyer"));
+        hasCoupon = (byte)cursor.getInt(cursor.getColumnIndex("has_coupon"));
+        isNew = (byte)cursor.getInt(cursor.getColumnIndex("is_new"));
+        isFavorite = (byte)cursor.getInt(cursor.getColumnIndex("is_favorite"));
+        couponString = cursor.getString(cursor.getColumnIndex("coupon_string"));
+        updatedTime = cursor.getString(cursor.getColumnIndex("updated_at"));
     }
 
     public static final Creator CREATOR = new Creator() {

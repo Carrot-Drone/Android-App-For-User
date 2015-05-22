@@ -15,10 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * Created by Guanadah on 2015-01-24.
+ * Displays extra functions.
  */
 public class SeeMoreFragment extends Fragment {
 
+    /**
+     * The {@link android.app.Activity Activity} to which this attaches.
+     */
     private Activity activity;
 
     public static SeeMoreFragment newInstance() {
@@ -50,17 +53,33 @@ public class SeeMoreFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RelativeLayout layout = new RelativeLayout(activity);
+        // A wrapper instance.
+        // Once the TalkParty banner gets of no use, it is okay to put it away.
+        RelativeLayout wrapper = new RelativeLayout(activity);
+
         View view = inflater.inflate(R.layout.list_view, null, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
-        listView.setAdapter(new SeeMoreListAdapter(activity));
+
+        // Set headers and items.
+        SeeMoreListAdapter adapter = new SeeMoreListAdapter(activity);
+        adapter.addHeader(activity.getString(R.string.participate_in));
+        adapter.addItem(activity.getString(R.string.facebook_page));
+        adapter.addItem(activity.getString(R.string.report_restaurant));
+        adapter.addItem(activity.getString(R.string.report_to_camdal));
+        adapter.addHeader(activity.getString(R.string.settings));
+        adapter.addItem(activity.getString(R.string.change_campus));
+        listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (view.findViewById(R.id.item) != null) {
                     TextView item = (TextView)view.findViewById(R.id.item);
                     CharSequence content = item.getText();
+
+                    // To the facebook link
                     if (content.equals(getString(R.string.facebook_page))) {
+
                         AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                         helper.sendEvent("UX", "link_to_facebook_clicked", "facebook");
 
@@ -72,7 +91,10 @@ public class SeeMoreFragment extends Fragment {
                             intent.setData(Uri.parse("https://www.facebook.com/snushadal"));
                         }
                         startActivity(intent);
+
+                    // Request for a new restaurant, etc.
                     } else if (content.equals(getString(R.string.report_restaurant))) {
+
                         AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                         helper.sendEvent("UX", "send_email", "individual");
 
@@ -84,7 +106,10 @@ public class SeeMoreFragment extends Fragment {
                                 activity.getString(R.string.report_restaurant_title));
                         intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.report_restaurant_content));
                         startActivity(Intent.createChooser(intent, activity.getString(R.string.select_app)));
+
+                    // Report to Campusdal.
                     } else if (content.equals(getString(R.string.report_to_camdal))) {
+
                         AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                         helper.sendEvent("UX", "send_email", "campusdal");
 
@@ -94,15 +119,20 @@ public class SeeMoreFragment extends Fragment {
                         intent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.report_camdal_title));
                         intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.report_camdal_content));
                         startActivity(Intent.createChooser(intent, activity.getString(R.string.select_app)));
+
+                    // Change the loaded campus.
                     } if (content.equals(getString(R.string.change_campus))) {
+
                         Intent intent = new Intent(activity, CampusSelectionActivity.class);
                         startActivity(intent);
+
                     }
                 }
             }
         });
-        layout.addView(view);
+        wrapper.addView(view);
 
+        // TalkParty banner
         View banner = inflater.inflate(R.layout.banner_talkparty, null, false);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -121,9 +151,9 @@ public class SeeMoreFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        layout.addView(banner);
+        wrapper.addView(banner);
 
-        return layout;
+        return wrapper;
     }
 
 }

@@ -11,12 +11,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * Displays the restaurants of a category, or from the bookmarks.
  */
 public class RestaurantListFragment extends Fragment {
 
+    /**
+     * The lastly instantiated instance of
+     * {@link com.lchpatners.shadal.RestaurantListAdapter
+     * RestaurantListAdapter}
+     */
     public static RestaurantListAdapter latestAdapter;
 
+    /**
+     * The {@link android.app.Activity Activity} to which this attaches.
+     */
     private Activity activity;
 
     public static RestaurantListFragment newInstance(String category) {
@@ -59,7 +67,7 @@ public class RestaurantListFragment extends Fragment {
         latestAdapter = adapter;
 
         Server server = new Server(activity);
-        server.updateCategory(category, adapter);
+        server.updateCategory(category);
 
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);

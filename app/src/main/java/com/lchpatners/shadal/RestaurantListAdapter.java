@@ -9,21 +9,55 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Guanadah on 2015-01-23.
+ * {@link android.widget.Adapter Adapter} of {@link com.lchpatners.shadal.RestaurantListFragment
+ * RestaurantListFragment}.
  */
 public class RestaurantListAdapter extends BaseAdapter {
 
+    /**
+     * Indicates that you need to get data from bookmarks,
+     * not by a specific category.
+     */
     public static final String BOOKMARK = "bookmark";
 
-    private static final int HEADER = 0;
-    private static final int ITEM = 1;
 
+    /**
+     * Indicates the header view type.
+     * Used for {@link com.lchpatners.shadal.Restaurant#category categories},
+     * only when the data source is bookmarks.
+     */
+    private static final int HEADER = 0;
+    /**
+     * Indicates the item view type.
+     * Used for {@link com.lchpatners.shadal.Restaurant#name names}.
+     */
+    private static final int ITEM = 1;
+    /**
+     * The number of view types.
+     */
+    private static final int VIEW_TYPE_COUNT = 2;
+
+    /**
+     * {@link android.content.Context Context} this belongs to.
+     */
     private Context context;
+    /**
+     * Data source of the list. Could either be a certain
+     * {@link com.lchpatners.shadal.Restaurant#category category}
+     * or bookmarks if this equals {@link #BOOKMARK}.
+     */
     private String category;
-    private ArrayList<Object> data;
-    private ArrayList<String> headers;
+    /**
+     * List of all data, including both {@link #HEADER} and {@link #ITEM}.
+     */
+    private List<Object> data;
+    /**
+     * List of {@link #HEADER} data.
+     */
+    private List<String> headers;
 
     public RestaurantListAdapter(Context context, String category) {
         this.context = context;
@@ -41,9 +75,12 @@ public class RestaurantListAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return VIEW_TYPE_COUNT;
     }
 
+    /**
+     * Reload all menu data from {@link #category source}.
+     */
     public void reloadData() {
         data.clear();
         headers.clear();

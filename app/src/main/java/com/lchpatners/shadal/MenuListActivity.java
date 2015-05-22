@@ -20,10 +20,24 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
+/**
+ * Displays a restaurant's detailed information.
+ */
+// This could have been named "RestaurantActivity".
+// But as you can see, it looks better on the project structure this way.
+// That's why. That's all. So you may just rename this class any time.
 public class MenuListActivity extends ActionBarActivity {
 
+    /**
+     * {@link com.lchpatners.shadal.Restaurant Restaurant} of which information
+     * is to be displayed.
+     */
     private Restaurant restaurant;
+    /**
+     * {@link android.view.Menu} of this {@link android.support.v7.app.ActionBarActivity
+     * ActionBarActivity}.
+     */
+    // ALERT: this is android.view.Menu, not com.lchpartners.shadal.Menu
     private Menu menu;
 
     @Override
@@ -36,6 +50,7 @@ public class MenuListActivity extends ActionBarActivity {
 
         setView();
 
+        // If shown up by the RandomFragment, set up the dice button.
         if (intent.getStringExtra("REFERRER") != null &&
                 intent.getStringExtra("REFERRER").equals("RandomFragment")) {
             View button = findViewById(R.id.random_button);
@@ -73,6 +88,8 @@ public class MenuListActivity extends ActionBarActivity {
 
         MenuItem flyer = menu.findItem(R.id.see_flyer);
         flyer.setVisible(restaurant.hasFlyer());
+        // The icon resource was kinda too big.
+        // So it was resized programmatically.
         flyer.setIcon(resizeDrawable(flyer.getIcon(), 0.8f));
         return true;
     }
@@ -83,14 +100,12 @@ public class MenuListActivity extends ActionBarActivity {
 
         if (id == R.id.bookmark) {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
-            helper.toggleFavoriteById(restaurant.getId());
-            boolean bookmarked = helper.getRestaurantFromId(restaurant.getId()).isFavorite();
+            boolean bookmarked = helper.toggleFavoriteById(restaurant.getId());
             setMenuItemChecked(item, bookmarked);
 
             AnalyticsHelper aHelper = new AnalyticsHelper(getApplication());
             aHelper.sendEvent("UX", bookmarked ? "favorite_button_clicked" :
                     "favorite_button_disclicked", restaurant.getName());
-
             return true;
         } else if (id == R.id.see_flyer) {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
@@ -104,6 +119,9 @@ public class MenuListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Set view of this {@link android.app.Activity Activity}.
+     */
     public void setView() {
         if (restaurant != null) {
             Intent intent = getIntent();
@@ -160,6 +178,11 @@ public class MenuListActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Check or uncheck {@link android.view.MenuItem MenuItem}.
+     * @param item The "bookmark" {@link android.view.MenuItem MenuItem}.
+     * @param checked Is the icon is to be checked?
+     */
     public void setMenuItemChecked(MenuItem item, boolean checked) {
         Drawable drawable = getResources().getDrawable(R.drawable.ic_action_star);
         drawable = resizeDrawable(drawable, 0.8f);
@@ -169,6 +192,12 @@ public class MenuListActivity extends ActionBarActivity {
         item.setIcon(drawable);
     }
 
+    /**
+     * Resize a {@link android.graphics.drawable.Drawable Drawable}.
+     * @param drawable The {@link android.graphics.drawable.Drawable Drawable} to be resized.
+     * @param ratio Size ratio.
+     * @return The resized {@link android.graphics.drawable.Drawable Drawable}.
+     */
     public Drawable resizeDrawable(Drawable drawable, final float ratio) {
         int x = drawable.getIntrinsicWidth(), y = drawable.getIntrinsicHeight();
         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
@@ -177,6 +206,14 @@ public class MenuListActivity extends ActionBarActivity {
         return drawable;
     }
 
+    /**
+     * Return a formatted {@link java.lang.String String}
+     * which tells open hours of a restaurant.
+     * @param restaurant {@link com.lchpatners.shadal.Restaurant Restaurant}
+     * with {@link com.lchpatners.shadal.Restaurant#openingHour openingHour}
+     * and {@link com.lchpatners.shadal.Restaurant#closingHour closingHour}.
+     * @return Well-formed {@link java.lang.String String}.
+     */
     public String hourFormatString(Restaurant restaurant) {
         String open = restaurant.getOpeningHour();
         int hour = Integer.parseInt(open.split("[.]")[0]);

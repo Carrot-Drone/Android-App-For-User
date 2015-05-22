@@ -2,15 +2,24 @@ package com.lchpatners.shadal;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
+
 /**
- * Created by Guanadah on 2015-02-12.
+ * Manages {@link android.content.SharedPreferences SharedPreferences}.
+ * Saves campus meta-data and device UUID.
  */
 public class Preferences {
 
+    /**
+     * Preferences name.
+     */
     private static final String PREFS_NAME = "Prefs";
 
     public static void setCampus(Context context, JSONObject campus) {
@@ -74,8 +83,33 @@ public class Preferences {
         editor.apply();
     }
 
+    /**
+     * Get device {@link java.util.UUID UUID} from {@link com.lchpatners.shadal.Preferences
+     * Preferences}, or generate newly when none is stored.
+     * @param context {@link android.content.Context}
+     * @return {@link java.util.UUID UUID} {@link java.lang.String String}.
+     */
     public static String getDeviceUuid(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-        return settings.getString("DEVICE_ID", null);
+        final String id = settings.getString("DEVICE_ID", null);
+        UUID uuid = null;
+        if (id != null) {
+            uuid = UUID.fromString(id);
+        } else {
+            final String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            try {
+                if (!"9774d56d682e549c".equals(androidId)) {
+                    uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+                } else {
+                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (uuid != null) setDeviceUuid(context, uuid.toString());
+            }
+        }
+        return uuid.toString();
     }
 }

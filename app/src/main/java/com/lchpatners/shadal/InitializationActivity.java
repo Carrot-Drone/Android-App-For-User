@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-
+/**
+ * The {@link android.app.Activity Activity} to be shown
+ * at the first time the user runs the app.
+ */
 public class InitializationActivity extends Activity {
 
     @Override

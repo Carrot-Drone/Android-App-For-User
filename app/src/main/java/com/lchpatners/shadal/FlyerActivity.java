@@ -19,7 +19,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-
+/**
+ * Displays image files of leaflets(==flyers).
+ */
 public class FlyerActivity extends ActionBarActivity {
 
     @Override
@@ -87,11 +89,12 @@ public class FlyerActivity extends ActionBarActivity {
             final int page = getArguments().getInt("PAGE");
             ImageView image = new ImageView(context);
             stream = null;
-            // TODO use an AsyncTask instead for this is quite weird
+            // TODO: use an AsyncTask instead, for this is quite weird
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        // Create a drawable from URL.
                         stream = (InputStream)new URL("http://www.shadal.kr" + urls.get(page)).getContent();
                         drawable = Drawable.createFromStream(stream, null);
                     } catch (Exception e) {
@@ -100,6 +103,7 @@ public class FlyerActivity extends ActionBarActivity {
                     }
                 }
             }).start();
+            // Wait the task to be completed.
             while (drawable == null) {
                 if (exceptionOccurred) {
                     Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
