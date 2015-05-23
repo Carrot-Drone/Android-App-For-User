@@ -37,7 +37,7 @@ public class CampusSelectionActivity extends Activity {
     /**
      * A {@link org.json.JSONArray} of campus data.
      */
-    private static JSONArray campuses;
+    private JSONArray campuses;
 
     /**
      * Indicates if the database file existed at the time when the application
@@ -114,35 +114,17 @@ public class CampusSelectionActivity extends Activity {
 
     /**
      * Request the campus list to the server and set the view, as a callback behavior.
-     * @see com.lchpatners.shadal.CampusSelectionActivity.CampusesLoadingTask CampusesLoadingTask
+     * @see com.lchpatners.shadal.Server.CampusesLoadingTask CampusesLoadingTask
      */
     public void showCampusesFromServer() {
-        new CampusesLoadingTask() {
+        new Server.CampusesLoadingTask() {
             @Override
             protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                campuses = results;
                 setListView();
             }
         }.execute();
-    }
-
-    /**
-     * An {@link android.os.AsyncTask} to load campuses from the server.
-     */
-    public static class CampusesLoadingTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                String serviceCall = Server.makeServiceCall(
-                        Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
-                if (serviceCall == null) {
-                    return null;
-                }
-                campuses = new JSONArray(serviceCall);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 
     /**

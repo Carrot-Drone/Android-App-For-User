@@ -352,4 +352,37 @@ public class Server {
         }.execute();
     }
 
+
+
+    /**
+     * An {@link android.os.AsyncTask} to load campuses from the server.
+     */
+    public static class CampusesLoadingTask extends AsyncTask<Void, Void, Void> {
+        String serviceCall;
+        JSONArray results;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                serviceCall = Server.makeServiceCall(
+                        Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
+                if (serviceCall == null) {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                results = new JSONArray(serviceCall);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

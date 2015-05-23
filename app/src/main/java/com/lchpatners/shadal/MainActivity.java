@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -55,6 +56,8 @@ public class MainActivity extends ActionBarActivity {
                 new Server(this).updateAll();
             }
         }
+
+        updateCampusMetaData();
 
         viewPager = (ViewPager)findViewById(R.id.main_pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
@@ -108,6 +111,30 @@ public class MainActivity extends ActionBarActivity {
         } else {
             viewPager.setCurrentItem(PagerAdapter.MAIN, true);
         }
+    }
+
+    /**
+     * Update campus meta data of currently selected campus.
+     * @see com.lchpatners.shadal.Server.CampusesLoadingTask CampusesLoadingTask
+     */
+    public void updateCampusMetaData() {
+        new Server.CampusesLoadingTask() {
+            @Override
+            public void onPostExecute(Void aVoid) {
+                for (int i = 0; i < results.length(); i++) {
+                    try {
+                        JSONObject result = results.getJSONObject(i);
+                        if (result.getString("name_eng").equals(
+                                Preferences.getCampusEnglishName(MainActivity.this))) {
+                            Preferences.setCampus(MainActivity.this, result);
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.execute();
     }
 
     /**
