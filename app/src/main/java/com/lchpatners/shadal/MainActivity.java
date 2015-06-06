@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +24,8 @@ import org.json.JSONObject;
  */
 public class MainActivity extends ActionBarActivity {
 
+    //public static String URL;
+    //public static boolean SHOW_POPUP=false;
     /**
      * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
      * RestaurantListFragment}.
@@ -34,32 +35,38 @@ public class MainActivity extends ActionBarActivity {
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
     ViewPager viewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         new Server(this).checkAppMinimumVersion();
+
 
         // If no campus is selected, have the user select one.
         if (Preferences.getCampusKoreanShortName(this) == null) {
             startActivity(new Intent(this, InitializationActivity.class));
             finish();
+        }else{
+            new Server(this).getPopupList();
         }
+
 
         // If no database, get data from the server and update.
         if (!DatabaseHelper.getInstance(this).checkDatabase(Preferences.getCampusEnglishName(this))) {
-            ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {
                 new Server(this).updateAll();
             }
         }
 
+
         updateCampusMetaData();
 
-        viewPager = (ViewPager)findViewById(R.id.main_pager);
+
+        viewPager = (ViewPager) findViewById(R.id.main_pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(PagerAdapter.MAX_PAGE);
@@ -87,7 +94,8 @@ public class MainActivity extends ActionBarActivity {
                             .setTabListener(tabListener));
         }
 
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {@Override
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
                 for (int i = 0; i < actionBar.getTabCount(); i++) {
@@ -113,14 +121,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+
+
     /**
      * Update campus meta data of currently selected campus.
+     *
      * @see com.lchpatners.shadal.Server.CampusesLoadingTask CampusesLoadingTask
      */
     public void updateCampusMetaData() {
         new Server.CampusesLoadingTask() {
-            @Override
+                        @Override
             public void onPostExecute(Void aVoid) {
+                if (results == null) return;
                 for (int i = 0; i < results.length(); i++) {
                     try {
                         JSONObject result = results.getJSONObject(i);
@@ -134,6 +147,30 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             }
+            protected Void doInBackground(Void... params) {
+
+                try {
+
+                    serviceCall = Server.makeServiceCall(
+
+                            Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
+
+                    if (serviceCall == null) {
+
+                        return null;
+
+                    }
+                    results = new JSONArray(serviceCall);
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+
+                }
+
+                return null;
+
+            }
         }.execute();
     }
 
@@ -145,21 +182,25 @@ public class MainActivity extends ActionBarActivity {
 
         /**
          * Indicates the main {@link android.support.v4.app.Fragment Fragment}.
+         *
          * @see com.lchpatners.shadal.CategoryListFragment CategoryListFragment
          */
         public static final int MAIN = 0;
         /**
          * Indicates the bookmark {@link android.support.v4.app.Fragment Fragment}.
+         *
          * @see com.lchpatners.shadal.BookmarkFragment BookmarkFragment
          */
         public static final int BOOKMARK = 1;
         /**
          * Indicates the random {@link android.support.v4.app.Fragment Fragment}.
+         *
          * @see com.lchpatners.shadal.RandomFragment RandomFragment
          */
         public static final int RANDOM = 2;
         /**
          * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
+         *
          * @see com.lchpatners.shadal.SeeMoreFragment SeeMoreFragment
          */
         public static final int SEE_MORE = 3;

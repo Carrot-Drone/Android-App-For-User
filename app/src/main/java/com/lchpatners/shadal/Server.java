@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -46,10 +47,25 @@ public class Server {
      * The server's domain name.
      */
     public static final String BASE_URL = "http://www.shadal.kr";
+
     /**
-     * Campus list directory.
+     * popup server url
      */
-    public static final String CAMPUSES = "/campuses_all";
+    public static final String POPUP_URL = "http://52.68.248.249/popup";
+
+    public static final String POPUP_LIST = "/curList";
+
+    public static final String POSTPONE_POPUP = "/postpone";
+
+    public static final String REJECT_POPUP = "/reject";
+
+    public static final String ACCEPT_POPUP = "/accept";
+
+    /**
+     * Campus list directory. /campuses_all
+     */
+    public static final String CAMPUSES = "/campuses";
+
     /**
      * Device update directory.
      */
@@ -82,7 +98,8 @@ public class Server {
 
     /**
      * Make a service call with the arguments and return the result.
-     * @param url URL to fetch.
+     *
+     * @param url    URL to fetch.
      * @param method HTTP method.
      * @param params HTTP request parameters.
      * @return The content of the request.
@@ -138,6 +155,7 @@ public class Server {
 
     /**
      * Check whether the app is newer or not than the minimally required version.
+     *
      * @see com.lchpatners.shadal.Server.AppMinimumVersionTask AppMinimumVersionTask
      */
     public void checkAppMinimumVersion() {
@@ -175,23 +193,140 @@ public class Server {
             if (appVersion < minimumVersion) {
                 Toast.makeText(context, context.getString(R.string.too_old_version), Toast.LENGTH_LONG).show();
                 try {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     activity.startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("market://details?id=" + activity.getPackageName())));
                 } catch (ActivityNotFoundException e) {
-                    Activity activity = (Activity)context;
+                    Activity activity = (Activity) context;
                     activity.startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://play.google.com/store/apps/details?id=" + activity.getPackageName())));
                 } finally {
-                    ((Activity)context).finish();
+                    ((Activity) context).finish();
                 }
             }
         }
     }
 
+    public void postponePopup(String pid) {
+        new requestPopupTask(pid).execute(POPUP_URL + POSTPONE_POPUP);
+    }
+
+    public void rejectPopup(String pid) {
+        new requestPopupTask(pid).execute(POPUP_URL + REJECT_POPUP);
+    }
+
+    public void acceptPopup(String pid) {
+        new requestPopupTask(pid).execute(POPUP_URL + ACCEPT_POPUP);
+    }
+
+    private class requestPopupTask extends AsyncTask<String, Void, Void> {
+        private String pid;
+        private JSONObject results;
+
+        public requestPopupTask(String pid) {
+            this.pid = pid;
+        }
+
+
+        @Override
+        protected Void doInBackground(String... urls) {
+            try {
+                List<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("device_id", Preferences.getDeviceUuid(context)));
+                params.add(new BasicNameValuePair("popup_id", pid));
+                String serviceCall = makeServiceCall(urls[0], POST, params);
+                results = new JSONObject(serviceCall);
+                if (results.getString("result") != null) {
+                    String result = results.getString("result");
+                    Log.d("result", results.getString("result"));
+                    if (result.equals("SUCCESS")) {
+
+                        return null;
+                    }
+                }
+                if (serviceCall == null) {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
+    public void getPopupList() {
+        new PopupLoadingTask().execute();
+    }
+
+    public class PopupLoadingTask extends AsyncTask<Void, Void, Void> {
+        String serviceCall;
+        JSONObject results;
+        JSONArray popupList;
+        String pid, link;
+        JSONObject popup;
+
+        @Override
+        protected Void doInBackground(Void... values) {
+            try {
+                List<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("device_id", Preferences.getDeviceUuid(context)));
+                serviceCall = Server.makeServiceCall(Server.POPUP_URL + Server.POPUP_LIST, Server.POST, params);
+                results = new JSONObject(serviceCall);
+                Log.d("rawResult", results.toString());
+                String result = results.getString("result");
+                Log.d("result", result);
+                if (result.equals("SUCCESS")) {
+                    popupList = results.getJSONArray("popupList");
+                    Log.d("popupList", popupList.length() + "");
+
+                    if (popupList.length() == 0) {
+                        return null;
+                    } else {
+                        popup = popupList.getJSONObject(0);
+                        pid = popup.getString("id");
+                        link = popup.getString("link");
+
+                        Log.d("popup id,link", pid + "," + link);
+                    }
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if ((popupList != null) && (popupList.length() != 0)) {
+                Intent intent = new Intent(context, Popup.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("pid", pid);
+                if (link != null) {
+                    intent.putExtra("link", link);
+                    Log.d("onPostExecute link", link);
+                }
+                context.startActivity(intent);
+                Log.d("pid", pid);
+
+
+            } else {
+                Log.d("Popuplist", "null?");
+                return;
+
+            }
+        }
+
+    }
+
     /**
      * Update all {@link com.lchpatners.shadal.Restaurant Restaurants}
      * of the currently selected campus.
+     *
      * @see com.lchpatners.shadal.Server.TotalUpdateTask TotalUpdateTask
      * @see CampusSelectionActivity#tryLoadingFromServer() CampusSelectionActivity.tryLoadingFromServer()
      * @see com.lchpatners.shadal.MainActivity#onCreate(android.os.Bundle) MainActivity.onCreate(Bundle)
@@ -226,7 +361,8 @@ public class Server {
 
     /**
      * Update a single {@link com.lchpatners.shadal.Restaurant Restaurant}.
-     * @param id Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     *
+     * @param id          Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
      * @param updatedTime The time when the {@link com.lchpatners.shadal.Restaurant Restaurant}
      *                    was updated for the last time on the device.
      * @see com.lchpatners.shadal.Server.RestaurantUpdateTask RestaurantUpdateTask
@@ -237,11 +373,12 @@ public class Server {
 
     /**
      * Update a single {@link com.lchpatners.shadal.Restaurant Restaurant}.
-     * @param id Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
+     *
+     * @param id          Server-side id of the {@link com.lchpatners.shadal.Restaurant Restaurant}
      * @param updatedTime The time when the {@link com.lchpatners.shadal.Restaurant Restaurant}
      *                    was updated for the last time on the device.
-     * @param activity {@link com.lchpatners.shadal.MenuListActivity MenuListActivity}
-     * to be refreshed as soon as the update is done.
+     * @param activity    {@link com.lchpatners.shadal.MenuListActivity MenuListActivity}
+     *                    to be refreshed as soon as the update is done.
      * @see com.lchpatners.shadal.Server.RestaurantUpdateTask RestaurantUpdateTask
      * @see MenuListActivity#setView() MenuListActivity.setView()
      */
@@ -285,6 +422,7 @@ public class Server {
     /**
      * Update {@link com.lchpatners.shadal.Restaurant Restaurants}
      * in a {@link com.lchpatners.shadal.Restaurant#category category}.
+     *
      * @param category The category to be updated.
      * @see com.lchpatners.shadal.Server.CategoryUpdateTask CategoryUpdateTask
      */
@@ -295,6 +433,7 @@ public class Server {
     /**
      * An {@link android.os.AsyncTask} to update {@link com.lchpatners.shadal.Restaurant Restaurants}
      * in a {@link com.lchpatners.shadal.Restaurant#category category}.
+     *
      * @see com.lchpatners.shadal.RestaurantListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
      */
     private class CategoryUpdateTask extends AsyncTask<String, Void, Void> {
@@ -311,6 +450,8 @@ public class Server {
                 params.add(new BasicNameValuePair("campus", Preferences.getCampusEnglishName(context)));
                 params.add(new BasicNameValuePair("category", category));
                 String serviceCall = makeServiceCall(urls[0], GET, params);
+                Log.d("urls", urls[0]);
+                Log.d("params", params.toString());
                 if (serviceCall == null) {
                     return null;
                 }
@@ -325,6 +466,7 @@ public class Server {
 
     /**
      * Send a call log to the server.
+     *
      * @param restaurant The target {@link com.lchpatners.shadal.Restaurant Restaurant}
      */
     public void sendCallLog(final Restaurant restaurant) {
@@ -343,15 +485,13 @@ public class Server {
                     value.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
                     post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
                     client.execute(post);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
             }
         }.execute();
     }
-
 
 
     /**
@@ -369,6 +509,7 @@ public class Server {
                 if (serviceCall == null) {
                     return null;
                 }
+                results = new JSONArray(serviceCall);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -378,7 +519,10 @@ public class Server {
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
+
                 results = new JSONArray(serviceCall);
+                Log.d("servicecall", results.toString());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

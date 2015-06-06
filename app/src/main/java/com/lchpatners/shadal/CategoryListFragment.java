@@ -34,6 +34,7 @@ public class CategoryListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         if (getUserVisibleHint()) {
             AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
             helper.sendScreen(((MainActivity)getActivity()).restaurantListFragmentCurrentlyOn == null ?

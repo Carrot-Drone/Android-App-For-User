@@ -122,6 +122,7 @@ public class CampusSelectionActivity extends Activity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 campuses = results;
+                Log.d("campuses",campuses.toString());
                 setListView();
             }
         }.execute();
