@@ -28,7 +28,6 @@ public class FlyerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flyer);
-
         getSupportActionBar().hide();
 
         Intent intent = getIntent();
@@ -97,6 +96,7 @@ public class FlyerActivity extends ActionBarActivity {
                         // Create a drawable from URL.
                         stream = (InputStream)new URL("http://www.shadal.kr" + urls.get(page)).getContent();
                         drawable = Drawable.createFromStream(stream, null);
+
                     } catch (Exception e) {
                         exceptionOccurred = true;
                         e.printStackTrace();
@@ -110,6 +110,7 @@ public class FlyerActivity extends ActionBarActivity {
                     return null;
                 }
             }
+            getActivity().setProgressBarIndeterminateVisibility(false);
             image.setImageDrawable(drawable);
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             return image;

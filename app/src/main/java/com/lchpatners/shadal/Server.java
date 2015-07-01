@@ -318,6 +318,8 @@ public class Server {
                 Log.d("Popuplist", "null?");
                 return;
 
+
+
             }
         }
 
