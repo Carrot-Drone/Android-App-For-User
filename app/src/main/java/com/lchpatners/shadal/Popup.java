@@ -55,7 +55,8 @@ public class Popup extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
-        RelativeLayout wrapper = new RelativeLayout(activity);;
+        RelativeLayout wrapper = new RelativeLayout(activity);
+        ;
         View popup = inflater.inflate(R.layout.popup, null, false);
 
         WebView webView = (WebView) popup.findViewById(R.id.webView);

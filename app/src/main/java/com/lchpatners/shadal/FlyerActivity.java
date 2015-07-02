@@ -19,10 +19,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * Displays image files of leaflets(==flyers).
  */
 public class FlyerActivity extends ActionBarActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class FlyerActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             final int page = getArguments().getInt("PAGE");
             ImageView image = new ImageView(context);
+            PhotoViewAttacher mAttacher;
             stream = null;
             // TODO: use an AsyncTask instead, for this is quite weird
             new Thread(new Runnable() {
@@ -113,6 +117,7 @@ public class FlyerActivity extends ActionBarActivity {
             getActivity().setProgressBarIndeterminateVisibility(false);
             image.setImageDrawable(drawable);
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            mAttacher = new PhotoViewAttacher(image);
             return image;
         }
     }
