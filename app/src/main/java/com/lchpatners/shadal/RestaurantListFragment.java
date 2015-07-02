@@ -1,13 +1,11 @@
 package com.lchpatners.shadal;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
@@ -72,6 +70,7 @@ public class RestaurantListFragment extends Fragment {
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        /*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,7 +87,7 @@ public class RestaurantListFragment extends Fragment {
                 }
             }
         });
-
+*/
         return view;
     }
 

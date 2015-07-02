@@ -31,7 +31,7 @@ public class FlyerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flyer);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         Intent intent = getIntent();
         ArrayList<String> urls = (ArrayList<String>)intent.getSerializableExtra("URLS");
@@ -65,9 +65,11 @@ public class FlyerActivity extends ActionBarActivity {
         public int getCount() {
             return urls.size();
         }
+
+
     }
 
-    public static class PageFragment extends Fragment {
+    public static class PageFragment extends Fragment  {
 
         private static Context context;
         private static ArrayList<String> urls;
@@ -86,8 +88,9 @@ public class FlyerActivity extends ActionBarActivity {
             return fragment;
         }
 
+
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
             final int page = getArguments().getInt("PAGE");
             ImageView image = new ImageView(context);
             PhotoViewAttacher mAttacher;
@@ -114,11 +117,14 @@ public class FlyerActivity extends ActionBarActivity {
                     return null;
                 }
             }
-            getActivity().setProgressBarIndeterminateVisibility(false);
             image.setImageDrawable(drawable);
-            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             mAttacher = new PhotoViewAttacher(image);
-            return image;
+//            mAttacher.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            return mAttacher.getImageView();
         }
+
     }
+
 }

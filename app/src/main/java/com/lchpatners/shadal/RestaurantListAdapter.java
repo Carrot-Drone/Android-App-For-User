@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -117,7 +118,8 @@ public class RestaurantListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final int pos = position;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             switch (getItemViewType(position)) {
@@ -132,35 +134,55 @@ public class RestaurantListAdapter extends BaseAdapter {
         assert convertView != null;
         switch (getItemViewType(position)) {
             case HEADER:
-                TextView header = (TextView)convertView.findViewById(R.id.header);
-                header.setText((String)data.get(position));
+                TextView header = (TextView) convertView.findViewById(R.id.header);
+                header.setText((String) data.get(position));
                 break;
             case ITEM:
-                Restaurant restaurant = (Restaurant)data.get(position);
-                TextView name = (TextView)convertView.findViewById(R.id.name);
+                Restaurant restaurant = (Restaurant) data.get(position);
+                TextView name = (TextView) convertView.findViewById(R.id.name);
                 name.setText(restaurant.getName());
                 convertView.findViewById(R.id.recent).setVisibility(restaurant.isNew() ? View.VISIBLE : View.GONE);
                 convertView.findViewById(R.id.coupon).setVisibility(restaurant.hasCoupon() ? View.VISIBLE : View.GONE);
                 convertView.findViewById(R.id.flyer).setVisibility(restaurant.hasFlyer() ? View.VISIBLE : View.GONE);
 
-                convertView.findViewById(R.id.flyer).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Restaurant restaurant = (Restaurant)data.get(position);
-                        DatabaseHelper helper = DatabaseHelper.getInstance(context);
-                        ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
-                        Intent intent = new Intent(context, FlyerActivity.class);
-                        intent.putExtra("URLS", urls);
-                        context.startActivity(intent);
+                if (restaurant.hasFlyer()) {
+                    ImageButton imgBtn = (ImageButton) convertView.findViewById(R.id.flyer);
+                    imgBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Restaurant restaurant = (Restaurant) data.get(pos);
+                            DatabaseHelper helper = DatabaseHelper.getInstance(context);
+                            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
+                            Intent intent = new Intent(context, FlyerActivity.class);
+                            intent.putExtra("URLS", urls);
+                            context.startActivity(intent);
 
-                    }
-                });
+                        }
+                    });
+                }
                 convertView.findViewById(R.id.bookmark).setVisibility(restaurant.isFavorite()
                         && !category.equals("bookmark") ? View.VISIBLE : View.GONE);
                 break;
         }
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getItem(pos) instanceof Restaurant) {
+                    Restaurant restaurant = (Restaurant) getItem(pos);
+
+                    AnalyticsHelper helper = new AnalyticsHelper(context);
+                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
+
+                    Intent intent = new Intent(context, MenuListActivity.class);
+                    intent.putExtra("RESTAURANT", restaurant);
+                    intent.putExtra("REFERRER", "RestaurantListFragment");
+                    context.startActivity(intent);
+                }
+            }
+        });
+
         return convertView;
     }
-
-
 }
+
+
