@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-
 /**
  * Displays image files of leaflets(==flyers).
  */
@@ -93,7 +91,7 @@ public class FlyerActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
             final int page = getArguments().getInt("PAGE");
             ImageView image = new ImageView(context);
-            PhotoViewAttacher mAttacher;
+            TouchImageView img = (TouchImageView) new TouchImageView(context);
             stream = null;
             // TODO: use an AsyncTask instead, for this is quite weird
             new Thread(new Runnable() {
@@ -117,12 +115,9 @@ public class FlyerActivity extends ActionBarActivity {
                     return null;
                 }
             }
-            image.setImageDrawable(drawable);
+            img.setImageDrawable(drawable);
             //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            mAttacher = new PhotoViewAttacher(image);
-//            mAttacher.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-            return mAttacher.getImageView();
+       return img;
         }
 
     }
