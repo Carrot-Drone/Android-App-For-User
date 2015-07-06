@@ -41,7 +41,6 @@
             android:name=".MenuListActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_info"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,10 +50,6 @@
             android:name=".FlyerActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_flyer"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".Popup"
             android:screenOrientation="portrait" >
         </activity>
 

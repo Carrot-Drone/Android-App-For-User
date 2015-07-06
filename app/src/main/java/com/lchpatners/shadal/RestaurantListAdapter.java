@@ -146,7 +146,8 @@ public class RestaurantListAdapter extends BaseAdapter {
                 convertView.findViewById(R.id.flyer).setVisibility(restaurant.hasFlyer() ? View.VISIBLE : View.GONE);
 
                 if (restaurant.hasFlyer()) {
-                    ImageButton imgBtn = (ImageButton) convertView.findViewById(R.id.flyer);
+                    final ImageButton imgBtn = (ImageButton) convertView.findViewById(R.id.flyer);
+                    imgBtn.setClickable(true);
                     imgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

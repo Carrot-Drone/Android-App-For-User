@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -23,19 +25,61 @@ import java.util.ArrayList;
  * Displays image files of leaflets(==flyers).
  */
 public class FlyerActivity extends ActionBarActivity {
-
+    static ProgressBar progressBar;
+    private LinearLayout mPageMark;
+    private int mPrePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flyer);
+        mPageMark = (LinearLayout) findViewById(R.id.pager);
+
+
         //getSupportActionBar().hide();
-
+        progressBar = new ProgressBar(this);
         Intent intent = getIntent();
-        ArrayList<String> urls = (ArrayList<String>)intent.getSerializableExtra("URLS");
+        ArrayList<String> urls = (ArrayList<String>) intent.getSerializableExtra("URLS");
 
-        ViewPager viewPager = (ViewPager)findViewById(R.id.flyer_pager);
+        progressBar.setVisibility(View.VISIBLE);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.flyer_pager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), urls));
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mPageMark.getChildAt(mPrePosition).setBackgroundResource(R.drawable.page_not);
+
+                mPageMark.getChildAt(position).setBackgroundResource(R.drawable.page_select);
+                mPrePosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        initPageMark(urls.size());
+    }
+
+    private void initPageMark(int count) {
+        for (int i = 0; i < count; i++) {
+            ImageView iv = new ImageView(getApplicationContext());
+
+            if (i == 0)
+                iv.setBackgroundResource(R.drawable.page_select);
+            else
+                iv.setBackgroundResource(R.drawable.page_not);
+
+            mPageMark.addView(iv);
+        }
+        mPrePosition = 0;
+
     }
 
     @Override
@@ -67,7 +111,7 @@ public class FlyerActivity extends ActionBarActivity {
 
     }
 
-    public static class PageFragment extends Fragment  {
+    public static class PageFragment extends Fragment {
 
         private static Context context;
         private static ArrayList<String> urls;
@@ -88,20 +132,21 @@ public class FlyerActivity extends ActionBarActivity {
 
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
             final int page = getArguments().getInt("PAGE");
-            ImageView image = new ImageView(context);
-            TouchImageView img = (TouchImageView) new TouchImageView(context);
-            stream = null;
+            TouchImageView img = new TouchImageView(context);
+
+
             // TODO: use an AsyncTask instead, for this is quite weird
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         // Create a drawable from URL.
-                        stream = (InputStream)new URL("http://www.shadal.kr" + urls.get(page)).getContent();
+                        stream = (InputStream) new URL("http://www.shadal.kr" + urls.get(page)).getContent();
                         drawable = Drawable.createFromStream(stream, null);
-
+                        progressBar.setVisibility(View.INVISIBLE);
                     } catch (Exception e) {
                         exceptionOccurred = true;
                         e.printStackTrace();
@@ -115,9 +160,10 @@ public class FlyerActivity extends ActionBarActivity {
                     return null;
                 }
             }
+
             img.setImageDrawable(drawable);
             //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-       return img;
+            return img;
         }
 
     }
