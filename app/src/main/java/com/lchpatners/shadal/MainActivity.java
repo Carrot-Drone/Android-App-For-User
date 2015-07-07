@@ -105,7 +105,7 @@ public class MainActivity extends ActionBarActivity {
                 actionBar.setTitle(adapter.getPageTitle(position));
             }
         });
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(PagerAdapter.MAIN);
     }
 
     @Override
@@ -185,13 +185,13 @@ public class MainActivity extends ActionBarActivity {
          *
          * @see com.lchpatners.shadal.CategoryListFragment CategoryListFragment
          */
-        public static final int MAIN = 0;
+        public static final int MAIN = 1;
         /**
          * Indicates the bookmark {@link android.support.v4.app.Fragment Fragment}.
          *
          * @see com.lchpatners.shadal.BookmarkFragment BookmarkFragment
          */
-        public static final int BOOKMARK = 1;
+        public static final int BOOKMARK = 0;
         /**
          * Indicates the random {@link android.support.v4.app.Fragment Fragment}.
          *

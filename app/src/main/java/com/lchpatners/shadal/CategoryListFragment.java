@@ -3,7 +3,6 @@ package com.lchpatners.shadal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class CategoryListFragment extends Fragment {
                 helper.sendEvent("UX", "category_clicked", category);
 
                 // Add the fragment with custom animations.
-                ((FragmentActivity)activity).getSupportFragmentManager()
+                getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right)
                         .add(R.id.fragment_list_frame, rlfInstance)
