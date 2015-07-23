@@ -159,6 +159,9 @@ public class MenuListActivity extends ActionBarActivity {
                     AnalyticsHelper helper = new AnalyticsHelper(getApplication());
                     helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
+                    DatabaseHelper DBhelper = DatabaseHelper.getInstance(MenuListActivity.this);
+                    DBhelper.insertRecentCalls(restaurant.getId());
+
                     server.sendCallLog(restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));

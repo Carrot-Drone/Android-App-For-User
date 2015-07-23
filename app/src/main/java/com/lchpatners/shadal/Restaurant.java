@@ -70,6 +70,8 @@ public class Restaurant implements Parcelable {
      */
     private String updatedTime;                             // Server-side name: updated_at
 
+
+
     // Must be read by the order which it was written by.
     /**
      * Construct by retrieving from the {@link android.os.Parcel Parcel}.

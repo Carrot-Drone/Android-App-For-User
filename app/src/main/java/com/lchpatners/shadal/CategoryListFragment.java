@@ -65,13 +65,13 @@ public class CategoryListFragment extends Fragment {
                 // Instantiate a RestaurantListFragment instance of the chosen category.
                 String category = ((TextView)view.findViewById(R.id.category_text)).getText().toString();
                 RestaurantListFragment rlfInstance = RestaurantListFragment.newInstance(category);
-                ((MainActivity)getActivity()).restaurantListFragmentCurrentlyOn = rlfInstance;
+                ((MainActivity)activity).restaurantListFragmentCurrentlyOn = rlfInstance;
 
                 AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                 helper.sendEvent("UX", "category_clicked", category);
 
                 // Add the fragment with custom animations.
-                getActivity().getSupportFragmentManager()
+                ((MainActivity)activity).getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right)
                         .add(R.id.fragment_list_frame, rlfInstance)

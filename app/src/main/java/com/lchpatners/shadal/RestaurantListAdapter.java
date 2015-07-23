@@ -23,6 +23,8 @@ public class RestaurantListAdapter extends BaseAdapter {
      */
     public static final String BOOKMARK = "bookmark";
 
+    public static final String CAllSLIST = "callslist";
+
 
     /**
      * Indicates the header view type.
@@ -85,20 +87,26 @@ public class RestaurantListAdapter extends BaseAdapter {
         data.clear();
         headers.clear();
         ArrayList<Restaurant> restaurants;
-        if (!category.equals(BOOKMARK)) {
+        ArrayList<Call> calls;
+        if (!category.equals(CAllSLIST)) {
             restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(category);
+            for (Restaurant restaurant : restaurants) {
+                data.add(restaurant);
+            }
         } else {
-            restaurants = DatabaseHelper.getInstance(context).getFavoriteRestaurants();
-        }
-        String header = null;
-        for (Restaurant restaurant : restaurants) {
-            if (category.equals(BOOKMARK) && !restaurant.getCategory().equals(header)) {
+            calls = DatabaseHelper.getInstance(context).getRecentCallsList();
+            String header = null;
+            for (Call call : calls) {
+          /*  if (category.equals(CAllSLIST) && !restaurant.getCategory().equals(header)) {
                 header = restaurant.getCategory();
                 data.add(header);
                 headers.add(header);
             }
-            data.add(restaurant);
+          */
+                data.add(call);
+            }
         }
+
         notifyDataSetChanged();
     }
 

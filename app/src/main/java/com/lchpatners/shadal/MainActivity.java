@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +35,9 @@ public class MainActivity extends ActionBarActivity {
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
-    ViewPager viewPager;
+    protected ViewPager viewPager;
+    protected boolean isInit = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +73,15 @@ public class MainActivity extends ActionBarActivity {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(PagerAdapter.MAX_PAGE);
-
+        //viewPager.setCurrentItem(PagerAdapter.MAIN);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(adapter.getPageTitle(viewPager.getCurrentItem()));
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Log.d("viewPager tab position", tab.getPosition() + "");
+                Log.d("viewPager currentItem",viewPager.getCurrentItem()+"");
             }
 
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -87,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
                 // Do nothing.
             }
         };
+
         for (int page = 0; page < PagerAdapter.MAX_PAGE; page++) {
             actionBar.addTab(
                     actionBar.newTab()
@@ -98,6 +104,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                viewPager.setCurrentItem(position);
                 for (int i = 0; i < actionBar.getTabCount(); i++) {
                     actionBar.getTabAt(i).setIcon(adapter.getPageIcon(i, false));
                 }
@@ -105,6 +112,7 @@ public class MainActivity extends ActionBarActivity {
                 actionBar.setTitle(adapter.getPageTitle(position));
             }
         });
+
         viewPager.setCurrentItem(PagerAdapter.MAIN);
     }
 
@@ -221,7 +229,7 @@ public class MainActivity extends ActionBarActivity {
                     fragment = CategoryListFragment.newInstance();
                     break;
                 case BOOKMARK:
-                    fragment = BookmarkFragment.newInstance();
+                    fragment = CallListFragment.newInstance();
                     break;
                 case RANDOM:
                     fragment = RandomFragment.newInstance();
@@ -246,7 +254,7 @@ public class MainActivity extends ActionBarActivity {
                     title = getString(R.string.app_name);
                     break;
                 case BOOKMARK:
-                    title = getString(R.string.bookmark);
+                    title = "최근주문";
                     break;
                 case RANDOM:
                     title = getString(R.string.random);

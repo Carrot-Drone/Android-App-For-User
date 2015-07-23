@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white100">
+
+    <RelativeLayout
+        android:id="@+id/icons"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp">
+
+        <ImageButton
+            android:id="@+id/iv_call"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_call"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world"
+        android:textSize="20sp"
+        android:textColor="@color/black87"
+        android:singleLine="true"
+        android:maxLength="12"
+        android:transitionName="@string/hello_world"
+        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/icons"
+        android:layout_toRightOf="@+id/call_count"
+        android:layout_toEndOf="@+id/call_count"
+        android:layout_marginLeft="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="24"
+        android:textSize="20sp"
+        android:textColor="@color/black87"
+        android:id="@+id/call_count"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>

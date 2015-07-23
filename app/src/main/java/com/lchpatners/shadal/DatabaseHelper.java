@@ -6,12 +6,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Manages the SQLite Database.
@@ -21,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int VERSION = 18;
+    private static final int VERSION = 19;
 
     /**
      * The restaurants table's name.
@@ -36,12 +38,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private static final String FLYERS = "flyers";
 
+    private static final String CALLLOGS = "calllogs";
+
     private static final String RESTAURANT_COLUMNS = "(id INTEGER PRIMARY KEY, server_id INT, name TEXT, " +
             "category TEXT, openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer INTEGER, " +
             "has_coupon INTEGER, is_new INTEGER, is_favorite INTEGER, coupon_string TEXT, updated_at TEXT)";
     private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, menu TEXT, section TEXT, " +
             "price INT, restaurant_id INT)";
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
+
+    private static final String CALLLOG_COLUMNS = "(id INTEGER PRIMARY KEY, restaurant_id INT, called_at LONG)";
 
     public static final String LEGACY_DATABASE_NAME = "Shadal";
     /**
@@ -96,9 +102,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", RESTAURANTS));
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", MENUS));
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", FLYERS));
+        db.execSQL(String.format("DROP TABLE IF EXISTS %s;", CALLLOGS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", RESTAURANTS, RESTAURANT_COLUMNS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", MENUS, MENU_COLUMNS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", FLYERS, FLYER_COLUMNS));
+        db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", CALLLOGS, CALLLOG_COLUMNS));
     }
 
     @Override
@@ -479,8 +487,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             cursor = db.rawQuery(String.format(
                     "SELECT * FROM %s WHERE id = %d;",
-                    RESTAURANTS, id
-            ), null);
+                    RESTAURANTS, id), null);
             if (cursor != null && cursor.moveToFirst()) {
                 restaurant = new Restaurant(cursor);
             }
@@ -524,4 +531,83 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertRecentCalls(int restaurant_id) {
+
+        try {
+            Log.d("DatabaseHelper",restaurant_id+"");
+            SQLiteDatabase db = getWritableDatabase();
+
+            Date date = new Date();
+            Long timestamp = date.getTime();
+            Log.d("DatabaseHelper", timestamp.toString());
+
+            ContentValues values = new ContentValues();
+            values.put("restaurant_id", restaurant_id);
+            values.put("called_at", timestamp);
+
+            db.insert(CALLLOGS, null, values);
+            Log.d("DatabaseHelper", values.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Call> getRecentCallsList() {
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Call> list = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+
+/*
+
+            cursor = db.rawQuery(String.format(
+                    "SELECT * FROM %s WHERE id IN (SELECT restaurant_id FROM %s ORDER BY called_at DESC);",
+                    RESTAURANTS,CALLLOGS
+            ), null);
+*/
+
+
+
+            cursor = db.rawQuery(String.format(
+                    "SELECT restaurants.id,name,count(*) FROM %s,%s WHERE %s = %s GROUP BY restaurants.id ORDER BY %s DESC; ",
+                    RESTAURANTS,CALLLOGS,"restaurants.id","calllogs.restaurant_id","calllogs.called_at"
+            ), null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    list.add(new Call(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    public int getCallsCount(int restaurant_id){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        int count = 0;
+        try {
+            cursor = db.rawQuery(String.format(
+                    "SELECT count(*) from %s WHERE restaurant_id = %s;",
+                    CALLLOGS,restaurant_id)
+                    ,null);
+            if (cursor !=null && cursor.moveToFirst()){
+                count = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0)));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
+        return count;
+    }
 }
