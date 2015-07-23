@@ -82,6 +82,7 @@ public class CallListAdapter extends BaseAdapter {
         ArrayList<Call> calls;
 
         calls = DatabaseHelper.getInstance(context).getRecentCallsList();
+
         for (Call call : calls) {
             data.add(call);
         }
@@ -110,6 +111,7 @@ public class CallListAdapter extends BaseAdapter {
         if (convertView == null) {
 
             LayoutInflater inflater = LayoutInflater.from(context);
+           // View view = inflater.inflate(R.layout.list_header_call, parent, false);
             convertView = inflater.inflate(R.layout.list_item_call, parent, false);
 
         }
@@ -139,6 +141,7 @@ public class CallListAdapter extends BaseAdapter {
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));
                 context.startActivity(intent);
+                reloadData();
             }
         });
 
@@ -155,7 +158,8 @@ public class CallListAdapter extends BaseAdapter {
 
                     Intent intent = new Intent(context, MenuListActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
-                    intent.putExtra("REFERRER", "RestaurantListFragment");
+                    intent.putExtra("REFERRER", "CallListFragment");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                 }
             }

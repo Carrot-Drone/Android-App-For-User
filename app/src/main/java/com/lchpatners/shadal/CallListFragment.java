@@ -39,6 +39,7 @@ public class CallListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         /*
          * Without this condition check, there would be multiple onResume() calls of
          * all the Fragments in the parent ViewPager this and they belong. This is because
@@ -62,7 +63,7 @@ public class CallListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.list_view, container, false);
-        ListView listView = (ListView)view.findViewById(R.id.list_view);
+        final ListView listView = (ListView)view.findViewById(R.id.list_view);
 
         // Create and set the empty view to show up when the list is empty.
         ImageView img = new ImageView(activity);
@@ -74,6 +75,7 @@ public class CallListFragment extends Fragment {
         final CallListAdapter adapter
                 = new CallListAdapter(activity);
 
+        adapter.notifyDataSetChanged();
         //latestAdapter = adapter;
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -87,8 +89,11 @@ public class CallListFragment extends Fragment {
 
                     Intent intent = new Intent(activity, MenuListActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
-                    intent.putExtra("REFERRER", "BookmarkFragment");
+                    intent.putExtra("REFERRER", "CallListFragment");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    adapter.notifyDataSetChanged();
+                    listView.deferNotifyDataSetChanged();
                 }
             }
         });
