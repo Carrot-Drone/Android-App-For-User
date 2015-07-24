@@ -5,22 +5,25 @@
                 android:background="@color/white100">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black54">
+        android:background="@color/white100"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        >
 
         <TextView
             android:id="@+id/title_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
             android:layout_toEndOf="@+id/title_call_count"
             android:layout_toRightOf="@+id/title_call_count"
             android:maxLength="12"
             android:singleLine="true"
             android:text="이름"
-            android:textColor="@color/white100"
+            android:textColor="@color/black87"
             android:textSize="15sp"/>
 
         <TextView
@@ -31,10 +34,11 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginBottom="16dp"
-            android:layout_marginLeft="24dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_marginTop="8dp"
             android:text="내 주문수"
-            android:textColor="@color/white100"
+            android:textColor="@color/black87"
             android:textSize="15sp"/>
 
         <TextView
@@ -44,9 +48,23 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="24dp"
+            android:layout_marginRight="28dp"
             android:text="최근"
-            android:textColor="@color/white100"
+            android:textColor="@color/black87"
             android:textSize="15sp"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black12"
+        android:layout_below="@+id/relativeLayout">
+    </RelativeLayout>
+        <ListView
+            android:id="@+id/call_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/relativeLayout2"/>
+
 </RelativeLayout>

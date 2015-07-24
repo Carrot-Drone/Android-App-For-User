@@ -1,7 +1,6 @@
 <resources>
 
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,6 +14,7 @@
         <item name="actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
         <item name="android:actionBarDivider">@color/transparent</item>
         <item name="actionBarDivider">@color/transparent</item>
+        <item name="android:actionBarTabTextStyle">@style/AppTheme.ActionBar.TabView.TabText</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -22,10 +22,22 @@
         <item name="background">@color/primary</item>
     </style>
 
-    <style name="AppTheme.ActionBar.TabView" parent="Widget.AppCompat.Light.ActionBar.TabView.Inverse">
+    <style name="AppTheme.ActionBar.TabView" parent="Widget.AppCompat.Light.ActionBar.TabView">
         <item name="android:background">@drawable/actionbar_tab</item>
         <item name="background">@drawable/actionbar_tab</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:color">@color/black54</item>
+        <item name="android:textColorPrimaryInverse">@color/black54</item>>
         <item name="android:paddingBottom">4dp</item>
     </style>
+
+    <style name="AppTheme.ActionBar.TabView.TabText"
+           parent="Widget.AppCompat.Light.ActionBar.TabText.Inverse">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:textColorPrimaryInverse">@color/black54</item>
+        <item name="android:color">@color/primary</item>
+    </style>
+
 
 </resources>

@@ -108,12 +108,11 @@ public class CallListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
+        View view;
         if (convertView == null) {
 
             LayoutInflater inflater = LayoutInflater.from(context);
-           // View view = inflater.inflate(R.layout.list_header_call, parent, false);
             convertView = inflater.inflate(R.layout.list_item_call, parent, false);
-
         }
         assert convertView != null;
 

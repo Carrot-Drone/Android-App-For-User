@@ -62,8 +62,8 @@ public class CallListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.list_view, container, false);
-        final ListView listView = (ListView)view.findViewById(R.id.list_view);
+        View view = inflater.inflate(R.layout.fragment_call, container, false);
+        final ListView listView = (ListView)view.findViewById(R.id.call_list_view);
 
         // Create and set the empty view to show up when the list is empty.
         ImageView img = new ImageView(activity);

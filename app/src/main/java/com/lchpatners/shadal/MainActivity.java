@@ -221,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
         /**
          * The number of {@link android.support.v4.app.Fragment Fragments}.
          */
-        public static final int MAX_PAGE = 2;
+        public static final int MAX_PAGE = 4;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
@@ -236,13 +236,13 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case BOOKMARK:
                     fragment = CallListFragment.newInstance();
-                    break;/*
+                    break;
                 case RANDOM:
                     fragment = RandomFragment.newInstance();
                     break;
                 case SEE_MORE:
                     fragment = SeeMoreFragment.newInstance();
-                    break;*/
+                    break;
             }
             return fragment;
         }
@@ -261,13 +261,13 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case BOOKMARK:
                     title = "최근주문";
-                    break;/*
+                    break;
                 case RANDOM:
                     title = getString(R.string.random);
                     break;
                 case SEE_MORE:
                     title = getString(R.string.see_more);
-                    break;*/
+                    break;
             }
             return title;
         }
@@ -284,7 +284,7 @@ public class MainActivity extends ActionBarActivity {
                     icon = getResources().getDrawable(
                             selected ? R.drawable.tab_star_selected : R.drawable.tab_star_unselected
                     );
-                    break;/*
+                    break;
                 case RANDOM:
                     icon = getResources().getDrawable(
                             selected ? R.drawable.tab_dice_selected : R.drawable.tab_dice_unselected
@@ -294,7 +294,7 @@ public class MainActivity extends ActionBarActivity {
                     icon = getResources().getDrawable(
                             selected ? R.drawable.tab_more_selected : R.drawable.tab_more_unselected
                     );
-                    break;*/
+                    break;
             }
             return icon;
         }
