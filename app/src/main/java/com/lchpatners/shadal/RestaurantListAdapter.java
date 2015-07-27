@@ -23,7 +23,7 @@ public class RestaurantListAdapter extends BaseAdapter {
      */
     public static final String BOOKMARK = "bookmark";
 
-    public static final String CAllSLIST = "callslist";
+//    public static final String CAllSLIST = "callslist";
 
 
     /**
@@ -87,25 +87,25 @@ public class RestaurantListAdapter extends BaseAdapter {
         data.clear();
         headers.clear();
         ArrayList<Restaurant> restaurants;
-        ArrayList<Call> calls;
-        if (!category.equals(CAllSLIST)) {
+//        ArrayList<Call> calls;
+//        if (!category.equals(CAllSLIST)) {
             restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(category);
             for (Restaurant restaurant : restaurants) {
                 data.add(restaurant);
             }
-        } else {
-            calls = DatabaseHelper.getInstance(context).getRecentCallsList();
+        /*} else {
+            calls = DatabaseHelper.getInstance(context).getRecentCallsList("NAME");
             String header = null;
             for (Call call : calls) {
-          /*  if (category.equals(CAllSLIST) && !restaurant.getCategory().equals(header)) {
+            if (category.equals(CAllSLIST) && !restaurant.getCategory().equals(header)) {
                 header = restaurant.getCategory();
                 data.add(header);
                 headers.add(header);
             }
-          */
+
                 data.add(call);
             }
-        }
+        }*/
 
         notifyDataSetChanged();
     }

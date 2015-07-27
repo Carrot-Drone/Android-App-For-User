@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Displays bookmarks.
@@ -20,11 +21,32 @@ public class CallListFragment extends Fragment {
      * The {@link Activity Activity} to which this attaches.
      */
     private Activity activity;
-    /**
-     * The lastly instantiated instance's {@link RestaurantListAdapter
-     * RestaurantListAdapter}. Used to reload the view from another {@link Activity Activity}.
-     */
-    public static RestaurantListAdapter latestAdapter;
+    private ListView listView;
+    private CallListAdapter adapter;
+
+    private ImageView iv_call;
+    private ImageView iv_name;
+    View.OnClickListener btnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            if (view.getId() == R.id.title_name) {
+                CallListAdapter adapter = new CallListAdapter(activity, DatabaseHelper.NAME);
+                listView.setAdapter(adapter);
+
+                iv_name.setVisibility(View.VISIBLE);
+                iv_call.setVisibility(View.INVISIBLE);
+
+            } else if (view.getId() == R.id.title_call) {
+                CallListAdapter adapter = new CallListAdapter(activity, DatabaseHelper.CALL);
+                listView.setAdapter(adapter);
+
+                iv_name.setVisibility(View.INVISIBLE);
+                iv_call.setVisibility(View.VISIBLE);
+
+            }
+        }
+    };
 
     public static CallListFragment newInstance() {
         return new CallListFragment();
@@ -63,20 +85,23 @@ public class CallListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_call, container, false);
-        final ListView listView = (ListView)view.findViewById(R.id.call_list_view);
+        listView = (ListView) view.findViewById(R.id.call_list_view);
+        TextView textView = (TextView) view.findViewById(android.R.id.empty);
+        listView.setEmptyView(textView);
 
-        // Create and set the empty view to show up when the list is empty.
-        ImageView img = new ImageView(activity);
-        img.setImageResource(R.drawable.bg_bookmarks_empty);
-        img.setVisibility(View.GONE);
-        ((ViewGroup)listView.getParent()).addView(img);
-        listView.setEmptyView(img);
+        TextView name = (TextView) view.findViewById(R.id.title_name);
+        TextView call = (TextView) view.findViewById(R.id.title_call);
 
-        final CallListAdapter adapter
-                = new CallListAdapter(activity);
+        iv_name = (ImageView) view.findViewById(R.id.iv_name_order);
+        iv_call = (ImageView) view.findViewById(R.id.iv_order);
+
+        name.setOnClickListener(btnListener);
+        call.setOnClickListener(btnListener);
+
+        adapter = new CallListAdapter(activity, DatabaseHelper.CALL);
 
         adapter.notifyDataSetChanged();
-        //latestAdapter = adapter;
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,7 +115,6 @@ public class CallListFragment extends Fragment {
                     Intent intent = new Intent(activity, MenuListActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "CallListFragment");
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     adapter.notifyDataSetChanged();
                     listView.deferNotifyDataSetChanged();
@@ -99,5 +123,4 @@ public class CallListFragment extends Fragment {
         });
         return view;
     }
-
 }

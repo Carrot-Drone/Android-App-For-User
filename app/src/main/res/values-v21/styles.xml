@@ -2,9 +2,6 @@
 <resources>
 
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:textColor">@color/white100</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -19,7 +16,7 @@
         <item name="actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
         <item name="android:actionBarDivider">@color/transparent</item>
         <item name="actionBarDivider">@color/transparent</item>
-        <item name="android:actionBarTabTextStyle">@style/AppTheme.ActionBar.TabView.TabText</item>
+        <item name="android:actionBarTabTextStyle">@style/myTabTextColor</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -35,16 +32,18 @@
         <item name="android:background">@drawable/actionbar_tab</item>
         <item name="background">@drawable/actionbar_tab</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:textColorPrimaryInverse">@color/black54</item>>
+        <item name="android:textColor">@color/black54</item>
+        <item name="android:textColorPrimaryInverse">@color/black54</item>
+        <item name="android:textColorHint">@color/black87</item>
     </style>
 
-    <style name="AppTheme.ActionBar.TabView.TabText"
-           parent="Widget.AppCompat.Light.ActionBar.TabText.Inverse">
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:textColorPrimary">@color/primary</item>
+    <style name="myTabTextColor"
+           parent="Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@color/black87</item>
+        <item name="android:textColorPrimary">@color/black87</item>
         <item name="android:textColorPrimaryInverse">@color/black54</item>
-        <item name="android:color">@color/primary</item>
+        <item name="android:textColorHint">@color/black26</item>
+
     </style>
 
 

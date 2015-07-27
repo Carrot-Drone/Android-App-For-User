@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,11 +19,13 @@ import java.util.Date;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    public static final String LEGACY_DATABASE_NAME = "Shadal";
+    public static final String NAME = "name";
+    public static final String CALL = "call";
     /**
      * Database version.
      */
     private static final int VERSION = 19;
-
     /**
      * The restaurants table's name.
      */
@@ -37,41 +38,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * The flyer table's name.
      */
     private static final String FLYERS = "flyers";
-
     private static final String CALLLOGS = "calllogs";
-
     private static final String RESTAURANT_COLUMNS = "(id INTEGER PRIMARY KEY, server_id INT, name TEXT, " +
             "category TEXT, openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer INTEGER, " +
             "has_coupon INTEGER, is_new INTEGER, is_favorite INTEGER, coupon_string TEXT, updated_at TEXT)";
     private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, menu TEXT, section TEXT, " +
             "price INT, restaurant_id INT)";
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
-
     private static final String CALLLOG_COLUMNS = "(id INTEGER PRIMARY KEY, restaurant_id INT, called_at LONG)";
-
-    public static final String LEGACY_DATABASE_NAME = "Shadal";
     /**
      * A list of bookmarks from the old version's database.
      * Each integer value means the server-side id of restaurants.
      */
     public static ArrayList<Integer> legacyBookmarks = new ArrayList<>();
-
-
     /**
      * The singleton object.
      */
     private static DatabaseHelper instance;
     /**
-     * The campus whose database is currently loaded to be handled..
+     * The campus whose database is currently loaded to be handled..f
      */
     private static String loadedCampus;
-
     private Context context;
+
+    /**
+     * Constructs a {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper}.
+     *
+     * @param context        {@link android.content.Context}
+     * @param selectedCampus The campus database to be handled.
+     */
+    private DatabaseHelper(Context context, String selectedCampus) {
+        super(context.getApplicationContext(), selectedCampus, null, VERSION);
+        this.context = context;
+    }
 
     /**
      * If {@link #instance} is null, or {@link #loadedCampus} is different from the
      * user's last pick, instantiate a new object of {@link com.lchpatners.shadal.DatabaseHelper
      * DatabaseHelper}.
+     *
      * @param context {@link android.content.Context}
      * @return A {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper} instance.
      */
@@ -85,16 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return instance;
-    }
-
-    /**
-     * Constructs a {@link com.lchpatners.shadal.DatabaseHelper DatabaseHelper}.
-     * @param context {@link android.content.Context}
-     * @param selectedCampus The campus database to be handled.
-     */
-    private DatabaseHelper(Context context, String selectedCampus) {
-        super(context.getApplicationContext(), selectedCampus, null, VERSION);
-        this.context = context;
     }
 
     @Override
@@ -128,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Insert if new to the table, or otherwise update the existing data.
      * Data are identified by the server-side id value. And then
      * reload {@link com.lchpatners.shadal.RestaurantListFragment#latestAdapter latestAdapter}.
+     *
      * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
      */
     public void updateRestaurant(JSONObject restaurantJson) {
@@ -139,8 +135,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Insert if new to the table, or otherwise update the existing data.
      * Data are identified by the server-side id value. And then
      * reload the {@link com.lchpatners.shadal.MenuListActivity activity}.
+     *
      * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
-     * @param activity {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
+     * @param activity       {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
      */
     public void updateRestaurant(JSONObject restaurantJson, final MenuListActivity activity) {
         Cursor cursor = null;
@@ -228,8 +225,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Server offering complete data, you could use the JSONObject object
      * retrieved from the Cursor e.g. <code>if (...) { updateRestaurant(jsonObjFromCursor(cursor); }</code>
      * instead of <code>server.updatedRestaurant(...)</code> call.
+     *
      * @param restaurants {@link org.json.JSONArray JSONArray} data to update with.
-     * @param category A category the restaurants belongs to.
+     * @param category    A category the restaurants belongs to.
      * @see com.lchpatners.shadal.Server#updateRestaurant(int, java.lang.String) Server.updateRestaurant(int, String)
      */
     public void updateCategory(JSONArray restaurants, String category) {
@@ -331,11 +329,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Bookmark a restaurant if it wasn't, and do the opposite otherwise.
+     *
      * @param restaurantId The restaurant's server-side id.
      * @return <code>true</code> if it was bookmarked,
      * <code>false</code> if un-bookmarked.
      */
-    public boolean toggleFavoriteById(long restaurantId){
+    public boolean toggleFavoriteById(long restaurantId) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         Restaurant restaurant = getRestaurantFromId(restaurantId);
@@ -384,7 +383,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(String.format(
-                   "SELECT section FROM %s WHERE restaurant_id = %d;",
+                    "SELECT section FROM %s WHERE restaurant_id = %d;",
                     MENUS, restaurantServerId
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -452,6 +451,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * A WILD RESTAURANT APPEARS!
+     *
      * @return A randomly selected restaurant.
      */
     public Restaurant getRandomRestaurant() {
@@ -503,11 +503,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Reload a {@link com.lchpatners.shadal.RestaurantListAdapter adapter}.
+     *
      * @param adapter An adapter to be reloaded.
      */
     public void reloadRestaurantListAdapter(final RestaurantListAdapter adapter) {
         if (adapter != null) {
-            ((Activity)context).runOnUiThread(new Runnable() {
+            ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     adapter.reloadData();
@@ -518,11 +519,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Reload a {@link com.lchpatners.shadal.MenuListActivity activity}.
+     *
      * @param activity An activity to be reloaded.
      */
     public void reloadMenuListActivity(final MenuListActivity activity) {
         if (activity != null) {
-            ((Activity)context).runOnUiThread(new Runnable() {
+            ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     activity.setView();
@@ -534,49 +536,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void insertRecentCalls(int restaurant_id) {
 
         try {
-            Log.d("DatabaseHelper",restaurant_id+"");
+
             SQLiteDatabase db = getWritableDatabase();
 
             Date date = new Date();
             Long timestamp = date.getTime();
-            Log.d("DatabaseHelper", timestamp.toString());
 
             ContentValues values = new ContentValues();
             values.put("restaurant_id", restaurant_id);
             values.put("called_at", timestamp);
 
             db.insert(CALLLOGS, null, values);
-            Log.d("DatabaseHelper", values.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<Call> getRecentCallsList() {
+    public ArrayList<Call> getRecentCallsList(String orderBy) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Call> list = new ArrayList<>();
         Cursor cursor = null;
         try {
 
-/*
-
-            cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE id IN (SELECT restaurant_id FROM %s ORDER BY called_at DESC);",
-                    RESTAURANTS,CALLLOGS
-            ), null);
-*/
-
-
-
-            cursor = db.rawQuery(String.format(
-                    "SELECT restaurants.id,name,count(*) FROM %s,%s WHERE %s = %s GROUP BY restaurants.id ORDER BY %s DESC; ",
-                    RESTAURANTS,CALLLOGS,"restaurants.id","calllogs.restaurant_id","calllogs.called_at"
-            ), null);
+            if (orderBy == CALL) {
+                cursor = db.rawQuery(String.format(
+                        "SELECT %s,%s,%s FROM %s,%s WHERE %s = %s GROUP BY %s ORDER BY %s DESC; ",
+                        "restaurants.id", "restaurants.name", "count(*)",//select
+                        RESTAURANTS, CALLLOGS, //from
+                        "restaurants.id", "calllogs.restaurant_id",//where
+                        "restaurants.id", //group by
+                        "calllogs.called_at" //order by
+                ), null);
+            } else if (orderBy == NAME) {
+                cursor = db.rawQuery(String.format(
+                        "SELECT %s,%s,%s FROM %s,%s WHERE %s = %s GROUP BY %s ORDER BY %s ASC; ",
+                        "restaurants.id", "restaurants.name", "count(*)",//select
+                        RESTAURANTS, CALLLOGS, //from
+                        "restaurants.id", "calllogs.restaurant_id",//where
+                        "restaurants.id", //group by
+                        "restaurants.name" //order by
+                ), null);
+            }
 
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     list.add(new Call(cursor));
+
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -589,25 +595,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public int getCallsCount(int restaurant_id){
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = null;
-        int count = 0;
-        try {
-            cursor = db.rawQuery(String.format(
-                    "SELECT count(*) from %s WHERE restaurant_id = %s;",
-                    CALLLOGS,restaurant_id)
-                    ,null);
-            if (cursor !=null && cursor.moveToFirst()){
-                count = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0)));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(cursor != null){
-                cursor.close();
-            }
-        }
-        return count;
-    }
+
 }

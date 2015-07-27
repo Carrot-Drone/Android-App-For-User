@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,15 +27,15 @@ public class MainActivity extends ActionBarActivity {
     //public static String URL;
     //public static boolean SHOW_POPUP=false;
     /**
-     * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
-     * RestaurantListFragment}.
-     */
-    RestaurantListFragment restaurantListFragmentCurrentlyOn;
-    /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
     protected ViewPager viewPager;
     protected boolean isInit = true;
+    /**
+     * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
+     * RestaurantListFragment}.
+     */
+    RestaurantListFragment restaurantListFragmentCurrentlyOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +79,6 @@ public class MainActivity extends ActionBarActivity {
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Log.d("viewPager tab position", tab.getPosition() + "");
-                Log.d("viewPager currentItem",viewPager.getCurrentItem()+"");
             }
 
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -100,6 +97,7 @@ public class MainActivity extends ActionBarActivity {
                             .setText(adapter.getPageTitle(page))
                             .setTabListener(tabListener);
             actionBar.addTab(tab);
+
 
         }
 
@@ -211,17 +209,17 @@ public class MainActivity extends ActionBarActivity {
          *
          * @see com.lchpatners.shadal.RandomFragment RandomFragment
          */
-        public static final int RANDOM = 2;
+        // public static final int RANDOM = 2;
         /**
          * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
          *
          * @see com.lchpatners.shadal.SeeMoreFragment SeeMoreFragment
          */
-        public static final int SEE_MORE = 3;
+        public static final int SEE_MORE = 2;
         /**
          * The number of {@link android.support.v4.app.Fragment Fragments}.
          */
-        public static final int MAX_PAGE = 4;
+        public static final int MAX_PAGE = 3;
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);
@@ -237,9 +235,9 @@ public class MainActivity extends ActionBarActivity {
                 case BOOKMARK:
                     fragment = CallListFragment.newInstance();
                     break;
-                case RANDOM:
-                    fragment = RandomFragment.newInstance();
-                    break;
+//                case RANDOM:
+//                    fragment = RandomFragment.newInstance();
+//                    break;
                 case SEE_MORE:
                     fragment = SeeMoreFragment.newInstance();
                     break;
@@ -262,9 +260,9 @@ public class MainActivity extends ActionBarActivity {
                 case BOOKMARK:
                     title = "최근주문";
                     break;
-                case RANDOM:
-                    title = getString(R.string.random);
-                    break;
+//                case RANDOM:
+//                    title = getString(R.string.random);
+//                    break;
                 case SEE_MORE:
                     title = getString(R.string.see_more);
                     break;
@@ -285,11 +283,11 @@ public class MainActivity extends ActionBarActivity {
                             selected ? R.drawable.tab_star_selected : R.drawable.tab_star_unselected
                     );
                     break;
-                case RANDOM:
-                    icon = getResources().getDrawable(
-                            selected ? R.drawable.tab_dice_selected : R.drawable.tab_dice_unselected
-                    );
-                    break;
+//                case RANDOM:
+//                    icon = getResources().getDrawable(
+//                            selected ? R.drawable.tab_dice_selected : R.drawable.tab_dice_unselected
+//                    );
+//                    break;
                 case SEE_MORE:
                     icon = getResources().getDrawable(
                             selected ? R.drawable.tab_more_selected : R.drawable.tab_more_unselected
