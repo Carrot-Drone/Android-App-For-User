@@ -1,14 +1,35 @@
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
     tools:context=".MainActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/main_pager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/main_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/navigation_list"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white100"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"/>
+
+
+</android.support.v4.widget.DrawerLayout>

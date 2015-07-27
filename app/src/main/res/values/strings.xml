@@ -53,4 +53,7 @@
 스토어에서 업데이트를 해주세요."</string>
     <string name="title_activity_intro">IntroActivity</string>
 
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="title_activity_see_more">더보기</string>
 </resources>

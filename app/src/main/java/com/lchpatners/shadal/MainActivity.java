@@ -2,6 +2,7 @@ package com.lchpatners.shadal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,8 +12,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,19 +31,20 @@ import org.json.JSONObject;
  * Displays the {@link android.support.v4.app.Fragment Fragments}.
  */
 public class MainActivity extends ActionBarActivity {
-
     //public static String URL;
     //public static boolean SHOW_POPUP=false;
+    protected static String[] drawer_str = {"주문하기", "더보기", "추천"};
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
     protected ViewPager viewPager;
-    protected boolean isInit = true;
     /**
      * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
      * RestaurantListFragment}.
      */
     RestaurantListFragment restaurantListFragmentCurrentlyOn;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
         if (Preferences.getCampusKoreanShortName(this) == null) {
             startActivity(new Intent(this, InitializationActivity.class));
             finish();
-        }else{
+        } else {
             new Server(this).getPopupList();
         }
 
@@ -66,6 +75,48 @@ public class MainActivity extends ActionBarActivity {
 
 
         updateCampusMetaData();
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ListView listView = (ListView) findViewById(R.id.navigation_list);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawer_str);
+        listView.setAdapter(arrayAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position == 0) {
+                    mDrawerLayout.closeDrawer(listView);
+                } else if (position == 1) {
+
+                    Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
+                    startActivity(intent);
+
+                } else if (position == 2) {
+
+                    Intent intent = new Intent(MainActivity.this, BookmarkFragment.class);
+                    startActivity(intent);
+                }
+            }
+        });
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                // getActionBar().setTitle(mTitle);
+            }
+
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
@@ -108,7 +159,7 @@ public class MainActivity extends ActionBarActivity {
                 viewPager.setCurrentItem(position);
                 for (int i = 0; i < actionBar.getTabCount(); i++) {
                     actionBar.getTabAt(i).setIcon(adapter.getPageIcon(i, false))
-                    .setText(adapter.getPageTitle(i));
+                            .setText(adapter.getPageTitle(i));
                 }
                 actionBar.getTabAt(position)
                         .setIcon(adapter.getPageIcon(position, true));
@@ -118,6 +169,25 @@ public class MainActivity extends ActionBarActivity {
         });
 
         viewPager.setCurrentItem(PagerAdapter.MAIN);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item))
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -134,8 +204,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-
-
     /**
      * Update campus meta data of currently selected campus.
      *
@@ -143,7 +211,7 @@ public class MainActivity extends ActionBarActivity {
      */
     public void updateCampusMetaData() {
         new Server.CampusesLoadingTask() {
-                        @Override
+            @Override
             public void onPostExecute(Void aVoid) {
                 if (results == null) return;
                 for (int i = 0; i < results.length(); i++) {
@@ -159,29 +227,20 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             }
+
             protected Void doInBackground(Void... params) {
 
                 try {
-
                     serviceCall = Server.makeServiceCall(
-
                             Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
-
                     if (serviceCall == null) {
-
                         return null;
-
                     }
                     results = new JSONArray(serviceCall);
-
                 } catch (Exception e) {
-
                     e.printStackTrace();
-
                 }
-
                 return null;
-
             }
         }.execute();
     }
@@ -296,5 +355,8 @@ public class MainActivity extends ActionBarActivity {
             }
             return icon;
         }
+
+
     }
+
 }
