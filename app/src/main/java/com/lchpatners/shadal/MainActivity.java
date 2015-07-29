@@ -3,24 +3,19 @@ package com.lchpatners.shadal;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,9 +26,7 @@ import org.json.JSONObject;
  * Displays the {@link android.support.v4.app.Fragment Fragments}.
  */
 public class MainActivity extends ActionBarActivity {
-    //public static String URL;
-    //public static boolean SHOW_POPUP=false;
-    protected static String[] drawer_str = {"주문하기", "더보기", "추천"};
+
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
@@ -43,15 +36,18 @@ public class MainActivity extends ActionBarActivity {
      * RestaurantListFragment}.
      */
     RestaurantListFragment restaurantListFragmentCurrentlyOn;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private String title;
+    private Toolbar toolbar;
+    private SlidingTabLayout tabs;
+    private ViewPagerAdapter adapter;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
         new Server(this).checkAppMinimumVersion();
 
 
@@ -75,35 +71,69 @@ public class MainActivity extends ActionBarActivity {
 
 
         updateCampusMetaData();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ListView listView = (ListView) findViewById(R.id.navigation_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, drawer_str);
-        listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        title = getString(R.string.drawer_order);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+
+        viewPager = (ViewPager) findViewById(R.id.main_pager);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setDistributeEvenly(true);
+
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position == 0) {
-                    mDrawerLayout.closeDrawer(listView);
-                } else if (position == 1) {
-
-                    Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
-                    startActivity(intent);
-
-                } else if (position == 2) {
-
-                    Intent intent = new Intent(MainActivity.this, BookmarkFragment.class);
-                    startActivity(intent);
-                }
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.primary);
             }
         });
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
+
+        tabs.setViewPager(viewPager);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setHomeButtonEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowHomeEnabled(true);
+        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if (menuItem.isChecked()) {
+                    menuItem.setChecked(false);
+                } else {
+                    menuItem.setChecked(true);
+                }
+
+                drawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()) {
+                    case R.id.drawer_item_1:
+                        return true;
+                    case R.id.drawer_item_2:
+                        return true;
+                    case R.id.drawer_item_3:
+                        Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
+                        startActivity(intent);
+                        return true;
+
+                }
+                return false;
+            }
+        });
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close) {
             /**
              * Called when a drawer has settled in a completely closed state.
              */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                // getActionBar().setTitle(mTitle);
+                toolbar.setTitle(title);
             }
 
             /**
@@ -115,14 +145,11 @@ public class MainActivity extends ActionBarActivity {
             }
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerLayout.setDrawerListener(drawerToggle);
 
 
-        viewPager = (ViewPager) findViewById(R.id.main_pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(PagerAdapter.MAX_PAGE);
+
+     /*   viewPager.setOffscreenPageLimit(ViewPagerAdapter.MAX_PAGE);
         //viewPager.setCurrentItem(PagerAdapter.MAIN);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(adapter.getPageTitle(viewPager.getCurrentItem()));
@@ -141,7 +168,7 @@ public class MainActivity extends ActionBarActivity {
             }
         };
 
-        for (int page = 0; page < PagerAdapter.MAX_PAGE; page++) {
+        for (int page = 0; page < ViewPagerAdapter.MAX_PAGE; page++) {
             ActionBar.Tab tab =
                     actionBar.newTab()
                             .setIcon(adapter.getPageIcon(page, page == viewPager.getCurrentItem()))
@@ -168,38 +195,36 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        viewPager.setCurrentItem(PagerAdapter.MAIN);
+        viewPager.setCurrentItem(ViewPagerAdapter.MAIN);
+        */
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item))
+        if (drawerToggle.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == PagerAdapter.MAIN) {
-            if (restaurantListFragmentCurrentlyOn != null) {
-                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
-                helper.sendScreen("메인 화면");
-            }
-            super.onBackPressed();
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawers();
+
         } else {
-            viewPager.setCurrentItem(PagerAdapter.MAIN, true);
+            super.onBackPressed();
         }
     }
 
@@ -245,118 +270,5 @@ public class MainActivity extends ActionBarActivity {
         }.execute();
     }
 
-    /**
-     * The {@link android.support.v4.app.FragmentStatePagerAdapter
-     * FragmentStatePagerAdapter} of {@link #viewPager}.
-     */
-    private class PagerAdapter extends FragmentStatePagerAdapter {
-
-        /**
-         * Indicates the main {@link android.support.v4.app.Fragment Fragment}.
-         *
-         * @see com.lchpatners.shadal.CategoryListFragment CategoryListFragment
-         */
-        public static final int MAIN = 1;
-        /**
-         * Indicates the bookmark {@link android.support.v4.app.Fragment Fragment}.
-         *
-         * @see com.lchpatners.shadal.BookmarkFragment BookmarkFragment
-         */
-        public static final int BOOKMARK = 0;
-        /**
-         * Indicates the random {@link android.support.v4.app.Fragment Fragment}.
-         *
-         * @see com.lchpatners.shadal.RandomFragment RandomFragment
-         */
-        // public static final int RANDOM = 2;
-        /**
-         * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
-         *
-         * @see com.lchpatners.shadal.SeeMoreFragment SeeMoreFragment
-         */
-        public static final int SEE_MORE = 2;
-        /**
-         * The number of {@link android.support.v4.app.Fragment Fragments}.
-         */
-        public static final int MAX_PAGE = 3;
-
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case MAIN:
-                    fragment = CategoryListFragment.newInstance();
-                    break;
-                case BOOKMARK:
-                    fragment = CallListFragment.newInstance();
-                    break;
-//                case RANDOM:
-//                    fragment = RandomFragment.newInstance();
-//                    break;
-                case SEE_MORE:
-                    fragment = SeeMoreFragment.newInstance();
-                    break;
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return MAX_PAGE;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            String title = null;
-            switch (position) {
-                case MAIN:
-                    title = getString(R.string.app_name);
-                    break;
-                case BOOKMARK:
-                    title = "최근주문";
-                    break;
-//                case RANDOM:
-//                    title = getString(R.string.random);
-//                    break;
-                case SEE_MORE:
-                    title = getString(R.string.see_more);
-                    break;
-            }
-            return title;
-        }
-
-        public Drawable getPageIcon(int page, boolean selected) {
-            Drawable icon = null;
-            switch (page) {
-                case MAIN:
-                    icon = getResources().getDrawable(
-                            selected ? R.drawable.tab_main_selected : R.drawable.tab_main_unselected
-                    );
-                    break;
-                case BOOKMARK:
-                    icon = getResources().getDrawable(
-                            selected ? R.drawable.tab_star_selected : R.drawable.tab_star_unselected
-                    );
-                    break;
-//                case RANDOM:
-//                    icon = getResources().getDrawable(
-//                            selected ? R.drawable.tab_dice_selected : R.drawable.tab_dice_unselected
-//                    );
-//                    break;
-                case SEE_MORE:
-                    icon = getResources().getDrawable(
-                            selected ? R.drawable.tab_more_selected : R.drawable.tab_more_unselected
-                    );
-                    break;
-            }
-            return icon;
-        }
-
-
-    }
 
 }

@@ -1,50 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-    </style>
-
-    <style name="AppTheme" parent="BaseAppTheme">
-        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
-        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
-        <item name="android:actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
-        <item name="actionBarTabStyle">@style/AppTheme.ActionBar.TabView</item>
-        <item name="android:actionBarDivider">@color/transparent</item>
-        <item name="actionBarDivider">@color/transparent</item>
-        <item name="android:actionBarTabTextStyle">@style/myTabTextColor</item>
-    </style>
-
-    <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">?android:colorPrimary</item>
-        <item name="background">?android:colorPrimary</item>
-        <item name="android:elevation">0dp</item>
-        <item name="elevation">0dp</item>
-        <item name="android:textColor">@color/white100</item>
-        <item name="android:textColorPrimary">@color/white100</item>
-    </style>
-
-    <style name="AppTheme.ActionBar.TabView" parent="Widget.AppCompat.Light.ActionBar.TabView">
-        <item name="android:background">@drawable/actionbar_tab</item>
-        <item name="background">@drawable/actionbar_tab</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">@color/black54</item>
-        <item name="android:textColorPrimaryInverse">@color/black54</item>
-        <item name="android:textColorHint">@color/black87</item>
-    </style>
-
-    <style name="myTabTextColor"
-           parent="Widget.AppCompat.ActionBar.TabText">
-        <item name="android:textColor">@color/black87</item>
-        <item name="android:textColorPrimary">@color/black87</item>
-        <item name="android:textColorPrimaryInverse">@color/black54</item>
-        <item name="android:textColorHint">@color/black26</item>
+    <style name="AppTheme" parent="AppTheme.Base">
 
     </style>
 
+    <style name="ToolbarTheme" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="actionMenuTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+    </style>
 
 </resources>
