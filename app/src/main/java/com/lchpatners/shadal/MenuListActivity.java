@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 
@@ -39,12 +40,14 @@ public class MenuListActivity extends ActionBarActivity {
      */
     // ALERT: this is android.view.Menu, not com.lchpartners.shadal.Menu
     private Menu menu;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_list);
 
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         Intent intent = getIntent();
         restaurant = intent.getParcelableExtra("RESTAURANT");
 
@@ -137,7 +140,8 @@ public class MenuListActivity extends ActionBarActivity {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
             restaurant = helper.getRestaurantFromId(restaurant.getId());
 
-            getSupportActionBar().setTitle(restaurant.getName());
+            toolbar.setTitle(restaurant.getName());
+            setSupportActionBar(toolbar);
 
             final Server server = new Server(this);
             server.updateRestaurant(restaurant.getServerId(), restaurant.getUpdatedTime(), this);

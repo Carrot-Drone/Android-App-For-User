@@ -66,6 +66,10 @@ public class Preferences {
         return settings.getString("EMAIL", "campusdal@gmail.com");
     }
 
+    public static String getCampusKoreanName(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        return settings.getString("CAMPUS_KOR", null);
+    }
     public static String getCampusKoreanShortName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         return settings.getString("CAMPUS_KOR_SHORT", null);

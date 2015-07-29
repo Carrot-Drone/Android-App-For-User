@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,12 +43,16 @@ public class MainActivity extends ActionBarActivity {
     private ViewPagerAdapter adapter;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
+    private TextView drawerTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        drawerTitle = (TextView) findViewById(R.id.drawer_title);
+
         new Server(this).checkAppMinimumVersion();
 
 
@@ -56,7 +61,8 @@ public class MainActivity extends ActionBarActivity {
             startActivity(new Intent(this, InitializationActivity.class));
             finish();
         } else {
-            new Server(this).getPopupList();
+            drawerTitle.setText(Preferences.getCampusKoreanName(this));
+           // new Server(this).getPopupList();
         }
 
 
@@ -101,6 +107,7 @@ public class MainActivity extends ActionBarActivity {
         ab.setDisplayShowHomeEnabled(true);
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -119,6 +126,7 @@ public class MainActivity extends ActionBarActivity {
                         return true;
                     case R.id.drawer_item_3:
                         Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         return true;
 

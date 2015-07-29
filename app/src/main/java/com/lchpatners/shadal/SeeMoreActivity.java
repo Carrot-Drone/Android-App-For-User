@@ -22,6 +22,7 @@ public class SeeMoreActivity extends ActionBarActivity {
     ActionBarDrawerToggle drawerToggle;
     Toolbar toolbar;
     String mTitle;
+    TextView drawerTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,8 @@ public class SeeMoreActivity extends ActionBarActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        drawerTitle = (TextView) findViewById(R.id.drawer_title);
+        drawerTitle.setText(Preferences.getCampusKoreanName(this));
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -56,6 +59,7 @@ public class SeeMoreActivity extends ActionBarActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_item_1:
                         Intent intent = new Intent(SeeMoreActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         return true;
                     case R.id.drawer_item_2:
