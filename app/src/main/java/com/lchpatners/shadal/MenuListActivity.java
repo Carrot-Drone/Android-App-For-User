@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +18,6 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 
@@ -168,7 +168,7 @@ public class MenuListActivity extends ActionBarActivity {
 
                     server.sendCallLog(restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                     startActivity(intent);
                 }
             });

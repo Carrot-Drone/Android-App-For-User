@@ -89,7 +89,7 @@ public class CallListAdapter extends BaseAdapter {
                 Server server = new Server(context);
                 server.sendCallLog(restaurant);
                 String number = "tel:" + restaurant.getPhoneNumber();
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(number));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 context.startActivity(intent);
                 reloadData(orderby);
             }

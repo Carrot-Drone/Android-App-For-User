@@ -105,7 +105,6 @@ public class MainActivity extends ActionBarActivity {
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

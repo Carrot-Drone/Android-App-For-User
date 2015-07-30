@@ -39,7 +39,6 @@ public class SeeMoreActivity extends ActionBarActivity {
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         drawerTitle = (TextView) findViewById(R.id.drawer_title);
