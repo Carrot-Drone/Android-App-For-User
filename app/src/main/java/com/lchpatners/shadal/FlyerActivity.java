@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
  * Displays image files of leaflets(==flyers).
  */
 public class FlyerActivity extends ActionBarActivity {
-    static ProgressBar progressBar;
     private LinearLayout mPageMark;
     private int mPrePosition;
 
@@ -36,12 +34,11 @@ public class FlyerActivity extends ActionBarActivity {
         mPageMark = (LinearLayout) findViewById(R.id.pager);
 
 
+
         //getSupportActionBar().hide();
-        progressBar = new ProgressBar(this);
         Intent intent = getIntent();
         ArrayList<String> urls = (ArrayList<String>) intent.getSerializableExtra("URLS");
 
-        progressBar.setVisibility(View.VISIBLE);
         ViewPager viewPager = (ViewPager) findViewById(R.id.flyer_pager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), urls));
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -89,28 +86,6 @@ public class FlyerActivity extends ActionBarActivity {
         helper.sendScreen("전단지 화면");
     }
 
-    private class PagerAdapter extends FragmentStatePagerAdapter {
-
-        private ArrayList<String> urls;
-
-        private PagerAdapter(FragmentManager fm, ArrayList<String> urls) {
-            super(fm);
-            this.urls = urls;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return PageFragment.create(FlyerActivity.this, urls, position);
-        }
-
-        @Override
-        public int getCount() {
-            return urls.size();
-        }
-
-
-    }
-
     public static class PageFragment extends Fragment {
 
         private static Context context;
@@ -146,7 +121,7 @@ public class FlyerActivity extends ActionBarActivity {
                         // Create a drawable from URL.
                         stream = (InputStream) new URL("http://www.shadal.kr" + urls.get(page)).getContent();
                         drawable = Drawable.createFromStream(stream, null);
-                        progressBar.setVisibility(View.INVISIBLE);
+
                     } catch (Exception e) {
                         exceptionOccurred = true;
                         e.printStackTrace();
@@ -165,6 +140,28 @@ public class FlyerActivity extends ActionBarActivity {
             //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             return img;
         }
+
+    }
+
+    private class PagerAdapter extends FragmentStatePagerAdapter {
+
+        private ArrayList<String> urls;
+
+        private PagerAdapter(FragmentManager fm, ArrayList<String> urls) {
+            super(fm);
+            this.urls = urls;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return PageFragment.create(FlyerActivity.this, urls, position);
+        }
+
+        @Override
+        public int getCount() {
+            return urls.size();
+        }
+
 
     }
 

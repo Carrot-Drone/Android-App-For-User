@@ -28,6 +28,7 @@ import org.json.JSONObject;
  */
 public class MainActivity extends ActionBarActivity {
 
+    public static final String MAIN = "main";
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
@@ -86,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), MAIN);
         viewPager.setAdapter(adapter);
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
@@ -99,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        tabs.setViewPager(viewPager);
+        tabs.setViewPager(viewPager, MAIN);
 
         ActionBar ab = getSupportActionBar();
         ab.setHomeButtonEnabled(true);

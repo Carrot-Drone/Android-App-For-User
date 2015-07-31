@@ -38,42 +38,61 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
      * The number of {@link android.support.v4.app.Fragment Fragments}.
      */
     public static final int MAX_PAGE = 2;
+    public static final String[] categories = {"치킨", "피자", "중국집", "한식/분식", "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
     Context context;
+    String type;
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm, String type) {
         super(fm);
+        this.type = type;
     }
+
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
-        switch (position) {
-            case MAIN:
-                fragment = CategoryListFragment.newInstance();
-                break;
-            case BOOKMARK:
-                fragment = CallListFragment.newInstance();
-                break;
+        if (type == MainActivity.MAIN) {
+            switch (position) {
+                case MAIN:
+                    fragment = CategoryListFragment.newInstance();
+                    break;
+                case BOOKMARK:
+                    fragment = CallListFragment.newInstance();
+                    break;
+            }
+        } else if (type == RestaurantActivity.RESTAURANT) {
+            fragment = RestaurantListFragment.newInstance(categories[position]);
         }
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return MAX_PAGE;
+        int count = 1;
+        if (type == MainActivity.MAIN) {
+            count = MAX_PAGE;
+        } else if (type == RestaurantActivity.RESTAURANT) {
+            count = categories.length;
+        }
+        return count;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         String title = null;
-        switch (position) {
-            case MAIN:
-                title = "음식점";
-                break;
-            case BOOKMARK:
-                title = "최근주문";
-                break;
+        if (type == MainActivity.MAIN) {
+            switch (position) {
+                case MAIN:
+                    title = "음식점";
+                    break;
+                case BOOKMARK:
+                    title = "최근주문";
+                    break;
+            }
+        } else if (type == RestaurantActivity.RESTAURANT) {
+            title = categories[position];
         }
+
         return title;
     }
 

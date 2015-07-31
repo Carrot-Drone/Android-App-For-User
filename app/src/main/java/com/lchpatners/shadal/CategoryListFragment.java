@@ -1,6 +1,7 @@
 package com.lchpatners.shadal;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -67,7 +68,7 @@ public class CategoryListFragment extends Fragment {
                 RestaurantListFragment rlfInstance = RestaurantListFragment.newInstance(category);
                 ((MainActivity)activity).restaurantListFragmentCurrentlyOn = rlfInstance;
 
-                AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
+                /*AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                 helper.sendEvent("UX", "category_clicked", category);
 
                 // Add the fragment with custom animations.
@@ -77,6 +78,13 @@ public class CategoryListFragment extends Fragment {
                         .add(R.id.fragment_list_frame, rlfInstance)
                         .addToBackStack(null)
                         .commit();
+
+                */
+                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("category", category);
+                intent.putExtra("position", position);
+                startActivity(intent);
             }
         });
         return view;

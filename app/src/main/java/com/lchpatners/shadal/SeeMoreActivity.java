@@ -1,16 +1,11 @@
 package com.lchpatners.shadal;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -18,18 +13,14 @@ import android.widget.TextView;
 
 
 public class SeeMoreActivity extends ActionBarActivity {
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle drawerToggle;
     Toolbar toolbar;
     String mTitle;
-    TextView drawerTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_more);
 
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         mTitle = getString(R.string.see_more);
         toolbar.setTitle(mTitle);
@@ -39,55 +30,6 @@ public class SeeMoreActivity extends ActionBarActivity {
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        drawerTitle = (TextView) findViewById(R.id.drawer_title);
-        drawerTitle.setText(Preferences.getCampusKoreanName(this));
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
-                    menuItem.setChecked(true);
-                }
-
-                drawerLayout.closeDrawers();
-
-                switch (menuItem.getItemId()) {
-                    case R.id.drawer_item_1:
-                        Intent intent = new Intent(SeeMoreActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        return true;
-                    case R.id.drawer_item_2:
-                        return true;
-                    case R.id.drawer_item_3:
-                        return true;
-
-                }
-                return false;
-            }
-        });
-
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close) {
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                // getActionBar().setTitle(mTitle);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //getActionBar().setTitle(mDrawerTitle);
-            }
-        };
-
-        drawerLayout.setDrawerListener(drawerToggle);
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         ListView listView = (ListView) findViewById(R.id.listView);
 
         // Set headers and items.
@@ -164,23 +106,5 @@ public class SeeMoreActivity extends ActionBarActivity {
         });
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item))
-            return true;
-        return super.onOptionsItemSelected(item);
-    }
 
 }

@@ -117,6 +117,9 @@ public class MenuListActivity extends ActionBarActivity {
             intent.putExtra("URLS", urls);
             startActivity(intent);
             return true;
+        } else if (id == android.R.id.home) {
+            finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -130,11 +133,11 @@ public class MenuListActivity extends ActionBarActivity {
             Intent intent = getIntent();
             if (intent.getStringExtra("REFERRER") != null &&
                     intent.getStringExtra("REFERRER").equals("RandomFragment")) {
-                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
-                helper.sendScreen("아무거나 화면");
+//                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+//                helper.sendScreen("아무거나 화면");
             } else {
-                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
-                helper.sendScreen("음식점 화면");
+//                AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+//                helper.sendScreen("음식점 화면");
             }
 
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
@@ -142,12 +145,14 @@ public class MenuListActivity extends ActionBarActivity {
 
             toolbar.setTitle(restaurant.getName());
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
             final Server server = new Server(this);
             server.updateRestaurant(restaurant.getServerId(), restaurant.getUpdatedTime(), this);
 
             if (menu != null) {
-                setMenuItemChecked(menu.findItem(R.id.bookmark), restaurant.isFavorite());
+                //setMenuItemChecked(menu.findItem(R.id.bookmark), restaurant.isFavorite());
                 menu.findItem(R.id.see_flyer).setVisible(restaurant.hasFlyer());
             }
 
@@ -160,8 +165,8 @@ public class MenuListActivity extends ActionBarActivity {
             phoneNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
-                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
+//                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+//                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
                     DatabaseHelper DBhelper = DatabaseHelper.getInstance(MenuListActivity.this);
                     DBhelper.insertRecentCalls(restaurant.getId());
@@ -242,4 +247,6 @@ public class MenuListActivity extends ActionBarActivity {
 
         return getString(R.string.open_time) + ": " + open + " ~ " + close;
     }
+
+
 }

@@ -60,5 +60,6 @@
     <string name="drawer_order">주문하기</string>
     <string name="drawer_see_more">더보기</string>
     <string name="drawer_recommend">추천</string>
+    <string name="title_activity_restaurant">RestaurantActivity</string>
 
 </resources>
