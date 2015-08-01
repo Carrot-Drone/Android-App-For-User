@@ -51,7 +51,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
-        if (type == MainActivity.MAIN) {
+        if (type.equals(MainActivity.MAIN)) {
             switch (position) {
                 case MAIN:
                     fragment = CategoryListFragment.newInstance();
@@ -60,7 +60,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     fragment = CallListFragment.newInstance();
                     break;
             }
-        } else if (type == RestaurantActivity.RESTAURANT) {
+        } else if (type.equals(RestaurantActivity.RESTAURANT)) {
             fragment = RestaurantListFragment.newInstance(categories[position]);
         }
         return fragment;
@@ -80,7 +80,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         String title = null;
-        if (type == MainActivity.MAIN) {
+        if (type.equals(MainActivity.MAIN)) {
             switch (position) {
                 case MAIN:
                     title = "음식점";
@@ -89,7 +89,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     title = "최근주문";
                     break;
             }
-        } else if (type == RestaurantActivity.RESTAURANT) {
+        } else if (type.equals(RestaurantActivity.RESTAURANT)) {
             title = categories[position];
         }
 

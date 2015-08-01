@@ -3,12 +3,14 @@ package com.lchpatners.shadal;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -32,7 +35,6 @@ public class FlyerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flyer);
         mPageMark = (LinearLayout) findViewById(R.id.pager);
-
 
 
         //getSupportActionBar().hide();
@@ -112,31 +114,18 @@ public class FlyerActivity extends ActionBarActivity {
             final int page = getArguments().getInt("PAGE");
             TouchImageView img = new TouchImageView(context);
 
+            Picasso.with(context).load("http://www.shadal.kr" + urls.get(page)).into(img);
 
-            // TODO: use an AsyncTask instead, for this is quite weird
-            new Thread(new Runnable() {
+            Picasso.Builder builder = new Picasso.Builder(context);
+            builder.listener(new Picasso.Listener() {
                 @Override
-                public void run() {
-                    try {
-                        // Create a drawable from URL.
-                        stream = (InputStream) new URL("http://www.shadal.kr" + urls.get(page)).getContent();
-                        drawable = Drawable.createFromStream(stream, null);
-
-                    } catch (Exception e) {
-                        exceptionOccurred = true;
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-            // Wait the task to be completed.
-            while (drawable == null) {
-                if (exceptionOccurred) {
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
                     Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
-                    return null;
+                    Log.e("FlyerActivity", exception.getMessage());
                 }
-            }
+            });
 
-            img.setImageDrawable(drawable);
+
             //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             return img;
         }
