@@ -114,7 +114,8 @@ public class MenuListActivity extends ActionBarActivity {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
             ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
             Intent intent = new Intent(this, FlyerActivity.class);
-            intent.putExtra("URLS", urls);
+            intent.putExtra(RestaurantListAdapter.URLS, urls);
+            intent.putExtra(RestaurantListAdapter.RESTAURANT, restaurant);
             startActivity(intent);
             return true;
         } else if (id == android.R.id.home) {

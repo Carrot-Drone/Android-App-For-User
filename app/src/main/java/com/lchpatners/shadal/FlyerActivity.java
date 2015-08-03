@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -29,17 +31,38 @@ import java.util.ArrayList;
 public class FlyerActivity extends ActionBarActivity {
     private LinearLayout mPageMark;
     private int mPrePosition;
-
+    private Toolbar toolbar;
+    private Restaurant restaurant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flyer);
         mPageMark = (LinearLayout) findViewById(R.id.pager);
-
-
-        //getSupportActionBar().hide();
         Intent intent = getIntent();
-        ArrayList<String> urls = (ArrayList<String>) intent.getSerializableExtra("URLS");
+        restaurant = intent.getParcelableExtra(RestaurantListAdapter.RESTAURANT);
+
+        ArrayList<String> urls = (ArrayList<String>) intent.getSerializableExtra(RestaurantListAdapter.URLS);
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        TextView toolbarText = (TextView) findViewById(R.id.tool_bar_text);
+        toolbarText.setText(restaurant.getPhoneNumber());
+        toolbarText.setTextSize(20);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Server server = new Server(FlyerActivity.this);
+                server.sendCallLog(restaurant);
+                DatabaseHelper DBhelper = DatabaseHelper.getInstance(FlyerActivity.this);
+                DBhelper.insertRecentCalls(restaurant.getId());
+
+                String number = "tel:" + restaurant.getPhoneNumber();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
+                startActivity(intent);
+
+            }
+        });
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.flyer_pager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), urls));

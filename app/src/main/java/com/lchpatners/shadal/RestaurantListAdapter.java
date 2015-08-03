@@ -23,6 +23,13 @@ public class RestaurantListAdapter extends BaseAdapter {
      */
     public static final String BOOKMARK = "bookmark";
 
+    public static final String URLS = "urls";
+
+    public static final String NAME = "name";
+    public static final String RESTAURANT = "restaurant";
+
+    public static final String PHONE_NUMBER = "phonenumber";
+
 //    public static final String CAllSLIST = "callslist";
 
 
@@ -159,11 +166,12 @@ public class RestaurantListAdapter extends BaseAdapter {
                     imgBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Restaurant restaurant = (Restaurant) data.get(pos);
+                            Restaurant restaurant = (Restaurant) getItem(pos);
                             DatabaseHelper helper = DatabaseHelper.getInstance(context);
                             ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
                             Intent intent = new Intent(context, FlyerActivity.class);
-                            intent.putExtra("URLS", urls);
+                            intent.putExtra(RESTAURANT, restaurant);
+                            intent.putExtra(URLS, urls);
                             context.startActivity(intent);
 
                         }
@@ -179,8 +187,8 @@ public class RestaurantListAdapter extends BaseAdapter {
                 if (getItem(pos) instanceof Restaurant) {
                     Restaurant restaurant = (Restaurant) getItem(pos);
 
-                    AnalyticsHelper helper = new AnalyticsHelper(context);
-                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
+//                    AnalyticsHelper helper = new AnalyticsHelper(context);
+//                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
 
                     Intent intent = new Intent(context, MenuListActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);

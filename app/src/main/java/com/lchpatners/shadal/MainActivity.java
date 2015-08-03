@@ -8,12 +8,15 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -45,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private TextView drawerTitle;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
             finish();
         } else {
             drawerTitle.setText(Preferences.getCampusKoreanName(this));
-           // new Server(this).getPopupList();
+            // new Server(this).getPopupList();
         }
 
 
@@ -84,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         title = getString(R.string.drawer_order);
         toolbar.setTitle(title);
-        setSupportActionBar(toolbar);
+
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), MAIN);
@@ -102,11 +106,10 @@ public class MainActivity extends ActionBarActivity {
 
         tabs.setViewPager(viewPager, MAIN);
 
-        ActionBar ab = getSupportActionBar();
-        ab.setHomeButtonEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowHomeEnabled(true);
 
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -223,7 +226,15 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item))
             return true;
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return true;
+            case R.id.action_request:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -278,5 +289,49 @@ public class MainActivity extends ActionBarActivity {
         }.execute();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint("원하시는 음식점, 메뉴를 입력해주세요");
 
+        TextView searchText = (TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchText.setTextSize(15);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                return false;
+            }
+        });
+
+     /*   getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setQueryHint("원하시는 음식점, 메뉴를 검색해주세요");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });*/
+        return super.onCreateOptionsMenu(menu);
+    }
 }
