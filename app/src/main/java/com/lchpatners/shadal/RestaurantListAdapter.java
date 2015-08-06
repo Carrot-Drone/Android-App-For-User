@@ -2,6 +2,7 @@ package com.lchpatners.shadal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class RestaurantListAdapter extends BaseAdapter {
      * {@link com.lchpatners.shadal.Restaurant#category category}
      * or bookmarks if this equals {@link #BOOKMARK}.
      */
-    private String category;
+    private int categoryId;
     /**
      * List of all data, including both {@link #HEADER} and {@link #ITEM}.
      */
@@ -68,9 +69,10 @@ public class RestaurantListAdapter extends BaseAdapter {
      */
     private List<String> headers;
 
-    public RestaurantListAdapter(Context context, String category) {
+    public RestaurantListAdapter(Context context, int categoryId) {
+        Log.d("RestaurantAdapter", "called");
         this.context = context;
-        this.category = category;
+        this.categoryId = categoryId;
         data = new ArrayList<>();
         headers = new ArrayList<>();
         reloadData();
@@ -87,33 +89,16 @@ public class RestaurantListAdapter extends BaseAdapter {
         return VIEW_TYPE_COUNT;
     }
 
-    /**
-     * Reload all menu data from {@link #category source}.
-     */
+
     public void reloadData() {
+        Log.d("reloadData", "called");
         data.clear();
         headers.clear();
         ArrayList<Restaurant> restaurants;
-//        ArrayList<Call> calls;
-//        if (!category.equals(CAllSLIST)) {
-            restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(category);
-            for (Restaurant restaurant : restaurants) {
-                data.add(restaurant);
-            }
-        /*} else {
-            calls = DatabaseHelper.getInstance(context).getRecentCallsList("NAME");
-            String header = null;
-            for (Call call : calls) {
-            if (category.equals(CAllSLIST) && !restaurant.getCategory().equals(header)) {
-                header = restaurant.getCategory();
-                data.add(header);
-                headers.add(header);
-            }
-
-                data.add(call);
-            }
-        }*/
-
+        restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(categoryId);
+        for (Restaurant restaurant : restaurants) {
+            data.add(restaurant);
+        }
         notifyDataSetChanged();
     }
 
@@ -156,8 +141,6 @@ public class RestaurantListAdapter extends BaseAdapter {
                 Restaurant restaurant = (Restaurant) data.get(position);
                 TextView name = (TextView) convertView.findViewById(R.id.name);
                 name.setText(restaurant.getName());
-                convertView.findViewById(R.id.recent).setVisibility(restaurant.isNew() ? View.VISIBLE : View.GONE);
-                convertView.findViewById(R.id.coupon).setVisibility(restaurant.hasCoupon() ? View.VISIBLE : View.GONE);
                 convertView.findViewById(R.id.flyer).setVisibility(restaurant.hasFlyer() ? View.VISIBLE : View.GONE);
 
                 if (restaurant.hasFlyer()) {
@@ -172,13 +155,12 @@ public class RestaurantListAdapter extends BaseAdapter {
                             Intent intent = new Intent(context, FlyerActivity.class);
                             intent.putExtra(RESTAURANT, restaurant);
                             intent.putExtra(URLS, urls);
+                            Log.d("RestaurantListAdapturls", urls.toString());
                             context.startActivity(intent);
 
                         }
                     });
                 }
-                convertView.findViewById(R.id.bookmark).setVisibility(restaurant.isFavorite()
-                        && !category.equals("bookmark") ? View.VISIBLE : View.GONE);
                 break;
         }
         convertView.setOnClickListener(new View.OnClickListener() {

@@ -84,10 +84,10 @@ public class CallListAdapter extends BaseAdapter {
                 Restaurant restaurant = helper.getRestaurantFromId(call.getRestaurantId());
 
                 DatabaseHelper DBhelper = DatabaseHelper.getInstance(context);
-                DBhelper.insertRecentCalls(restaurant.getId());
+                DBhelper.insertRecentCalls(restaurant.getRestaurantId());
 
                 Server server = new Server(context);
-                server.sendCallLog(restaurant);
+                //server.sendCallLog(restaurant);
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 context.startActivity(intent);

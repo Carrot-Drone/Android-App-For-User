@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -35,21 +34,19 @@ import java.io.File;
 public class CampusSelectionActivity extends Activity {
 
     /**
+     * A {@link android.widget.ListView} to display a campus list.
+     */
+    ListView listView;
+    /**
      * A {@link org.json.JSONArray} of campus data.
      */
     private JSONArray campuses;
-
     /**
      * Indicates if the database file existed at the time when the application
      * started. If <code>true</code>, it is likely that the user is using the
      * app for the first time. Or he/she may have cleared the cache.
      */
     private boolean hasNoDatabase;
-
-    /**
-     * A {@link android.widget.ListView} to display a campus list.
-     */
-    ListView listView;
     /**
      * A confirm {@link android.widget.Button}.
      */
@@ -117,6 +114,7 @@ public class CampusSelectionActivity extends Activity {
      * @see com.lchpatners.shadal.Server.CampusesLoadingTask CampusesLoadingTask
      */
     public void showCampusesFromServer() {
+
         new Server.CampusesLoadingTask() {
             @Override
             protected void onPostExecute(Void aVoid) {
@@ -257,7 +255,7 @@ public class CampusSelectionActivity extends Activity {
                     if (cursor != null && cursor.moveToFirst()) {
                         do {
                             int id = cursor.getInt(cursor.getColumnIndex("server_id"));
-                            DatabaseHelper.legacyBookmarks.add(id);
+
                         } while (cursor.moveToNext());
                     }
                     legacyFile.delete();

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 /**
  * Created by eunhyekim on 2015. 7. 28..
@@ -16,11 +17,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
      * @see com.lchpatners.shadal.CategoryListFragment CategoryListFragment
      */
     public static final int MAIN = 1;
-    /**
-     * Indicates the bookmark {@link android.support.v4.app.Fragment Fragment}.
-     *
-     * @see com.lchpatners.shadal.BookmarkFragment BookmarkFragment
-     */
+
     public static final int BOOKMARK = 0;
     /**
      * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
@@ -61,7 +58,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     break;
             }
         } else if (type.equals(RestaurantActivity.RESTAURANT)) {
-            fragment = RestaurantListFragment.newInstance(categories[position]);
+            fragment = RestaurantListFragment.newInstance(position);
+            Log.d("ViewPagerAdapter", "called");
         }
         return fragment;
     }
@@ -69,9 +67,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         int count = 1;
-        if (type == MainActivity.MAIN) {
+        if (type.equals(MainActivity.MAIN)) {
             count = MAX_PAGE;
-        } else if (type == RestaurantActivity.RESTAURANT) {
+        } else if (type.equals(RestaurantActivity.RESTAURANT)) {
             count = categories.length;
         }
         return count;

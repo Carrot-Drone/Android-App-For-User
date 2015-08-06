@@ -1,5 +1,6 @@
 package com.lchpatners.shadal;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,21 +9,32 @@ import android.os.Parcelable;
  * Model class representing a restaurant data.
  */
 public class Restaurant implements Parcelable {
+    public static final Creator CREATOR = new Creator() {
+        @Override
+        public Restaurant createFromParcel(Parcel source) {
+            return new Restaurant(source);
+        }
 
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
+    Context context;
     /**
      * An instance-unique integer value.
      */
-    private int id;
+    private int restaurantId;
+    // Booleans are represented as bytes to implement the Parcelable interface.
+    // See how getters and setters work in using byte variables for representing boolean ones.
+    // NOTE: it is possible that without implementing Parcelable interface,
+    // you can just pass id or serverId as a Intent parameter like you do in the web communication.
     /**
      * Server-side id. This works as a universal fingerprint.
      * If two instances have the same value, then it is guaranteed that
      * they represent the same restaurants of the real world.
      */
     private int serverId;
-    // Booleans are represented as bytes to implement the Parcelable interface.
-    // See how getters and setters work in using byte variables for representing boolean ones.
-    // NOTE: it is possible that without implementing Parcelable interface,
-    // you can just pass id or serverId as a Intent parameter like you do in the web communication.
     /**
      * Does this have a flyer(s)?
      */
@@ -69,27 +81,39 @@ public class Restaurant implements Parcelable {
      * Lastly updated time.
      */
     private String updatedTime;                             // Server-side name: updated_at
-
+    private Float retention;
+    private int categoryId;
+    private int numberOfMyCalls;
+    private int totalNumberOfCalls;
+    private int totalNumberOfGoods;
+    private int totalNumberOfBads;
 
 
     // Must be read by the order which it was written by.
+    private int myPreference;
+
     /**
      * Construct by retrieving from the {@link android.os.Parcel Parcel}.
      * @param source {@link android.os.Parcel}
      */
     public Restaurant(Parcel source) {
-        id = source.readInt();
-        serverId = source.readInt();
+        restaurantId = source.readInt();
         hasFlyer = source.readByte();
         hasCoupon = source.readByte();
         isNew = source.readByte();
         name = source.readString();
         phoneNumber = source.readString();
-        category = source.readString();
         openingHour = source.readString();
         closingHour = source.readString();
         couponString = source.readString();
-        updatedTime = source.readString();
+        retention = source.readFloat();
+        numberOfMyCalls = source.readInt();
+        totalNumberOfCalls = source.readInt();
+        totalNumberOfGoods = source.readInt();
+        totalNumberOfBads = source.readInt();
+        myPreference = source.readInt();
+        categoryId = source.readInt();
+
     }
 
     /**
@@ -97,47 +121,42 @@ public class Restaurant implements Parcelable {
      * @param cursor {@link android.database.Cursor}
      */
     public Restaurant(Cursor cursor) {
-        id = cursor.getInt(cursor.getColumnIndex("id"));
-        serverId = cursor.getInt(cursor.getColumnIndex("server_id"));
+        restaurantId = cursor.getInt(cursor.getColumnIndex("id"));
         name = cursor.getString(cursor.getColumnIndex("name"));
-        category = cursor.getString(cursor.getColumnIndex("category"));
-        phoneNumber = cursor.getString(cursor.getColumnIndex("phoneNumber"));
-        openingHour = cursor.getString(cursor.getColumnIndex("openingHours"));
-        closingHour = cursor.getString(cursor.getColumnIndex("closingHours"));
+        phoneNumber = cursor.getString(cursor.getColumnIndex("phone_number"));
+        openingHour = cursor.getString(cursor.getColumnIndex("opening_hours"));
+        closingHour = cursor.getString(cursor.getColumnIndex("closing_hours"));
         hasFlyer = (byte)cursor.getInt(cursor.getColumnIndex("has_flyer"));
         hasCoupon = (byte)cursor.getInt(cursor.getColumnIndex("has_coupon"));
         isNew = (byte)cursor.getInt(cursor.getColumnIndex("is_new"));
-        isFavorite = (byte)cursor.getInt(cursor.getColumnIndex("is_favorite"));
         couponString = cursor.getString(cursor.getColumnIndex("coupon_string"));
-        updatedTime = cursor.getString(cursor.getColumnIndex("updated_at"));
+        retention = cursor.getFloat(cursor.getColumnIndex("retention"));
+        numberOfMyCalls = cursor.getInt(cursor.getColumnIndex("number_of_my_calls"));
+        totalNumberOfCalls = cursor.getInt(cursor.getColumnIndex("total_number_of_calls"));
+        totalNumberOfGoods = cursor.getInt(cursor.getColumnIndex("total_number_of_goods"));
+        totalNumberOfBads = cursor.getInt(cursor.getColumnIndex("total_number_of_bads"));
+        myPreference = cursor.getInt(cursor.getColumnIndex("my_preference"));
+        categoryId = cursor.getInt(cursor.getColumnIndex("category_id"));
     }
-
-    public static final Creator CREATOR = new Creator() {
-        @Override
-        public Restaurant createFromParcel(Parcel source) {
-            return new Restaurant(source);
-        }
-
-        @Override
-        public Restaurant[] newArray(int size) {
-            return new Restaurant[size];
-        }
-    };
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeInt(serverId);
+        dest.writeInt(restaurantId);
         dest.writeByte(hasFlyer);
         dest.writeByte(hasCoupon);
         dest.writeByte(isNew);
         dest.writeString(name);
         dest.writeString(phoneNumber);
-        dest.writeString(category);
         dest.writeString(openingHour);
         dest.writeString(closingHour);
         dest.writeString(couponString);
-        dest.writeString(updatedTime);
+        dest.writeFloat(retention);
+        dest.writeInt(numberOfMyCalls);
+        dest.writeInt(totalNumberOfCalls);
+        dest.writeInt(totalNumberOfCalls);
+        dest.writeInt(totalNumberOfBads);
+        dest.writeInt(myPreference);
+        dest.writeInt(categoryId);
     }
 
     @Override
@@ -145,12 +164,12 @@ public class Restaurant implements Parcelable {
         return 0;
     }
 
-    public int getId() {
-        return id;
+    public int getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public int getServerId() {
@@ -249,14 +268,27 @@ public class Restaurant implements Parcelable {
         this.updatedTime = updatedTime;
     }
 
+    public Float getRetention() {
+        return retention;
+    }
+
+    public void setRetention(Float retention) {
+        this.retention = retention;
+    }
+
     @Override
     public boolean equals(Object object) {
-        return object instanceof Restaurant && id == ((Restaurant)object).getId();
+        return object instanceof Restaurant && restaurantId == ((Restaurant) object).getRestaurantId();
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return restaurantId;
     }
 
+    public int getMyNumberOfCalls(int restaurantId) {
+        DatabaseHelper helper = DatabaseHelper.getInstance(context);
+        int number_of_calls = helper.getNumberOfCalls(restaurantId);
+        return number_of_calls;
+    }
 }

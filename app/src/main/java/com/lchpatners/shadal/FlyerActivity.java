@@ -2,7 +2,6 @@ package com.lchpatners.shadal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -53,9 +51,9 @@ public class FlyerActivity extends ActionBarActivity {
 
 
                 Server server = new Server(FlyerActivity.this);
-                server.sendCallLog(restaurant);
+                //server.sendCallLog(restaurant);
                 DatabaseHelper DBhelper = DatabaseHelper.getInstance(FlyerActivity.this);
-                DBhelper.insertRecentCalls(restaurant.getId());
+                DBhelper.insertRecentCalls(restaurant.getRestaurantId());
 
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
@@ -107,18 +105,14 @@ public class FlyerActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        AnalyticsHelper helper = new AnalyticsHelper(getApplication());
-        helper.sendScreen("전단지 화면");
+//        AnalyticsHelper helper = new AnalyticsHelper(getApplication());
+//        helper.sendScreen("전단지 화면");
     }
 
     public static class PageFragment extends Fragment {
 
         private static Context context;
         private static ArrayList<String> urls;
-
-        InputStream stream;
-        Drawable drawable;
-        boolean exceptionOccurred = false;
 
         public static PageFragment create(Context context, ArrayList<String> urls, int page) {
             PageFragment.context = context;
@@ -137,7 +131,6 @@ public class FlyerActivity extends ActionBarActivity {
             final int page = getArguments().getInt("PAGE");
             TouchImageView img = new TouchImageView(context);
 
-            Picasso.with(context).load("http://www.shadal.kr" + urls.get(page)).into(img);
 
             Picasso.Builder builder = new Picasso.Builder(context);
             builder.listener(new Picasso.Listener() {
@@ -147,7 +140,8 @@ public class FlyerActivity extends ActionBarActivity {
                     Log.e("FlyerActivity", exception.getMessage());
                 }
             });
-
+            Log.d("FlyerActivity url", urls.toString());
+            Picasso.with(context).load("http://www.shadal.kr" + urls.get(page)).into(img);
 
             //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             return img;

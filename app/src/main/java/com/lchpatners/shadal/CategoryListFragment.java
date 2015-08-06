@@ -65,7 +65,8 @@ public class CategoryListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Instantiate a RestaurantListFragment instance of the chosen category.
                 String category = ((TextView)view.findViewById(R.id.category_text)).getText().toString();
-                RestaurantListFragment rlfInstance = RestaurantListFragment.newInstance(category);
+
+                RestaurantListFragment rlfInstance = RestaurantListFragment.newInstance(position);
                 ((MainActivity)activity).restaurantListFragmentCurrentlyOn = rlfInstance;
 
                 /*AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());

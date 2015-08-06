@@ -24,6 +24,7 @@ public class Preferences {
 
     public static void setCampus(Context context, JSONObject campus) {
         try {
+            setCampusId(context, campus.getString("id"));
             setCampusEnglishName(context, campus.getString("name_eng"));
             setCampusKoreanName(context, campus.getString("name_kor"));
             setCampusKoreanShortName(context, campus.getString("name_kor_short"));
@@ -31,6 +32,13 @@ public class Preferences {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setCampusId(Context context, String campus) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("CAMPUS_ID", campus);
+        editor.apply();
     }
 
     public static void setCampusEnglishName(Context context, String campus) {
@@ -59,6 +67,11 @@ public class Preferences {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("EMAIL", email);
         editor.apply();
+    }
+
+    public static String getCampusId(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        return settings.getString("CAMPUS_ID", null);
     }
 
     public static String getCampusEmail(Context context) {

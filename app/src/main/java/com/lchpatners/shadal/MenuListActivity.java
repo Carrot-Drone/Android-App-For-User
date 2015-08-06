@@ -86,8 +86,6 @@ public class MenuListActivity extends ActionBarActivity {
         this.menu = menu;
 
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
-        setMenuItemChecked(menu.findItem(R.id.bookmark),
-                helper.getRestaurantFromId(restaurant.getId()).isFavorite());
 
         MenuItem flyer = menu.findItem(R.id.see_flyer);
         flyer.setVisible(restaurant.hasFlyer());
@@ -100,17 +98,7 @@ public class MenuListActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.bookmark) {
-            DatabaseHelper helper = DatabaseHelper.getInstance(this);
-            boolean bookmarked = helper.toggleFavoriteById(restaurant.getId());
-            setMenuItemChecked(item, bookmarked);
-
-            AnalyticsHelper aHelper = new AnalyticsHelper(getApplication());
-            aHelper.sendEvent("UX", bookmarked ? "favorite_button_clicked" :
-                    "favorite_button_disclicked", restaurant.getName());
-            return true;
-        } else if (id == R.id.see_flyer) {
+        if (id == R.id.see_flyer) {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
             ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
             Intent intent = new Intent(this, FlyerActivity.class);
@@ -142,7 +130,7 @@ public class MenuListActivity extends ActionBarActivity {
             }
 
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
-            restaurant = helper.getRestaurantFromId(restaurant.getId());
+            restaurant = helper.getRestaurantFromId(restaurant.getRestaurantId());
 
             toolbar.setTitle(restaurant.getName());
             setSupportActionBar(toolbar);
@@ -157,11 +145,11 @@ public class MenuListActivity extends ActionBarActivity {
                 menu.findItem(R.id.see_flyer).setVisible(restaurant.hasFlyer());
             }
 
-            ListView listView = (ListView)findViewById(R.id.menu_list);
+            ListView listView = (ListView) findViewById(R.id.menu_list);
             MenuListAdapter adapter = new MenuListAdapter(this, restaurant);
             listView.setAdapter(adapter);
 
-            TextView phoneNumber = (TextView)findViewById(R.id.phone_number);
+            TextView phoneNumber = (TextView) findViewById(R.id.phone_number);
             phoneNumber.setText(restaurant.getPhoneNumber());
             phoneNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -170,19 +158,19 @@ public class MenuListActivity extends ActionBarActivity {
 //                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
                     DatabaseHelper DBhelper = DatabaseHelper.getInstance(MenuListActivity.this);
-                    DBhelper.insertRecentCalls(restaurant.getId());
+                    DBhelper.insertRecentCalls(restaurant.getRestaurantId());
 
-                    server.sendCallLog(restaurant);
+                    //server.sendCallLog(restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                     startActivity(intent);
                 }
             });
 
-            TextView openTime = (TextView)findViewById(R.id.open_time);
+            TextView openTime = (TextView) findViewById(R.id.open_time);
             openTime.setText(hourFormatString(restaurant));
 
-            TextView couponString = (TextView)findViewById(R.id.coupon_string);
+            TextView couponString = (TextView) findViewById(R.id.coupon_string);
             if (restaurant.getCouponString() != null && restaurant.getCouponString().length() > 0) {
                 couponString.setText(restaurant.getCouponString());
             } else {
@@ -193,7 +181,8 @@ public class MenuListActivity extends ActionBarActivity {
 
     /**
      * Check or uncheck {@link android.view.MenuItem MenuItem}.
-     * @param item The "bookmark" {@link android.view.MenuItem MenuItem}.
+     *
+     * @param item    The "bookmark" {@link android.view.MenuItem MenuItem}.
      * @param checked Is the icon is to be checked?
      */
     public void setMenuItemChecked(MenuItem item, boolean checked) {
@@ -207,24 +196,26 @@ public class MenuListActivity extends ActionBarActivity {
 
     /**
      * Resize a {@link android.graphics.drawable.Drawable Drawable}.
+     *
      * @param drawable The {@link android.graphics.drawable.Drawable Drawable} to be resized.
-     * @param ratio Size ratio.
+     * @param ratio    Size ratio.
      * @return The resized {@link android.graphics.drawable.Drawable Drawable}.
      */
     public Drawable resizeDrawable(Drawable drawable, final float ratio) {
         int x = drawable.getIntrinsicWidth(), y = drawable.getIntrinsicHeight();
-        Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         drawable = new BitmapDrawable(getResources(),
-                Bitmap.createScaledBitmap(bitmap, (int)(x * ratio), (int)(y * ratio), true));
+                Bitmap.createScaledBitmap(bitmap, (int) (x * ratio), (int) (y * ratio), true));
         return drawable;
     }
 
     /**
      * Return a formatted {@link java.lang.String String}
      * which tells open hours of a restaurant.
+     *
      * @param restaurant {@link com.lchpatners.shadal.Restaurant Restaurant}
-     * with {@link com.lchpatners.shadal.Restaurant#openingHour openingHour}
-     * and {@link com.lchpatners.shadal.Restaurant#closingHour closingHour}.
+     *                   with {@link com.lchpatners.shadal.Restaurant#openingHour openingHour}
+     *                   and {@link com.lchpatners.shadal.Restaurant#closingHour closingHour}.
      * @return Well-formed {@link java.lang.String String}.
      */
     public String hourFormatString(Restaurant restaurant) {

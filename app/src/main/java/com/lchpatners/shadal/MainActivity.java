@@ -159,55 +159,6 @@ public class MainActivity extends ActionBarActivity {
         drawerLayout.setDrawerListener(drawerToggle);
 
 
-
-     /*   viewPager.setOffscreenPageLimit(ViewPagerAdapter.MAX_PAGE);
-        //viewPager.setCurrentItem(PagerAdapter.MAIN);
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(adapter.getPageTitle(viewPager.getCurrentItem()));
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // Do nothing.
-            }
-
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-                // Do nothing.
-            }
-        };
-
-        for (int page = 0; page < ViewPagerAdapter.MAX_PAGE; page++) {
-            ActionBar.Tab tab =
-                    actionBar.newTab()
-                            .setIcon(adapter.getPageIcon(page, page == viewPager.getCurrentItem()))
-                            .setText(adapter.getPageTitle(page))
-                            .setTabListener(tabListener);
-            actionBar.addTab(tab);
-
-
-        }
-
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-                viewPager.setCurrentItem(position);
-                for (int i = 0; i < actionBar.getTabCount(); i++) {
-                    actionBar.getTabAt(i).setIcon(adapter.getPageIcon(i, false))
-                            .setText(adapter.getPageTitle(i));
-                }
-                actionBar.getTabAt(position)
-                        .setIcon(adapter.getPageIcon(position, true));
-
-                actionBar.setTitle("주문하기");
-            }
-        });
-
-        viewPager.setCurrentItem(ViewPagerAdapter.MAIN);
-        */
     }
 
     @Override
@@ -228,7 +179,6 @@ public class MainActivity extends ActionBarActivity {
             return true;
         switch (item.getItemId()) {
             case R.id.action_search:
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 return true;
             case R.id.action_request:
                 return true;
@@ -261,7 +211,7 @@ public class MainActivity extends ActionBarActivity {
                 for (int i = 0; i < results.length(); i++) {
                     try {
                         JSONObject result = results.getJSONObject(i);
-                        if (result.getString("name_eng").equals(
+                        if (result.getString("id").equals(
                                 Preferences.getCampusEnglishName(MainActivity.this))) {
                             Preferences.setCampus(MainActivity.this, result);
                             break;
@@ -303,14 +253,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
 
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 return false;
             }
         });

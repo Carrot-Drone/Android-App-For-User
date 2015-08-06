@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,18 +40,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private static final String FLYERS = "flyers";
     private static final String CALLLOGS = "calllogs";
-    private static final String RESTAURANT_COLUMNS = "(id INTEGER PRIMARY KEY, server_id INT, name TEXT, " +
-            "category TEXT, openingHours TEXT, closingHours TEXT, phoneNumber TEXT, has_flyer INTEGER, " +
-            "has_coupon INTEGER, is_new INTEGER, is_favorite INTEGER, coupon_string TEXT, updated_at TEXT)";
-    private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, menu TEXT, section TEXT, " +
-            "price INT, restaurant_id INT)";
+    private static final String CATEGORIES = "categories";
+    private static final String SUBMENUS = "submenus";
+    private static final String CATEGORY_COLUMNS = "(id INTEGER PRIMARY KEY, server_id INTEGER, campus_id INTEGER, title TEXT)";
+    private static final String RESTAURANT_COLUMNS = "(id INTEGER PRIMARY KEY, " +
+            "name TEXT, " +
+            "opening_hours TEXT, " +
+            "closing_hours TEXT, " +
+            "phone_number TEXT," +
+            "has_flyer INTEGER, " +
+            "has_coupon INTEGER," +
+            "is_new INTEGER," +
+            "coupon_string TEXT," +
+            "retention INTEGER," +
+            "number_of_my_calls INTEGER," +
+            "total_number_of_calls INTEGER," +
+            "total_number_of_goods INTEGER," +
+            "total_number_of_bads INTEGER," +
+            "my_preference INTEGER," +
+            "category_id INTEGER)";
+
+    private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, name TEXT, section TEXT, " +
+            "price INT,description TEXT, restaurant_id INT)";
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
     private static final String CALLLOG_COLUMNS = "(id INTEGER PRIMARY KEY, restaurant_id INT, called_at LONG)";
-    /**
-     * A list of bookmarks from the old version's database.
-     * Each integer value means the server-side id of restaurants.
-     */
-    public static ArrayList<Integer> legacyBookmarks = new ArrayList<>();
+    private static final String SUBMENU_COLUMNS = "(id INTEGER PRIMARY KEY, name TEXT, price INTEGER, menu_id INTEGER)";
+
     /**
      * The singleton object.
      */
@@ -98,10 +113,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", MENUS));
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", FLYERS));
         db.execSQL(String.format("DROP TABLE IF EXISTS %s;", CALLLOGS));
+        db.execSQL(String.format("DROP TABLE IF EXISTS %s;", CATEGORIES));
+        db.execSQL(String.format("DROP TABLE IF EXISTS %s;", SUBMENUS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", RESTAURANTS, RESTAURANT_COLUMNS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", MENUS, MENU_COLUMNS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", FLYERS, FLYER_COLUMNS));
         db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", CALLLOGS, CALLLOG_COLUMNS));
+        db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", CATEGORIES, CATEGORY_COLUMNS));
+        db.execSQL(String.format("CREATE TABLE IF NOT EXISTS %s %s;", SUBMENUS, SUBMENU_COLUMNS));
+
+
     }
 
     @Override
@@ -119,15 +140,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return dbFile.exists();
     }
 
-    /**
-     * Insert if new to the table, or otherwise update the existing data.
-     * Data are identified by the server-side id value. And then
-     * reload {@link com.lchpatners.shadal.RestaurantListFragment#latestAdapter latestAdapter}.
-     *
-     * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
-     */
-    public void updateRestaurant(JSONObject restaurantJson) {
-        updateRestaurant(restaurantJson, null);
+
+    public void updateAll(JSONObject categoryJson, int categoryId) {
+        updateAll(categoryJson, categoryId, null);
         reloadRestaurantListAdapter(RestaurantListFragment.latestAdapter);
     }
 
@@ -136,74 +151,125 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Data are identified by the server-side id value. And then
      * reload the {@link com.lchpatners.shadal.MenuListActivity activity}.
      *
-     * @param restaurantJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
-     * @param activity       {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
+     * @param categoryJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
+     * @param activity     {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
      */
-    public void updateRestaurant(JSONObject restaurantJson, final MenuListActivity activity) {
+    public void updateAll(JSONObject categoryJson, int categoryId, final MenuListActivity activity) {
         Cursor cursor = null;
         try {
-            int restaurantServerId = restaurantJson.getInt("id");
+            Log.d("DH updateAll()", categoryJson.toString());
             SQLiteDatabase db = getWritableDatabase();
             ContentValues values;
-
-            boolean isLegacyBookmark = legacyBookmarks.contains(restaurantJson.getInt("id"));
-
             values = new ContentValues();
-            values.put("server_id", restaurantJson.getInt("id"));
-            values.put("updated_at", restaurantJson.getString("updated_at"));
-            values.put("name", restaurantJson.getString("name"));
-            values.put("phoneNumber", restaurantJson.getString("phone_number"));
-            values.put("category", restaurantJson.getString("category").trim());
-            values.put("openingHours", restaurantJson.getString("openingHours"));
-            values.put("closingHours", restaurantJson.getString("closingHours"));
-            values.put("has_flyer", (restaurantJson.getBoolean("has_flyer")) ? 1 : 0);
-            values.put("has_coupon", (restaurantJson.getBoolean("has_coupon")) ? 1 : 0);
-            values.put("is_new", (restaurantJson.getBoolean("is_new")) ? 1 : 0);
-            values.put("is_favorite", isLegacyBookmark ? 1 : 0);
-            values.put("coupon_string", restaurantJson.getString("coupon_string"));
+            values.put("server_id", categoryJson.getInt("id"));
+            values.put("campus_id", categoryJson.getInt("campus_id"));
+            values.put("title", categoryJson.getString("title"));
 
             cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE server_id = %d;",
-                    RESTAURANTS, restaurantServerId
-            ), null);
+                    "SELECT * FROM %s WHERE id = %d", CATEGORIES, categoryId), null);
+
             if (cursor != null && cursor.moveToFirst()) {
-                db.update(RESTAURANTS, values, "server_id = ?", new String[]{String.valueOf(restaurantServerId)});
+                db.update(CATEGORIES, values, "id = ?", new String[]{String.valueOf(categoryId)});
             } else {
-                db.insert(RESTAURANTS, null, values);
-                if (isLegacyBookmark) {
-                    reloadRestaurantListAdapter(BookmarkFragment.latestAdapter);
+                db.insert(CATEGORIES, null, values);
+            }
+            JSONArray restaurants = categoryJson.getJSONArray("restaurants");
+            Log.d("DH RESTAURANTs", restaurants.toString());
+            Log.d("restaurantLength", restaurants.length() + "");
+            cursor = null;
+            for (int i = 0; i < restaurants.length(); i++) {
+                JSONObject restaurant = restaurants.getJSONObject(i);
+                Log.d("loof restaurant", i + "");
+                Log.d("DH restaurant", restaurant.toString());
+                int restaurantId = restaurant.getInt("id");
+
+                values = new ContentValues();
+                values.put("id", restaurant.getInt("id"));
+                values.put("name", restaurant.getString("name"));
+                values.put("phone_number", restaurant.getString("phone_number"));
+                values.put("opening_hours", restaurant.getString("opening_hours"));
+                values.put("closing_hours", restaurant.getString("closing_hours"));
+                values.put("has_flyer", (restaurant.getBoolean("has_flyer")) ? 1 : 0);
+                values.put("has_coupon", (restaurant.getBoolean("has_coupon")) ? 1 : 0);
+                values.put("is_new", (restaurant.getBoolean("is_new")) ? 1 : 0);
+                values.put("coupon_string", restaurant.getString("coupon_string"));
+                values.put("retention", restaurant.getString("retention"));
+                values.put("number_of_my_calls", restaurant.getInt("number_of_my_calls"));
+                values.put("total_number_of_calls", restaurant.getInt("total_number_of_calls"));
+                values.put("total_number_of_goods", restaurant.getInt("total_number_of_goods"));
+                values.put("total_number_of_bads", restaurant.getInt("total_number_of_bads"));
+                values.put("my_preference", restaurant.getInt("my_preference"));
+                values.put("category_id", categoryId);
+
+                cursor = db.rawQuery(String.format(
+                        "SELECT * FROM %s WHERE id = %d;",
+                        RESTAURANTS, restaurantId
+                ), null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    db.update(RESTAURANTS, values, "id = ?", new String[]{String.valueOf(restaurantId)});
+                } else {
+                    db.insert(RESTAURANTS, null, values);
+
                 }
-            }
 
-            // Update menus and leaflet urls corresponding to the restaurant
-            db.execSQL(String.format(
-                    "DELETE FROM %s WHERE restaurant_id = %d;",
-                    MENUS, restaurantServerId
-            ));
-            JSONArray menus = restaurantJson.getJSONArray("menus");
-            for (int i = 0; i < menus.length(); i++) {
-                JSONObject menu = menus.getJSONObject(i);
+                // Update menus and leaflet urls corresponding to the restaurant
+                db.execSQL(String.format(
+                        "DELETE FROM %s WHERE restaurant_id = %d;",
+                        MENUS, restaurantId
+                ));
 
-                values = new ContentValues();
-                values.put("menu", menu.getString("name"));
-                values.put("section", menu.getString("section"));
-                values.put("price", menu.getInt("price"));
-                values.put("restaurant_id", restaurantServerId);
+                JSONArray menus = restaurant.getJSONArray("menus");
+                for (int j = 0; j < menus.length(); j++) {
+                    JSONObject menu = menus.getJSONObject(j);
+                    JSONArray submenus = menu.getJSONArray("submenus");
+                    if (submenus.length() == 0 || submenus == null) {
+                        values = new ContentValues();
+                        values.put("id", menu.getInt("id"));
+                        values.put("name", menu.getString("name"));
+                        values.put("section", menu.getString("section"));
+                        values.put("price", menu.getInt("price"));
+                        values.put("description", menu.getString("description"));
+                        values.put("restaurant_id", restaurantId);
 
-                db.insert(MENUS, null, values);
-            }
+                        db.insert(MENUS, null, values);
+                    } else {
+                        values = new ContentValues();
+                        int menu_id = menu.getInt("id");
+                        values.put("id", menu.getInt("id"));
+                        values.put("name", menu.getString("name"));
+                        values.put("section", menu.getString("section"));
+                        values.put("description", menu.getString("description"));
+                        values.put("restaurant_id", restaurantId);
+                        db.insert(MENUS, null, values);
 
-            db.execSQL(String.format(
-                    "DELETE FROM %s WHERE restaurant_id = %d;",
-                    FLYERS, restaurantServerId
-            ));
-            JSONArray urls = restaurantJson.getJSONArray("flyers_url");
-            for (int i = 0; i < urls.length(); i++) {
-                String url = urls.getString(i);
-                values = new ContentValues();
-                values.put("url", url);
-                values.put("restaurant_id", restaurantServerId);
-                db.insert(FLYERS, null, values);
+                        db.execSQL(String.format(
+                                "DELETE FROM %s WHERE menu_id = %d;",
+                                SUBMENUS, menu_id
+                        ));
+
+                        values = new ContentValues();
+                        JSONObject submenu = submenus.getJSONObject(0);
+                        values.put("name", submenu.getString("name"));
+                        values.put("price", submenu.getInt("price"));
+                        values.put("menu_id", menu_id);
+                        db.insert(SUBMENUS, null, values);
+
+
+                    }
+                }
+
+                db.execSQL(String.format(
+                        "DELETE FROM %s WHERE restaurant_id = %d;",
+                        FLYERS, restaurantId
+                ));
+                JSONArray urls = restaurant.getJSONArray("flyers_url");
+                for (int j = 0; j < urls.length(); j++) {
+                    String url = urls.getString(j);
+                    values = new ContentValues();
+                    values.put("url", url);
+                    values.put("restaurant_id", restaurantId);
+                    db.insert(FLYERS, null, values);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,23 +280,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             reloadMenuListActivity(activity);
         }
     }
+/*
 
-    /**
-     * Update the category with a {@link org.json.JSONArray JSONArray}. If a single data was
-     * already in the device database, check if the device's data is outdated compared to the
-     * new data. Outdated, update the {@link com.lchpatners.shadal.Restaurant Restaurant} data
-     * with a {@link com.lchpatners.shadal.Server}.
-     * <br><strong>NOTE</strong>: This is because Server API "res_in_category" returns
-     * incomplete restaurant data which lacks some fields.
-     * Server offering complete data, you could use the JSONObject object
-     * retrieved from the Cursor e.g. <code>if (...) { updateRestaurant(jsonObjFromCursor(cursor); }</code>
-     * instead of <code>server.updatedRestaurant(...)</code> call.
-     *
-     * @param restaurants {@link org.json.JSONArray JSONArray} data to update with.
-     * @param category    A category the restaurants belongs to.
-     * @see com.lchpatners.shadal.Server#updateRestaurant(int, java.lang.String) Server.updateRestaurant(int, String)
-     */
-    public void updateCategory(JSONArray restaurants, String category) {
+    public void updateCategory(JSONArray restaurants, int category_id) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
         Server server = new Server(context);
@@ -252,7 +304,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 cursor.getString(cursor.getColumnIndex("updated_at")));
                     }
                 } else {
-                    restaurant.put("category", category);
+                    restaurant.put("category_id", category_id);
                     restaurant.put("openingHours", "0.0");
                     restaurant.put("closingHours", "0.0");
                     restaurant.put("coupon_string", "loading...");
@@ -266,8 +318,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             // Delete restaurants no more available from the server.
             cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE category = '%s';",
-                    RESTAURANTS, category
+                    "SELECT * FROM %s WHERE category_id = '%s';",
+                    RESTAURANTS, category_id
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -296,7 +348,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             reloadRestaurantListAdapter(RestaurantListFragment.latestAdapter);
         }
     }
-
+*/
 
     /**
      * @return Bookmarked restaurants.
@@ -327,38 +379,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    /**
-     * Bookmark a restaurant if it wasn't, and do the opposite otherwise.
-     *
-     * @param restaurantId The restaurant's server-side id.
-     * @return <code>true</code> if it was bookmarked,
-     * <code>false</code> if un-bookmarked.
-     */
-    public boolean toggleFavoriteById(long restaurantId) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        Restaurant restaurant = getRestaurantFromId(restaurantId);
-        values.put("is_favorite", (!restaurant.isFavorite()) ? 1 : 0);
-        db.update(RESTAURANTS, values, "id = " + restaurantId, null);
-        reloadRestaurantListAdapter(BookmarkFragment.latestAdapter);
-        return !restaurant.isFavorite();
-    }
 
-    /**
-     * @param category Category to search by.
-     * @return Restaurants of the category.
-     */
-    public ArrayList<Restaurant> getRestaurantsByCategory(String category) {
+    public ArrayList<Restaurant> getRestaurantsByCategory(int category_id) {
+        Log.d("getRestaurantByCategory", "called");
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Restaurant> list = new ArrayList<>();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE category = '%s' ORDER BY has_flyer DESC, name ASC;",
-                    RESTAURANTS, category
+                    "SELECT * FROM %s WHERE category_id = '%d' ORDER BY has_flyer DESC, name ASC;",
+                    RESTAURANTS, category_id
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
+                    Log.d("RestaurantByCategory", cursor.toString());
                     list.add(new Restaurant(cursor));
                 } while (cursor.moveToNext());
             }
@@ -553,13 +587,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public int getNumberOfCalls(int restaurant_id) {
+        SQLiteDatabase db = getReadableDatabase();
+        int numberOfCalls = 0;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(String.format(
+                    "SELECT %s FROM %s GROUP BY %s;",
+                    "count(*)",//select
+                    CALLLOGS, //from
+                    restaurant_id //group by
+            ), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (cursor != null && cursor.moveToFirst()) {
+            numberOfCalls = cursor.getColumnIndex(cursor.getColumnName(0));
+        }
+        return numberOfCalls;
+    }
+
     public ArrayList<Call> getRecentCallsList(String orderBy) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Call> list = new ArrayList<>();
         Cursor cursor = null;
         try {
 
-            if (orderBy == CALL) {
+            if (orderBy.equals(CALL)) {
                 cursor = db.rawQuery(String.format(
                         "SELECT %s,%s,%s FROM %s,%s WHERE %s = %s GROUP BY %s ORDER BY %s DESC; ",
                         "restaurants.id", "restaurants.name", "count(*)",//select
@@ -568,10 +623,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "restaurants.id", //group by
                         "calllogs.called_at" //order by
                 ), null);
-            } else if (orderBy == NAME) {
+            } else if (orderBy.equals(NAME)) {
                 cursor = db.rawQuery(String.format(
                         "SELECT %s,%s,%s FROM %s,%s WHERE %s = %s GROUP BY %s ORDER BY %s ASC; ",
-                        "restaurants.id", "restaurants.name", "count(*)",//select
+                        "restaurants.restaurant_id", "restaurants.name", "count(*)",//select
                         RESTAURANTS, CALLLOGS, //from
                         "restaurants.id", "calllogs.restaurant_id",//where
                         "restaurants.id", //group by
@@ -595,5 +650,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public int getCategoryIdFromTitle(String title) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        int id = 0;
+        try {
+            cursor = db.rawQuery(String.format(
+                    "SELECT %d FROM %s WHERE title = %s;",
+                    "id", CATEGORIES, title), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                id = cursor.getInt(cursor.getColumnIndex("id"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return id;
+    }
 
 }
