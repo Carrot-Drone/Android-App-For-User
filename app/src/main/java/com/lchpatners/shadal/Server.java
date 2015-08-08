@@ -60,7 +60,9 @@ public class Server {
     public static final String REJECT_POPUP = "/reject";
 
     public static final String ACCEPT_POPUP = "/accept";
-    public static final String RESTAURANT = "/restaurants";
+    public static final String RESTAURANTS = "/restaurants";
+    public static final String RESTAURANT = "/restaurant";
+
     /**
      * Campus list directory. /campuses_all
      */
@@ -190,19 +192,7 @@ public class Server {
      */
     public void updateAll() {
         new TotalUpdateTask().execute(BASE_URL + CAMPUS +
-                "/" + Preferences.getCampusId(context) + RESTAURANT);
-    }
-
-    /**
-     * Update a single {@link Restaurant Restaurant}.
-     *
-     * @param id          Server-side id of the {@link Restaurant Restaurant}
-     * @param updatedTime The time when the {@link Restaurant Restaurant}
-     *                    was updated for the last time on the device.
-     * @see Server.RestaurantUpdateTask RestaurantUpdateTask
-     */
-    public void updateRestaurant(int id, String updatedTime) {
-        updateRestaurant(id, updatedTime, null);
+                "/" + Preferences.getCampusId(context) + RESTAURANTS);
     }
 
     /**
@@ -216,19 +206,8 @@ public class Server {
      * @see Server.RestaurantUpdateTask RestaurantUpdateTask
      * @see MenuListActivity#setView() MenuListActivity.setView()
      */
-    public void updateRestaurant(int id, String updatedTime, MenuListActivity activity) {
-        new RestaurantUpdateTask(id, updatedTime, activity).execute(BASE_URL + CHECK_FOR_UPDATE);
-    }
-
-    /**
-     * Update {@link Restaurant Restaurants}
-     * in a {@link Restaurant#category category}.
-     *
-     * @param category The category to be updated.
-     * @see Server.CategoryUpdateTask CategoryUpdateTask
-     */
-    public void updateCategory(String category) {
-        new CategoryUpdateTask(category).execute(BASE_URL + CHECK_FOR_RES_IN_CATEGORY);
+    public void updateRestaurant(int id, String updatedTime, int categoryId, MenuListActivity activity) {
+        new RestaurantUpdateTask(updatedTime, activity, categoryId).execute(BASE_URL + RESTAURANT + "/" + id);
     }
 
     /**
@@ -248,7 +227,7 @@ public class Server {
                     value.add(new BasicNameValuePair("category_id", Integer.toString(category_id)));
                     value.add(new BasicNameValuePair("restaurant_id", Integer.toString(restaurant.getServerId())));
                     value.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
-                    value.add(new BasicNameValuePair("number_of_calls", Integer.toString(restaurant.getMyNumberOfCalls(restaurant.getServerId()))));
+                    value.add(new BasicNameValuePair("number_of_calls", Integer.toString(restaurant.getNumberOfCalls(restaurant.getServerId()))));
                     post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
                     client.execute(post);
                 } catch (Exception e) {
@@ -469,29 +448,31 @@ public class Server {
      * An {@link AsyncTask} to update a single {@link Restaurant Restaurant}.
      */
     private class RestaurantUpdateTask extends AsyncTask<String, Void, Void> {
-        private int id;
+        private int categoryId;
         private String updatedTime;
         private MenuListActivity activity;
 
-        public RestaurantUpdateTask(int id, String updatedTime, MenuListActivity activity) {
-            this.id = id;
+        public RestaurantUpdateTask(String updatedTime, MenuListActivity activity, int categoryId) {
             this.updatedTime = updatedTime;
             this.activity = activity;
+            this.categoryId = categoryId;
         }
 
         @Override
         protected Void doInBackground(String... urls) {
             try {
                 List<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("restaurant_id", Integer.toString(id)));
+                params.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(activity)));
                 params.add(new BasicNameValuePair("updated_at", updatedTime));
                 String serviceCall = makeServiceCall(urls[0], GET, params);
-                Log.d("Restaurant servicecall", serviceCall.toString());
+
                 if (serviceCall == null) {
                     return null;
+                } else {
+                    Log.d("Restaurant servicecall", serviceCall.toString());
                 }
                 DatabaseHelper helper = DatabaseHelper.getInstance(context);
-                //helper.updateRestaurant(new JSONObject(serviceCall), activity);
+                helper.updateRestaurant(new JSONObject(serviceCall), categoryId, activity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -499,39 +480,5 @@ public class Server {
         }
     }
 
-    /**
-     * An {@link AsyncTask} to update {@link Restaurant Restaurants}
-     * in a {@link Restaurant#category category}.
-     *
-     * @see RestaurantListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
-     */
-    private class CategoryUpdateTask extends AsyncTask<String, Void, Void> {
-        private String category;
-        private int category_id;
-
-        public CategoryUpdateTask(String category) {
-            this.category = category;
-        }
-
-        @Override
-        protected Void doInBackground(String... urls) {
-            try {
-                List<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("campus_id", Preferences.getCampusId(context)));
-                params.add(new BasicNameValuePair("category_id", Integer.toString(category_id)));
-                String serviceCall = makeServiceCall(urls[0], GET, params);
-                Log.d("urls", urls[0]);
-                Log.d("params", params.toString());
-                if (serviceCall == null) {
-                    return null;
-                }
-                DatabaseHelper helper = DatabaseHelper.getInstance(context);
-//                helper.updateCategory(new JSONArray(serviceCall), category_id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 
 }

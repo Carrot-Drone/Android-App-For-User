@@ -22,7 +22,8 @@ public class CategoryListFragment extends Fragment {
     private Activity activity;
 
     public static CategoryListFragment newInstance() {
-        return new CategoryListFragment();
+        CategoryListFragment categoryListFragment = new CategoryListFragment();
+        return categoryListFragment;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class CategoryListFragment extends Fragment {
 
         if (getUserVisibleHint()) {
             AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
-            helper.sendScreen(((MainActivity)getActivity()).restaurantListFragmentCurrentlyOn == null ?
+            helper.sendScreen(((MainActivity) getActivity()).restaurantListFragmentCurrentlyOn == null ?
                     "메인 화면" : "음식점 리스트 화면");
         }
     }
@@ -54,9 +55,12 @@ public class CategoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
 
+        Category[] categories = Category.getCategory(activity);
+
         // Set view of the ListView.
-        ListView listView = (ListView)view.findViewById(R.id.list_view);
+        ListView listView = (ListView) view.findViewById(R.id.list_view);
         final CategoryListAdapter adapter = new CategoryListAdapter(activity);
+//        CategoryAdapter adapter = new CategoryAdapter(activity,categories);
         listView.setAdapter(adapter);
 
         // KNOWN ISSUE: duplicated onItemClick() calls when double-tapping
@@ -64,10 +68,10 @@ public class CategoryListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Instantiate a RestaurantListFragment instance of the chosen category.
-                String category = ((TextView)view.findViewById(R.id.category_text)).getText().toString();
+                String category = ((TextView) view.findViewById(R.id.category_text)).getText().toString();
 
                 RestaurantListFragment rlfInstance = RestaurantListFragment.newInstance(position);
-                ((MainActivity)activity).restaurantListFragmentCurrentlyOn = rlfInstance;
+                ((MainActivity) activity).restaurantListFragmentCurrentlyOn = rlfInstance;
 
                 /*AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
                 helper.sendEvent("UX", "category_clicked", category);

@@ -17,6 +17,20 @@ import java.util.List;
 public class MenuListAdapter extends BaseAdapter {
 
     /**
+     * Indicates the header view type.
+     * Used for {@link com.lchpatners.shadal.Menu#section sections}.
+     */
+    private static final int HEADER = 0;
+    /**
+     * Indicates the item view type.
+     * Used for {@link com.lchpatners.shadal.Menu#item items}.
+     */
+    private static final int ITEM = 1;
+    /**
+     * The number of view types.
+     */
+    private static final int VIEW_TYPE_COUNT = 2;
+    /**
      * {@link android.content.Context Context} this belongs to.
      */
     private Context context;
@@ -35,21 +49,6 @@ public class MenuListAdapter extends BaseAdapter {
      */
     private List<String> headers;
 
-    /**
-     * Indicates the header view type.
-     * Used for {@link com.lchpatners.shadal.Menu#section sections}.
-     */
-    private static final int HEADER = 0;
-    /**
-     * Indicates the item view type.
-     * Used for {@link com.lchpatners.shadal.Menu#item items}.
-     */
-    private static final int ITEM = 1;
-    /**
-     * The number of view types.
-     */
-    private static final int VIEW_TYPE_COUNT = 2;
-
     public MenuListAdapter(Context context, Restaurant restaurant) {
         this.context = context;
         this.restaurant = restaurant;
@@ -64,7 +63,7 @@ public class MenuListAdapter extends BaseAdapter {
     public void reloadData() {
         data.clear();
         List<Menu> menus = DatabaseHelper.getInstance(context)
-                .getMenusByRestaurantServerId(restaurant.getServerId());
+                .getMenusByRestaurantServerId(restaurant.getRestaurantId());
         String header = null;
         for (Menu menu : menus) {
             if (!menu.getSection().equals(header)) {

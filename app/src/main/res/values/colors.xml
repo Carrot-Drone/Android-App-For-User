@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary_light">#9C27B0</color>
-    <color name="primary">#9C27B0</color>
-    <color name="primary_dark">#9C27B0</color>
+    <color name="primary_light">#fb7010</color>
+    <color name="primary">#fb7010</color>
+    <color name="primary_dark">#fb7010</color>
 
     <color name="white100">#FFFFFF</color>
     <color name="white70">#B2FFFFFF</color>

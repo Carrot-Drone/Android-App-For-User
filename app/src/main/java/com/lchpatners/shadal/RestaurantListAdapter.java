@@ -18,20 +18,10 @@ import java.util.List;
  * RestaurantListFragment}.
  */
 public class RestaurantListAdapter extends BaseAdapter {
-    /**
-     * Indicates that you need to get data from bookmarks,
-     * not by a specific category.
-     */
-    public static final String BOOKMARK = "bookmark";
 
     public static final String URLS = "urls";
 
-    public static final String NAME = "name";
     public static final String RESTAURANT = "restaurant";
-
-    public static final String PHONE_NUMBER = "phonenumber";
-
-//    public static final String CAllSLIST = "callslist";
 
 
     /**
@@ -54,11 +44,8 @@ public class RestaurantListAdapter extends BaseAdapter {
      * {@link android.content.Context Context} this belongs to.
      */
     private Context context;
-    /**
-     * Data source of the list. Could either be a certain
-     * {@link com.lchpatners.shadal.Restaurant#category category}
-     * or bookmarks if this equals {@link #BOOKMARK}.
-     */
+
+
     private int categoryId;
     /**
      * List of all data, including both {@link #HEADER} and {@link #ITEM}.
@@ -136,9 +123,12 @@ public class RestaurantListAdapter extends BaseAdapter {
             case HEADER:
                 TextView header = (TextView) convertView.findViewById(R.id.header);
                 header.setText((String) data.get(position));
+                Log.d("restaurantList", "header" + (String) data.get(position));
                 break;
             case ITEM:
                 Restaurant restaurant = (Restaurant) data.get(position);
+                TextView retention = (TextView) convertView.findViewById(R.id.retention);
+                retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
                 TextView name = (TextView) convertView.findViewById(R.id.name);
                 name.setText(restaurant.getName());
                 convertView.findViewById(R.id.flyer).setVisibility(restaurant.hasFlyer() ? View.VISIBLE : View.GONE);

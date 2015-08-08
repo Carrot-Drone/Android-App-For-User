@@ -2,8 +2,6 @@ package com.lchpatners.shadal;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,8 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,29 +49,6 @@ public class MenuListActivity extends ActionBarActivity {
 
         setView();
 
-        // If shown up by the RandomFragment, set up the dice button.
-        if (intent.getStringExtra("REFERRER") != null &&
-                intent.getStringExtra("REFERRER").equals("RandomFragment")) {
-            View button = findViewById(R.id.random_button);
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RotateAnimation anim =
-                            new RotateAnimation(0, 360,
-                                    Animation.RELATIVE_TO_SELF, 0.5f,
-                                    Animation.RELATIVE_TO_SELF, 0.5f);
-                    anim.setDuration(500);
-                    v.startAnimation(anim);
-                    DatabaseHelper helper = DatabaseHelper.getInstance(MenuListActivity.this);
-                    restaurant = helper.getRandomRestaurant();
-                    setView();
-
-                    AnalyticsHelper aHelper = new AnalyticsHelper(getApplication());
-                    aHelper.sendEvent("UX", "random_res_clicked", restaurant.getName());
-                }
-            });
-        }
     }
 
 
@@ -84,8 +57,6 @@ public class MenuListActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_menu_list, menu);
 
         this.menu = menu;
-
-        DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         MenuItem flyer = menu.findItem(R.id.see_flyer);
         flyer.setVisible(restaurant.hasFlyer());
@@ -100,7 +71,7 @@ public class MenuListActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.see_flyer) {
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
-            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
+            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getRestaurantId());
             Intent intent = new Intent(this, FlyerActivity.class);
             intent.putExtra(RestaurantListAdapter.URLS, urls);
             intent.putExtra(RestaurantListAdapter.RESTAURANT, restaurant);
@@ -138,7 +109,7 @@ public class MenuListActivity extends ActionBarActivity {
 
 
             final Server server = new Server(this);
-            server.updateRestaurant(restaurant.getServerId(), restaurant.getUpdatedTime(), this);
+            server.updateRestaurant(restaurant.getRestaurantId(), restaurant.getUpdatedTime(), restaurant.getCategoryId(), this);
 
             if (menu != null) {
                 //setMenuItemChecked(menu.findItem(R.id.bookmark), restaurant.isFavorite());
@@ -177,21 +148,6 @@ public class MenuListActivity extends ActionBarActivity {
                 couponString.setVisibility(View.GONE);
             }
         }
-    }
-
-    /**
-     * Check or uncheck {@link android.view.MenuItem MenuItem}.
-     *
-     * @param item    The "bookmark" {@link android.view.MenuItem MenuItem}.
-     * @param checked Is the icon is to be checked?
-     */
-    public void setMenuItemChecked(MenuItem item, boolean checked) {
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_action_star);
-        drawable = resizeDrawable(drawable, 0.8f);
-        if (checked) {
-            drawable.mutate().setColorFilter(Color.YELLOW, PorterDuff.Mode.MULTIPLY);
-        }
-        item.setIcon(drawable);
     }
 
     /**

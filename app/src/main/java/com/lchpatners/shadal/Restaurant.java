@@ -113,6 +113,7 @@ public class Restaurant implements Parcelable {
         totalNumberOfBads = source.readInt();
         myPreference = source.readInt();
         categoryId = source.readInt();
+        updatedTime = source.readString();
 
     }
 
@@ -137,6 +138,8 @@ public class Restaurant implements Parcelable {
         totalNumberOfBads = cursor.getInt(cursor.getColumnIndex("total_number_of_bads"));
         myPreference = cursor.getInt(cursor.getColumnIndex("my_preference"));
         categoryId = cursor.getInt(cursor.getColumnIndex("category_id"));
+        updatedTime = cursor.getString(cursor.getColumnIndex("updated_at"));
+
     }
 
     @Override
@@ -153,10 +156,12 @@ public class Restaurant implements Parcelable {
         dest.writeFloat(retention);
         dest.writeInt(numberOfMyCalls);
         dest.writeInt(totalNumberOfCalls);
-        dest.writeInt(totalNumberOfCalls);
+        dest.writeInt(totalNumberOfGoods);
         dest.writeInt(totalNumberOfBads);
         dest.writeInt(myPreference);
         dest.writeInt(categoryId);
+        dest.writeString(updatedTime);
+
     }
 
     @Override
@@ -276,6 +281,52 @@ public class Restaurant implements Parcelable {
         this.retention = retention;
     }
 
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+
+    public void setNumberOfMyCalls(int numberOfMyCalls) {
+        this.numberOfMyCalls = numberOfMyCalls;
+    }
+
+    public int getTotalNumberOfCalls() {
+        return totalNumberOfCalls;
+    }
+
+    public void setTotalNumberOfCalls(int totalNumberOfCalls) {
+        this.totalNumberOfCalls = totalNumberOfCalls;
+    }
+
+    public int getTotalNumberOfGoods() {
+        return totalNumberOfGoods;
+    }
+
+    public void setTotalNumberOfGoods(int totalNumberOfGoods) {
+        this.totalNumberOfGoods = totalNumberOfGoods;
+    }
+
+    public int getTotalNumberOfBads() {
+        return totalNumberOfBads;
+    }
+
+    public void setTotalNumberOfBads(int totalNumberOfBads) {
+        this.totalNumberOfBads = totalNumberOfBads;
+    }
+
+    public int getMyPreference() {
+        return myPreference;
+    }
+
+    public void setMyPreference(int myPreference) {
+        this.myPreference = myPreference;
+    }
+
     @Override
     public boolean equals(Object object) {
         return object instanceof Restaurant && restaurantId == ((Restaurant) object).getRestaurantId();
@@ -286,7 +337,7 @@ public class Restaurant implements Parcelable {
         return restaurantId;
     }
 
-    public int getMyNumberOfCalls(int restaurantId) {
+    public int getNumberOfCalls(int restaurantId) {
         DatabaseHelper helper = DatabaseHelper.getInstance(context);
         int number_of_calls = helper.getNumberOfCalls(restaurantId);
         return number_of_calls;

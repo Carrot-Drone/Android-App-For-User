@@ -26,10 +26,11 @@ public class RestaurantListFragment extends Fragment {
      */
     private Activity activity;
 
-    public static RestaurantListFragment newInstance(int category) {
+    public static RestaurantListFragment newInstance(int categoryId) {
         RestaurantListFragment rlf = new RestaurantListFragment();
         Bundle args = new Bundle();
-        args.putInt("CATEGORY", category);
+        args.putInt("categoryId", categoryId);
+
         rlf.setArguments(args);
         return rlf;
     }
@@ -61,7 +62,8 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("RestaurantFragment", "called");
-        final int categoryId = getArguments().getInt("CATEGORY");
+        int categoryId = getArguments().getInt("categoryId");
+//        final String category = getArguments().getString("CATEGORY");
         RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId);
         latestAdapter = adapter;
 //        Server server = new Server(activity);

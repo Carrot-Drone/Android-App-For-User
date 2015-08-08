@@ -91,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), MAIN);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.MAINACTIVITY);
         viewPager.setAdapter(adapter);
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
@@ -238,6 +238,7 @@ public class MainActivity extends ActionBarActivity {
             }
         }.execute();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

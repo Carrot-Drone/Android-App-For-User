@@ -26,7 +26,18 @@ public class Menu {
      * Restaurant} this belongs to.
      * @see com.lchpatners.shadal.Restaurant#id
      */
+
+    private String description;
+
     private long restaurantId;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public int getId() {
         return id;

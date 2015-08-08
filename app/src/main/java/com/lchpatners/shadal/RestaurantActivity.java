@@ -35,7 +35,7 @@ public class RestaurantActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), RESTAURANT);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.RESTAURANTACTIVITY);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
 
@@ -51,6 +51,7 @@ public class RestaurantActivity extends ActionBarActivity {
             }
         });
 
+
         tabs.setViewPager(viewPager, RESTAURANT);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -62,8 +63,9 @@ public class RestaurantActivity extends ActionBarActivity {
 
             @Override
             public void onPageSelected(int position) {
-                category = ViewPagerAdapter.categories[position];
-                toolbar.setTitle(category);
+                Category[] categories = Category.getCategory(RestaurantActivity.this);
+                Category category = categories[position];
+                toolbar.setTitle(category.getTitle());
             }
 
             @Override

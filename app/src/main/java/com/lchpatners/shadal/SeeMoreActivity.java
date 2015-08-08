@@ -105,6 +105,4 @@ public class SeeMoreActivity extends ActionBarActivity {
             }
         });
     }
-
-
 }
