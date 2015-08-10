@@ -337,9 +337,10 @@ public class Restaurant implements Parcelable {
         return restaurantId;
     }
 
-    public int getNumberOfCalls(int restaurantId) {
+    public int getNumberOfCalls(Context context, int restaurantId) {
         DatabaseHelper helper = DatabaseHelper.getInstance(context);
         int number_of_calls = helper.getNumberOfCalls(restaurantId);
         return number_of_calls;
     }
+
 }

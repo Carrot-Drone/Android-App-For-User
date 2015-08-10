@@ -2,22 +2,30 @@ package com.lchpatners.shadal;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class RequestActivity extends ActionBarActivity {
+public class RSbyUserActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request);
+        setContentView(R.layout.activity_rsby_user);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        String title = getString(R.string.title_activity_rsby_user);
+
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_request, menu);
+        getMenuInflater().inflate(R.menu.menu_rsby_user, menu);
         return true;
     }
 

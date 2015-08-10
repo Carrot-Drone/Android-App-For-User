@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class MenuListActivity extends ActionBarActivity {
      * {@link com.lchpatners.shadal.Restaurant Restaurant} of which information
      * is to be displayed.
      */
+    private DatabaseHelper helper;
     private Restaurant restaurant;
     /**
      * {@link android.view.Menu} of this {@link android.support.v7.app.ActionBarActivity
@@ -47,7 +49,9 @@ public class MenuListActivity extends ActionBarActivity {
         Intent intent = getIntent();
         restaurant = intent.getParcelableExtra("RESTAURANT");
 
+
         setView();
+
 
     }
 
@@ -100,7 +104,7 @@ public class MenuListActivity extends ActionBarActivity {
 //                helper.sendScreen("음식점 화면");
             }
 
-            DatabaseHelper helper = DatabaseHelper.getInstance(this);
+            helper = DatabaseHelper.getInstance(this);
             restaurant = helper.getRestaurantFromId(restaurant.getRestaurantId());
 
             toolbar.setTitle(restaurant.getName());
@@ -110,11 +114,30 @@ public class MenuListActivity extends ActionBarActivity {
 
             final Server server = new Server(this);
             server.updateRestaurant(restaurant.getRestaurantId(), restaurant.getUpdatedTime(), restaurant.getCategoryId(), this);
+//
+//            if (menu != null) {
+//                //setMenuItemChecked(menu.findItem(R.id.bookmark), restaurant.isFavorite());
+//                menu.findItem(R.id.see_flyer).setVisible(restaurant.hasFlyer());
+//            }
+            ImageButton flyer = (ImageButton) findViewById(R.id.flyer);
+            flyer.setVisibility((restaurant.hasFlyer()) ? View.VISIBLE : View.INVISIBLE);
+            flyer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getRestaurantId());
+                    Intent intent = new Intent(MenuListActivity.this, FlyerActivity.class);
+                    intent.putExtra(RestaurantListAdapter.URLS, urls);
+                    intent.putExtra(RestaurantListAdapter.RESTAURANT, restaurant);
+                    startActivity(intent);
+                }
+            });
+            TextView retention = (TextView) findViewById(R.id.retention);
+            TextView numberOfMyCalls = (TextView) findViewById(R.id.number_of_my_calls);
+            TextView totalNumberOfCalls = (TextView) findViewById(R.id.total_number_of_calls);
 
-            if (menu != null) {
-                //setMenuItemChecked(menu.findItem(R.id.bookmark), restaurant.isFavorite());
-                menu.findItem(R.id.see_flyer).setVisible(restaurant.hasFlyer());
-            }
+            retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
+            numberOfMyCalls.setText(restaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "회");
+            totalNumberOfCalls.setText(restaurant.getTotalNumberOfCalls() + "회");
 
             ListView listView = (ListView) findViewById(R.id.menu_list);
             MenuListAdapter adapter = new MenuListAdapter(this, restaurant);
@@ -138,8 +161,9 @@ public class MenuListActivity extends ActionBarActivity {
                 }
             });
 
-            TextView openTime = (TextView) findViewById(R.id.open_time);
+            TextView openTime = (TextView) findViewById(R.id.office_time);
             openTime.setText(hourFormatString(restaurant));
+
 
             TextView couponString = (TextView) findViewById(R.id.coupon_string);
             if (restaurant.getCouponString() != null && restaurant.getCouponString().length() > 0) {
@@ -193,7 +217,7 @@ public class MenuListActivity extends ActionBarActivity {
         }
         close = String.format("%02d:%02d", hour, 0);
 
-        return getString(R.string.open_time) + ": " + open + " ~ " + close;
+        return open + " ~ " + close;
     }
 
 

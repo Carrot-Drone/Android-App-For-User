@@ -180,7 +180,9 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_search:
                 return true;
-            case R.id.action_request:
+            case R.id.action_restaurant_suggestion:
+                Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

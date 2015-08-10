@@ -225,9 +225,9 @@ public class Server {
                     ArrayList<BasicNameValuePair> value = new ArrayList<>();
                     value.add(new BasicNameValuePair("campus_id", Preferences.getCampusId(context)));
                     value.add(new BasicNameValuePair("category_id", Integer.toString(category_id)));
-                    value.add(new BasicNameValuePair("restaurant_id", Integer.toString(restaurant.getServerId())));
+                    value.add(new BasicNameValuePair("restaurant_id", Integer.toString(restaurant.getRestaurantId())));
                     value.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
-                    value.add(new BasicNameValuePair("number_of_calls", Integer.toString(restaurant.getNumberOfCalls(restaurant.getServerId()))));
+                    value.add(new BasicNameValuePair("number_of_calls", Integer.toString(restaurant.getNumberOfCalls(context, restaurant.getRestaurantId()))));
                     post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
                     client.execute(post);
                 } catch (Exception e) {

@@ -621,16 +621,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         try {
             cursor = db.rawQuery(String.format(
-                    "SELECT %s FROM %s GROUP BY %s;",
+                    "SELECT %s FROM %s WHERE restaurant_id = %s",
                     "count(*)",//select
                     CALLLOGS, //from
-                    restaurant_id //group by
+                    restaurant_id
             ), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (cursor != null && cursor.moveToFirst()) {
-            numberOfCalls = cursor.getColumnIndex(cursor.getColumnName(0));
+            numberOfCalls = cursor.getInt(0);
+            Log.d("databasehelper", "getnumberofcalls :" + numberOfCalls);
         }
         return numberOfCalls;
     }
@@ -673,7 +674,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } else if (orderBy.equals(NAME)) {
                 cursor = db.rawQuery(String.format(
                         "SELECT %s,%s,%s FROM %s,%s WHERE %s = %s GROUP BY %s ORDER BY %s ASC; ",
-                        "restaurants.restaurant_id", "restaurants.name", "count(*)",//select
+                        "restaurants.id", "restaurants.name", "count(*)",//select
                         RESTAURANTS, CALLLOGS, //from
                         "restaurants.id", "calllogs.restaurant_id",//where
                         "restaurants.id", //group by
