@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,6 @@ import org.json.JSONObject;
  * Displays the {@link android.support.v4.app.Fragment Fragments}.
  */
 public class MainActivity extends ActionBarActivity {
-
     public static final String MAIN = "main";
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
@@ -41,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
      * RestaurantListFragment}.
      */
     RestaurantListFragment restaurantListFragmentCurrentlyOn;
+    private Menu menu;
     private String title;
     private Toolbar toolbar;
     private SlidingTabLayout tabs;
@@ -55,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
 
         drawerTitle = (TextView) findViewById(R.id.drawer_title);
 
@@ -106,6 +108,10 @@ public class MainActivity extends ActionBarActivity {
 
         tabs.setViewPager(viewPager, MAIN);
 
+        if (getIntent().getStringExtra("setcurrentpage") != null) {
+            viewPager.setCurrentItem(1);
+            Log.d("setcurrentpage", "getintentnotnull");
+        }
 
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
@@ -177,13 +183,17 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item))
             return true;
+        menu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
         switch (item.getItemId()) {
             case R.id.action_search:
+                menu.findItem(R.id.action_restaurant_suggestion).setVisible(false);
                 return true;
             case R.id.action_restaurant_suggestion:
                 Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
                 startActivity(intent);
                 return true;
+            case android.R.id.home:
+                menu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -243,9 +253,11 @@ public class MainActivity extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        menu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
         searchView = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("원하시는 음식점, 메뉴를 입력해주세요");
 
@@ -255,7 +267,6 @@ public class MainActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
                 return false;
             }
 
@@ -285,4 +296,6 @@ public class MainActivity extends ActionBarActivity {
         });*/
         return super.onCreateOptionsMenu(menu);
     }
+
+
 }

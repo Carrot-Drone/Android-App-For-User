@@ -60,9 +60,11 @@ public class CategoryListFragment extends Fragment {
         // Set view of the ListView.
         ListView listView = (ListView) view.findViewById(R.id.list_view);
         final CategoryListAdapter adapter = new CategoryListAdapter(activity);
+        TextView emptyView = (TextView) view.findViewById(R.id.empty);
+        emptyView.setText("카테고리가 없어요ㅠㅠ");
 //        CategoryAdapter adapter = new CategoryAdapter(activity,categories);
         listView.setAdapter(adapter);
-
+        listView.setEmptyView(emptyView);
         // KNOWN ISSUE: duplicated onItemClick() calls when double-tapping
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

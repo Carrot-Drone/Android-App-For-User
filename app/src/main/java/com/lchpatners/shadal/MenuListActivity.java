@@ -1,5 +1,6 @@
 package com.lchpatners.shadal;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,17 +133,29 @@ public class MenuListActivity extends ActionBarActivity {
                     startActivity(intent);
                 }
             });
-            TextView retention = (TextView) findViewById(R.id.retention);
-            TextView numberOfMyCalls = (TextView) findViewById(R.id.number_of_my_calls);
-            TextView totalNumberOfCalls = (TextView) findViewById(R.id.total_number_of_calls);
+
+
+            final ListView listView = (ListView) findViewById(R.id.menu_list);
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View header = inflater.inflate(
+                    R.layout.menu_header, null, false);
+
+            TextView retention = (TextView) header.findViewById(R.id.retention);
+            TextView numberOfMyCalls = (TextView) header.findViewById(R.id.number_of_my_calls);
+            TextView totalNumberOfCalls = (TextView) header.findViewById(R.id.total_number_of_calls);
 
             retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
             numberOfMyCalls.setText(restaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "회");
             totalNumberOfCalls.setText(restaurant.getTotalNumberOfCalls() + "회");
 
-            ListView listView = (ListView) findViewById(R.id.menu_list);
+            if (listView.getHeaderViewsCount() == 0) {
+                listView.addHeaderView(header, null, false);
+            }
+
             MenuListAdapter adapter = new MenuListAdapter(this, restaurant);
             listView.setAdapter(adapter);
+
 
             TextView phoneNumber = (TextView) findViewById(R.id.phone_number);
             phoneNumber.setText(restaurant.getPhoneNumber());

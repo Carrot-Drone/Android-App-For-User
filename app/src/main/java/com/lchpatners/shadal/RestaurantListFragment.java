@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Displays the restaurants of a category, or from the bookmarks.
@@ -71,6 +72,8 @@ public class RestaurantListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.list_view, container, false);
         ListView listView = (ListView)view.findViewById(R.id.list_view);
+        TextView empty = (TextView) view.findViewById(R.id.empty);
+        listView.setEmptyView(empty);
         listView.setAdapter(adapter);
 
         return view;

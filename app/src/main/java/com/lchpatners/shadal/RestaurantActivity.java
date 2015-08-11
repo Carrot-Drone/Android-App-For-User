@@ -83,7 +83,12 @@ public class RestaurantActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent(RestaurantActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("setcurrentpage", "s");
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -91,6 +96,7 @@ public class RestaurantActivity extends ActionBarActivity {
     public void onBackPressed() {
         Intent intent = new Intent(RestaurantActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("setcurrentpage", "s");
         startActivity(intent);
     }
 }

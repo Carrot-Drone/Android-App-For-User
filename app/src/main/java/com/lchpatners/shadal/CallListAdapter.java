@@ -3,6 +3,7 @@ package com.lchpatners.shadal;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,8 @@ public class CallListAdapter extends BaseAdapter {
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 context.startActivity(intent);
+                SystemClock.sleep(5000);
+
                 reloadData(orderby);
             }
         });
