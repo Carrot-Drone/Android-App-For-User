@@ -166,7 +166,7 @@ public class MenuListActivity extends ActionBarActivity {
 //                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
                     DatabaseHelper DBhelper = DatabaseHelper.getInstance(MenuListActivity.this);
-                    DBhelper.insertRecentCalls(restaurant.getRestaurantId());
+                    DBhelper.insertRecentCalls(restaurant.getRestaurantId(), restaurant.getCategoryId());
 
                     //server.sendCallLog(restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();

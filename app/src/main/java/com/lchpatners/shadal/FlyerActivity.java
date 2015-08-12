@@ -53,7 +53,7 @@ public class FlyerActivity extends ActionBarActivity {
                 Server server = new Server(FlyerActivity.this);
                 //server.sendCallLog(restaurant);
                 DatabaseHelper DBhelper = DatabaseHelper.getInstance(FlyerActivity.this);
-                DBhelper.insertRecentCalls(restaurant.getRestaurantId());
+                DBhelper.insertRecentCalls(restaurant.getRestaurantId(), restaurant.getCategoryId());
 
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));

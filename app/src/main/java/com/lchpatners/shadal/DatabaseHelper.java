@@ -65,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, name TEXT, section TEXT, " +
             "price INT,description TEXT, restaurant_id INT)";
     private static final String FLYER_COLUMNS = "(id INTEGER PRIMARY KEY, url TEXT, restaurant_id INT)";
-    private static final String CALLLOG_COLUMNS = "(id INTEGER PRIMARY KEY, restaurant_id INT, called_at LONG)";
+    private static final String CALLLOG_COLUMNS = "(id INTEGER PRIMARY KEY, restaurant_id INT,category_id INT, called_at LONG)";
     private static final String SUBMENU_COLUMNS = "(id INTEGER PRIMARY KEY, name TEXT, price INTEGER, menu_id INTEGER)";
 
     /**
@@ -594,7 +594,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertRecentCalls(int restaurant_id) {
+    public void insertRecentCalls(int restaurantId, int categoryId) {
 
         try {
 
@@ -604,9 +604,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Long timestamp = date.getTime();
 
             ContentValues values = new ContentValues();
-            values.put("restaurant_id", restaurant_id);
+            values.put("restaurant_id", restaurantId);
             values.put("called_at", timestamp);
-
+            values.put("category_id", categoryId);
             db.insert(CALLLOGS, null, values);
 
         } catch (Exception e) {
@@ -707,7 +707,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "SELECT %s FROM %s WHERE title = %s;",
                     "id", CATEGORIES, title), null);
             if (cursor != null && cursor.moveToFirst()) {
-                id = cursor.getInt(cursor.getColumnIndex("id"));
+                id = cursor.getInt(0);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -719,4 +719,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    public int getLastDay() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+
+        int lastday = 0;
+        try {
+            cursor = db.rawQuery(String.format("SELECT %s FROM %s order by id DESC ", "called_at", CALLLOGS), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                long last = cursor.getLong(0);
+                Date date = new Date();
+                Long now = date.getTime();
+                last = now - last;
+                lastday = (int) last / (24 * 60 * 60 * 1000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return lastday;
+    }
+
+    public String getTheMostOrderedFood() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+
+        String food = null;
+        try {
+            cursor = db.rawQuery(String.format("SELECT title FROM %s WHERE id = (SELECT category_id FROM %s GROUP BY category_id ORDER BY count(category_id) DESC) LIMIT 1", CATEGORIES, CALLLOGS), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                food = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return food;
+    }
+
+    public int getTotalNumberOfMyCalls() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+
+        int numberOfMyCalls = 0;
+        try {
+            cursor = db.rawQuery(String.format("SELECT count(*) FROM %s ", CALLLOGS), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                numberOfMyCalls = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return numberOfMyCalls;
+    }
 }

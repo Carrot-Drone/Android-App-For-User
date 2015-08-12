@@ -47,6 +47,23 @@ public class MainActivity extends ActionBarActivity {
     private SlidingTabLayout tabs;
     private ViewPagerAdapter adapter;
     private DrawerLayout drawerLayout;
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.drawer_1:
+                    drawerLayout.closeDrawers();
+                    break;
+                case R.id.drawer_2:
+                    break;
+                case R.id.drawer_3:
+                    Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    break;
+            }
+        }
+    };
     private ActionBarDrawerToggle drawerToggle;
     private TextView drawerTitle;
     private SearchView searchView;
@@ -86,7 +103,16 @@ public class MainActivity extends ActionBarActivity {
         updateCampusMetaData();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
+        navigationView.findViewById(R.id.drawer_1).setOnClickListener(clickListener);
+        navigationView.findViewById(R.id.drawer_2).setOnClickListener(clickListener);
+        navigationView.findViewById(R.id.drawer_3).setOnClickListener(clickListener);
+        TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day);
+        TextView categoryName = (TextView) navigationView.findViewById(R.id.category);
+        TextView myCalls = (TextView) navigationView.findViewById(R.id.my_calls);
+        DatabaseHelper helper = DatabaseHelper.getInstance(MainActivity.this);
+        lastDay.setText(helper.getLastDay() + "일");
+        myCalls.setText(helper.getTotalNumberOfMyCalls() + "회");
+        categoryName.setText(helper.getTheMostOrderedFood());
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         title = getString(R.string.drawer_order);
         toolbar.setTitle(title);
@@ -117,32 +143,6 @@ public class MainActivity extends ActionBarActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
-                    menuItem.setChecked(true);
-                }
-
-                drawerLayout.closeDrawers();
-
-                switch (menuItem.getItemId()) {
-                    case R.id.drawer_item_1:
-                        return true;
-                    case R.id.drawer_item_2:
-                        return true;
-                    case R.id.drawer_item_3:
-                        Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        return true;
-
-                }
-                return false;
-            }
-        });
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close) {
             /**
@@ -209,7 +209,6 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
     /**
      * Update campus meta data of currently selected campus.
      *
@@ -250,7 +249,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }.execute();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -296,6 +294,4 @@ public class MainActivity extends ActionBarActivity {
         });*/
         return super.onCreateOptionsMenu(menu);
     }
-
-
 }

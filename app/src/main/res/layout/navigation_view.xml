@@ -7,6 +7,200 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@color/white100"
-    app:headerLayout="@layout/header"
-    app:menu="@menu/menu_drawer"
-    app:theme="@style/AlertDialog.AppCompat.Light"/>
+
+    app:theme="@style/AlertDialog.AppCompat.Light"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/header"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="메뉴"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/black12"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/ic_call_button"/>
+
+            <TextView
+                android:id="@+id/drawer_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:onClick="click"
+                android:text="주문하기"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/tab_dice_unselected"/>
+
+            <TextView
+                android:id="@+id/drawer_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@color/white100"
+                android:onClick="click"
+                android:text="추천"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/tab_more_unselected"/>
+
+            <TextView
+                android:id="@+id/drawer_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:onClick="click"
+                android:text="더 보기"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="마지막 주문으로부터"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/black12"/>
+
+        <TextView
+            android:id="@+id/last_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:text="12일"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="제일 많이 시킨 음식"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/black12"/>
+
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:text="도시락/돈까스"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="총 주문수"
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/black12"/>
+
+        <TextView
+            android:id="@+id/my_calls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:text="17회"
+            android:textSize="20sp"/>
+
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="@color/black12"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:text=
+                "서울대학교 관악캠퍼스\n주변 음식점 정보의 수정 및 관리는\n서울대학교 학생회에서 전담합니다."
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+</android.support.design.widget.NavigationView>
