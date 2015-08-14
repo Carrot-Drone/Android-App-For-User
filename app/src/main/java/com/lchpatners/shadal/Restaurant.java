@@ -76,7 +76,7 @@ public class Restaurant implements Parcelable {
      * Describes how to get coupons if {@link #hasCoupon},
      * displays notices otherwise.
      */
-    private String couponString;                            // Server-side name: coupon_string
+    private String notice;
     /**
      * Lastly updated time.
      */
@@ -87,7 +87,7 @@ public class Restaurant implements Parcelable {
     private int totalNumberOfCalls;
     private int totalNumberOfGoods;
     private int totalNumberOfBads;
-
+    private int minimumPrice;
 
     // Must be read by the order which it was written by.
     private int myPreference;
@@ -105,7 +105,7 @@ public class Restaurant implements Parcelable {
         phoneNumber = source.readString();
         openingHour = source.readString();
         closingHour = source.readString();
-        couponString = source.readString();
+        notice = source.readString();
         retention = source.readFloat();
         numberOfMyCalls = source.readInt();
         totalNumberOfCalls = source.readInt();
@@ -114,6 +114,7 @@ public class Restaurant implements Parcelable {
         myPreference = source.readInt();
         categoryId = source.readInt();
         updatedTime = source.readString();
+        minimumPrice = source.readInt();
 
     }
 
@@ -130,7 +131,7 @@ public class Restaurant implements Parcelable {
         hasFlyer = (byte)cursor.getInt(cursor.getColumnIndex("has_flyer"));
         hasCoupon = (byte)cursor.getInt(cursor.getColumnIndex("has_coupon"));
         isNew = (byte)cursor.getInt(cursor.getColumnIndex("is_new"));
-        couponString = cursor.getString(cursor.getColumnIndex("coupon_string"));
+        notice = cursor.getString(cursor.getColumnIndex("notice"));
         retention = cursor.getFloat(cursor.getColumnIndex("retention"));
         numberOfMyCalls = cursor.getInt(cursor.getColumnIndex("number_of_my_calls"));
         totalNumberOfCalls = cursor.getInt(cursor.getColumnIndex("total_number_of_calls"));
@@ -139,7 +140,7 @@ public class Restaurant implements Parcelable {
         myPreference = cursor.getInt(cursor.getColumnIndex("my_preference"));
         categoryId = cursor.getInt(cursor.getColumnIndex("category_id"));
         updatedTime = cursor.getString(cursor.getColumnIndex("updated_at"));
-
+        minimumPrice = cursor.getInt(cursor.getColumnIndex("minimum_price"));
     }
 
     @Override
@@ -152,7 +153,7 @@ public class Restaurant implements Parcelable {
         dest.writeString(phoneNumber);
         dest.writeString(openingHour);
         dest.writeString(closingHour);
-        dest.writeString(couponString);
+        dest.writeString(notice);
         dest.writeFloat(retention);
         dest.writeInt(numberOfMyCalls);
         dest.writeInt(totalNumberOfCalls);
@@ -161,6 +162,7 @@ public class Restaurant implements Parcelable {
         dest.writeInt(myPreference);
         dest.writeInt(categoryId);
         dest.writeString(updatedTime);
+        dest.writeInt(minimumPrice);
 
     }
 
@@ -257,12 +259,12 @@ public class Restaurant implements Parcelable {
         this.closingHour = closingHour;
     }
 
-    public String getCouponString() {
-        return couponString;
+    public String getNotice() {
+        return notice;
     }
 
-    public void setCouponString(String couponString) {
-        this.couponString = couponString;
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
     public String getUpdatedTime() {
@@ -325,6 +327,14 @@ public class Restaurant implements Parcelable {
 
     public void setMyPreference(int myPreference) {
         this.myPreference = myPreference;
+    }
+
+    public int getMinimumPrice() {
+        return minimumPrice;
+    }
+
+    public void setMinimumPrice(int minimumPrice) {
+        this.minimumPrice = minimumPrice;
     }
 
     @Override

@@ -65,6 +65,15 @@ public class RestaurantListAdapter extends BaseAdapter {
         reloadData();
     }
 
+    public RestaurantListAdapter(Context context, List<Object> data) {
+        Log.d("RestaurantAdapter", "called");
+        this.context = context;
+        this.data = data;
+        headers = new ArrayList<>();
+
+    }
+
+
     @Override
     public int getItemViewType(int position) {
         return getItem(position) instanceof String
@@ -123,7 +132,6 @@ public class RestaurantListAdapter extends BaseAdapter {
             case HEADER:
                 TextView header = (TextView) convertView.findViewById(R.id.header);
                 header.setText((String) data.get(position));
-                Log.d("restaurantList", "header" + (String) data.get(position));
                 break;
             case ITEM:
                 Restaurant restaurant = (Restaurant) data.get(position);
@@ -141,7 +149,7 @@ public class RestaurantListAdapter extends BaseAdapter {
                         public void onClick(View view) {
                             Restaurant restaurant = (Restaurant) getItem(pos);
                             DatabaseHelper helper = DatabaseHelper.getInstance(context);
-                            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getServerId());
+                            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getRestaurantId());
                             Intent intent = new Intent(context, FlyerActivity.class);
                             intent.putExtra(RESTAURANT, restaurant);
                             intent.putExtra(URLS, urls);

@@ -65,6 +65,7 @@ public class RestaurantListFragment extends Fragment {
         Log.d("RestaurantFragment", "called");
         int categoryId = getArguments().getInt("categoryId");
 //        final String category = getArguments().getString("CATEGORY");
+
         RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId);
         latestAdapter = adapter;
 //        Server server = new Server(activity);

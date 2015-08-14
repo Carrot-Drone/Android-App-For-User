@@ -1,8 +1,11 @@
 package com.lchpatners.shadal;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,21 +20,27 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * The main {@link android.app.Activity Activity}.
  * Displays the {@link android.support.v4.app.Fragment Fragments}.
  */
 public class MainActivity extends ActionBarActivity {
-    public static final String MAIN = "main";
+
+    public static boolean ready = true;
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
@@ -47,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
     private SlidingTabLayout tabs;
     private ViewPagerAdapter adapter;
     private DrawerLayout drawerLayout;
+
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -68,6 +78,10 @@ public class MainActivity extends ActionBarActivity {
     private TextView drawerTitle;
     private SearchView searchView;
 
+    public static void showToast(Context context) {
+        Toast.makeText(context, "완료되었습니다!", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +96,7 @@ public class MainActivity extends ActionBarActivity {
 
         // If no campus is selected, have the user select one.
         if (Preferences.getCampusKoreanShortName(this) == null) {
+            ready = false;
             startActivity(new Intent(this, InitializationActivity.class));
             finish();
         } else {
@@ -92,6 +107,7 @@ public class MainActivity extends ActionBarActivity {
 
         // If no database, get data from the server and update.
         if (!DatabaseHelper.getInstance(this).checkDatabase(Preferences.getCampusEnglishName(this))) {
+            ready = false;
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {
@@ -103,14 +119,21 @@ public class MainActivity extends ActionBarActivity {
         updateCampusMetaData();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.findViewById(R.id.drawer_1).setOnClickListener(clickListener);
-        navigationView.findViewById(R.id.drawer_2).setOnClickListener(clickListener);
-        navigationView.findViewById(R.id.drawer_3).setOnClickListener(clickListener);
-        TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day);
-        TextView categoryName = (TextView) navigationView.findViewById(R.id.category);
-        TextView myCalls = (TextView) navigationView.findViewById(R.id.my_calls);
+
+        navigationView.findViewById(R.id.drawer_1).setOnClickListener(clickListener); //주문하기
+        navigationView.findViewById(R.id.drawer_2).setOnClickListener(clickListener); //추천
+        navigationView.findViewById(R.id.drawer_3).setOnClickListener(clickListener); //더보기
+
+        TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
+        TextView categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
+        TextView myCalls = (TextView) navigationView.findViewById(R.id.my_calls); //내 주문수
+
         DatabaseHelper helper = DatabaseHelper.getInstance(MainActivity.this);
-        lastDay.setText(helper.getLastDay() + "일");
+        if (helper.getLastDay() < 0) {
+            lastDay.setText("");
+        } else {
+            lastDay.setText(helper.getLastDay() + "일");
+        }
         myCalls.setText(helper.getTotalNumberOfMyCalls() + "회");
         categoryName.setText(helper.getTheMostOrderedFood());
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -123,16 +146,16 @@ public class MainActivity extends ActionBarActivity {
         viewPager.setAdapter(adapter);
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setBackgroundColor(getResources().getColor(R.color.primary));
         tabs.setDistributeEvenly(true);
 
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.primary);
+                return getResources().getColor(R.color.white100);
             }
         });
-
-        tabs.setViewPager(viewPager, MAIN);
+        tabs.setViewPager(viewPager);
 
         if (getIntent().getStringExtra("setcurrentpage") != null) {
             viewPager.setCurrentItem(1);
@@ -261,37 +284,53 @@ public class MainActivity extends ActionBarActivity {
 
         TextView searchText = (TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchText.setTextSize(15);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return false;
-            }
-        });
-
-     /*   getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) MenuItemCompat.getActionView(searchItem);
-
-        searchView.setQueryHint("원하시는 음식점, 메뉴를 검색해주세요");
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (searchManager != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(true);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                int count = 0;
+                ArrayList<Object> list = new ArrayList<>();
+                DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MainActivity.this);
+                SQLiteDatabase db = databaseHelper.getReadableDatabase();
+                Cursor cursor = db.rawQuery("select count(*) from restaurants where name like '%" + query + "%'", null);
+                cursor.moveToFirst();
+                count = cursor.getInt(0);
+                if (count <= 0) {
+                    Toast.makeText(MainActivity.this, "검색된 데이터가 없어요 ", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                cursor.close();
+                Cursor result = db.rawQuery("select * from restaurants where name like '%" + query + "%'", null);
+                if (result != null && result.moveToFirst()) {
+                    do {
+                        list.add(new Restaurant(result));
+                        Log.d("name", result.getString(1));
+                        Toast.makeText(MainActivity.this, result.getString(1), Toast.LENGTH_SHORT).show();
+                    } while (result.moveToNext());
+                }
+                result.close();
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.list_view, null, false);
+                ListView listView = (ListView) view.findViewById(R.id.list_view);
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
-        });*/
+        });
         return super.onCreateOptionsMenu(menu);
     }
 }

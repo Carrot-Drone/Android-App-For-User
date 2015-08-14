@@ -175,13 +175,15 @@ public class MenuListActivity extends ActionBarActivity {
                 }
             });
 
-            TextView openTime = (TextView) findViewById(R.id.office_time);
-            openTime.setText(hourFormatString(restaurant));
+            TextView officeHours = (TextView) findViewById(R.id.office_hours);
+            officeHours.setText(hourFormatString(restaurant));
 
+            TextView minimum = (TextView) findViewById(R.id.minimum);
+            minimum.setText(restaurant.getMinimumPrice() + "원");
 
             TextView couponString = (TextView) findViewById(R.id.coupon_string);
-            if (restaurant.getCouponString() != null && restaurant.getCouponString().length() > 0) {
-                couponString.setText(restaurant.getCouponString());
+            if (restaurant.getNotice() != null && restaurant.getNotice().length() > 0) {
+                couponString.setText(restaurant.getNotice());
             } else {
                 couponString.setVisibility(View.GONE);
             }

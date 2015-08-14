@@ -20,6 +20,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -62,7 +65,8 @@ public class Server {
     public static final String ACCEPT_POPUP = "/accept";
     public static final String RESTAURANTS = "/restaurants";
     public static final String RESTAURANT = "/restaurant";
-
+    public static final String RESTAURANT_SUGGESTION = "/restaurant_suggestion";
+    public static final String CALL_LOGS = "/call_logs";
     /**
      * Campus list directory. /campuses_all
      */
@@ -109,7 +113,8 @@ public class Server {
     public static String makeServiceCall(String url, int method, List<NameValuePair> params) {
         String result;
         try {
-            DefaultHttpClient client = new DefaultHttpClient();
+            HttpParams httpRequestParams = getHttpRequestParams();
+            DefaultHttpClient client = new DefaultHttpClient(httpRequestParams);
             HttpEntity entity;
             HttpResponse response = null;
             switch (method) {
@@ -139,6 +144,12 @@ public class Server {
         return result;
     }
 
+    private static HttpParams getHttpRequestParams() {
+        HttpParams httpRequestParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpRequestParams, 1000 * 30);
+        HttpConnectionParams.setSoTimeout(httpRequestParams, 1000 * 30);
+        return httpRequestParams;
+    }
     /**
      * Send the device UUID. Server registers if the ID's new to it.
      */
@@ -151,7 +162,7 @@ public class Server {
                 params.add(new BasicNameValuePair("campus_id", Preferences.getCampusId(context)));
                 params.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
                 params.add(new BasicNameValuePair("device", "android"));
-                makeServiceCall(urls[0], GET, params);
+                makeServiceCall(urls[0], POST, params);
                 return null;
             }
         }.execute(BASE_URL + UPDATE_DEVICE);
@@ -221,7 +232,7 @@ public class Server {
             protected Void doInBackground(Void... params) {
                 try {
                     HttpClient client = new DefaultHttpClient();
-                    HttpPost post = new HttpPost("http://shadal.kr/call_logs");
+                    HttpPost post = new HttpPost(BASE_URL + CALL_LOGS);
                     ArrayList<BasicNameValuePair> value = new ArrayList<>();
                     value.add(new BasicNameValuePair("campus_id", Preferences.getCampusId(context)));
                     value.add(new BasicNameValuePair("category_id", Integer.toString(category_id)));
@@ -238,6 +249,23 @@ public class Server {
         }.execute();
     }
 
+    public void sendRestaurantSuggestion(ArrayList<BasicNameValuePair> suggestion) {
+        final ArrayList<BasicNameValuePair> value = suggestion;
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    HttpClient client = new DefaultHttpClient();
+                    HttpPost post = new HttpPost(BASE_URL + RESTAURANT_SUGGESTION);
+                    post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
+                    client.execute(post);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
+    }
     /**
      * An {@link AsyncTask} to load campuses from the server.
      */
@@ -247,14 +275,17 @@ public class Server {
         JSONArray results;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... urls) {
             try {
+                List<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("all", String.valueOf(0))); //when 1, update all campuses are not ready
                 serviceCall = Server.makeServiceCall(
-                        Server.BASE_URL + Server.CAMPUSES, Server.GET, null);
+                        Server.BASE_URL + Server.CAMPUSES, Server.GET, params);
                 if (serviceCall == null) {
                     return null;
                 }
                 results = new JSONArray(serviceCall);
+                Log.d("campusloadingtask", "doInbackground" + results.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -266,7 +297,7 @@ public class Server {
             try {
 
                 results = new JSONArray(serviceCall);
-                Log.d("servicecall", results.toString());
+                Log.d("campusloadingTask", results.toString());
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -441,6 +472,13 @@ public class Server {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            MainActivity.ready = true;
+            MainActivity.showToast(context);
         }
     }
 

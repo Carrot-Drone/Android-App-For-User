@@ -10,8 +10,6 @@ import android.view.MenuItem;
 
 public class RestaurantActivity extends ActionBarActivity {
 
-
-    public static final String RESTAURANT = "Restaurant";
     private CharSequence category;
     private Toolbar toolbar;
     private int position;
@@ -52,7 +50,7 @@ public class RestaurantActivity extends ActionBarActivity {
         });
 
 
-        tabs.setViewPager(viewPager, RESTAURANT);
+        tabs.setViewPager(viewPager);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

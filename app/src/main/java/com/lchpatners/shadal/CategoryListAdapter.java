@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * {@link android.widget.Adapter Adapter} of {@link com.lchpatners.shadal.CategoryListFragment
  * CategoryListFragment}.
@@ -56,10 +58,13 @@ public class CategoryListAdapter extends BaseAdapter {
      */
     public static String[] categories;
 
+    ArrayList<Restaurant> restaurants;
+
     private Context context;
 
     /**
      * Set {@link #context} and {@link #categories}.
+     *
      * @param context {@link android.content.Context}
      */
     public CategoryListAdapter(Context context) {
@@ -67,9 +72,16 @@ public class CategoryListAdapter extends BaseAdapter {
         categories = context.getResources().getStringArray(R.array.categories);
     }
 
+    public CategoryListAdapter(Context context, ArrayList<Restaurant> restaurants) {
+        this.context = context;
+        this.restaurants = restaurants;
+    }
+
     @Override
     public int getCount() {
+
         return CATEGORIES_NUMBER;
+
     }
 
     @Override
@@ -88,8 +100,8 @@ public class CategoryListAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.list_item_category, parent, false);
         }
-        ImageView icon = (ImageView)convertView.findViewById(R.id.category_icon);
-        TextView text = (TextView)convertView.findViewById(R.id.category_text);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.category_icon);
+        TextView text = (TextView) convertView.findViewById(R.id.category_text);
         int iconId;
         switch (position) {
             case CHICKEN:
@@ -113,7 +125,8 @@ public class CategoryListAdapter extends BaseAdapter {
             case NAENGMYEON:
                 iconId = R.drawable.ic_noodle;
                 break;
-            case ETC: default:
+            case ETC:
+            default:
                 iconId = R.drawable.ic_etc;
                 break;
         }

@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "has_flyer INTEGER, " +
             "has_coupon INTEGER," +
             "is_new INTEGER," +
-            "coupon_string TEXT," +
+            "notice TEXT," +
             "retention INTEGER," +
             "number_of_my_calls INTEGER," +
             "total_number_of_calls INTEGER," +
@@ -60,7 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "total_number_of_bads INTEGER," +
             "my_preference INTEGER," +
             "updated_at INTEGER," +
-            "category_id INTEGER)";
+            "category_id INTEGER," +
+            "minimum_price INTEGER)";
 
     private static final String MENU_COLUMNS = "(id INTEGER PRIMARY KEY, name TEXT, section TEXT, " +
             "price INT,description TEXT, restaurant_id INT)";
@@ -196,7 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 values.put("has_flyer", (restaurant.getBoolean("has_flyer")) ? 1 : 0);
                 values.put("has_coupon", (restaurant.getBoolean("has_coupon")) ? 1 : 0);
                 values.put("is_new", (restaurant.getBoolean("is_new")) ? 1 : 0);
-                values.put("coupon_string", restaurant.getString("coupon_string"));
+                values.put("notice", restaurant.getString("notice"));
                 values.put("retention", restaurant.getString("retention"));
                 values.put("number_of_my_calls", restaurant.getInt("number_of_my_calls"));
                 values.put("total_number_of_calls", restaurant.getInt("total_number_of_calls"));
@@ -205,6 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 values.put("my_preference", restaurant.getInt("my_preference"));
                 values.put("category_id", categoryId);
                 values.put("updated_at", 0);
+                values.put("minimum_price", restaurant.getInt("minimum_price"));
 
                 cursor = db.rawQuery(String.format(
                         "SELECT * FROM %s WHERE id = %d;",
@@ -226,7 +228,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 JSONArray menus = restaurant.getJSONArray("menus");
                 for (int j = 0; j < menus.length(); j++) {
                     JSONObject menu = menus.getJSONObject(j);
-                    JSONArray submenus = menu.getJSONArray("submenus");
+                    JSONArray submenus = null;
+                    if (menu.getJSONArray("submenus") != null) {
+                        submenus = menu.getJSONArray("submenus");
+                    }
                     if (submenus.length() == 0 || submenus == null) {
                         values = new ContentValues();
                         values.put("id", menu.getInt("id"));
@@ -315,7 +320,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     values.put("has_flyer", (restaurant.getBoolean("has_flyer")) ? 1 : 0);
                     values.put("has_coupon", (restaurant.getBoolean("has_coupon")) ? 1 : 0);
                     values.put("is_new", (restaurant.getBoolean("is_new")) ? 1 : 0);
-                    values.put("coupon_string", restaurant.getString("coupon_string"));
+                    values.put("notice", restaurant.getString("notice"));
                     values.put("retention", restaurant.getString("retention"));
                     values.put("number_of_my_calls", restaurant.getInt("number_of_my_calls"));
                     values.put("total_number_of_calls", restaurant.getInt("total_number_of_calls"));
@@ -324,6 +329,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     values.put("my_preference", restaurant.getInt("my_preference"));
                     values.put("category_id", categoryId);
                     values.put("updated_at", restaurant.getString("updated_at"));
+                    values.put("minimum_price", restaurant.getInt("minimum_price"));
 
                     cursor = db.rawQuery(String.format(
                             "SELECT * FROM %s WHERE id = %d;",
@@ -345,7 +351,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     JSONArray menus = restaurant.getJSONArray("menus");
                     for (int j = 0; j < menus.length(); j++) {
                         JSONObject menu = menus.getJSONObject(j);
-                        JSONArray submenus = menu.getJSONArray("submenus");
+
+                        JSONArray submenus = null;
+                        if (menu.getJSONArray("submenus") != null) {
+                            submenus = menu.getJSONArray("submenus");
+                        }
                         if (submenus.length() == 0 || submenus == null) {
                             values = new ContentValues();
                             values.put("id", menu.getInt("id"));
@@ -414,7 +424,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             cursor = null;
             cursor = db.rawQuery(String.format(
-                    "SELECT * FROM %s WHERE category_id = '%d' ORDER BY has_flyer DESC, name ASC;",
+                    "SELECT * FROM %s WHERE category_id = '%d' ORDER BY name ASC;",
+                    RESTAURANTS, category_id
+            ), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    list.add(new Restaurant(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    public ArrayList<Restaurant> getRestaurantsByCategoryFilteredFlyer(int category_id) {
+        Log.d("getRestaurantByCategory", "called");
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Restaurant> list = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = null;
+            cursor = db.rawQuery(String.format(
+                    "SELECT * FROM %s WHERE category_id = '%d'and has_flyer = 1 ORDER BY name ASC;",
                     RESTAURANTS, category_id
             ), null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -640,7 +676,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Category> list = new ArrayList<>();
 
-        Cursor cursor = null;
+        Cursor cursor;
 
         try {
             cursor = db.rawQuery(String.format("SELECT * FROM %s ORDER BY %s;", CATEGORIES, "server_id"), null);
@@ -652,7 +688,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            ;
+
         }
         return list;
     }
@@ -723,7 +759,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
 
-        int lastday = 0;
+        int lastday = -1;
         try {
             cursor = db.rawQuery(String.format("SELECT %s FROM %s order by id DESC ", "called_at", CALLLOGS), null);
             if (cursor != null && cursor.moveToFirst()) {
