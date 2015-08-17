@@ -1,6 +1,7 @@
 package com.lchpatners.shadal;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,20 +119,47 @@ public class MenuListAdapter extends BaseAdapter {
         assert convertView != null;
         switch (getItemViewType(position)) {
             case HEADER:
-                TextView header = (TextView)convertView.findViewById(R.id.header);
-                header.setText((String)data.get(position));
+                TextView header = (TextView) convertView.findViewById(R.id.header);
+                header.setText((String) data.get(position));
                 break;
             case ITEM:
-                TextView item = (TextView)convertView.findViewById(R.id.item);
-                item.setText(((Menu)data.get(position)).getItem());
-                TextView price = (TextView)convertView.findViewById(R.id.price);
-                int value = ((Menu)data.get(position)).getPrice();
-                if (value == 0) {
-                    price.setVisibility(View.INVISIBLE);
-                }
+                TextView item = (TextView) convertView.findViewById(R.id.item);
+                item.setText(((Menu) data.get(position)).getItem());
+                TextView price = (TextView) convertView.findViewById(R.id.price);
+                int value = ((Menu) data.get(position)).getPrice();
                 price.setText(value + context.getString(R.string.won));
+                if (value == 0) {
+                    ArrayList<SubMenu> subMenus = ((Menu) data.get(position)).getSubMenus();
+                    Log.d("submenu size", subMenus.size() + "");
+                    if (!subMenus.isEmpty() && subMenus.size() > 0) {
+                        String subMenuString = "";
+                        int count = 0;
+                        for (SubMenu subMenu : subMenus) {
+                            count++;
+                            subMenuString += subMenu.getItem() + " : " + subMenu.getPrice() + context.getString(R.string.won);
+                            if (count < subMenus.size()) {
+                                subMenuString += "\n";
+                            }
+                        }
+                        price.setText(subMenuString);
+                    }
+
+                }
+
+
+                TextView description = (TextView) convertView.findViewById(R.id.description);
+
+                if (((Menu) data.get(position)).getDescription() != null &&
+                        ((Menu) data.get(position)).getDescription().length() > 0 &&
+                        !((Menu) data.get(position)).getDescription().equals("null")) {
+                    description.setVisibility(View.VISIBLE);
+                    description.setText(((Menu) data.get(position)).getDescription());
+                } else {
+                    description.setVisibility(View.GONE);
+                }
                 break;
         }
+
         return convertView;
     }
 }

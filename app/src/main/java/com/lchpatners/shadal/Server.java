@@ -226,7 +226,7 @@ public class Server {
      *
      * @param restaurant The target {@link Restaurant Restaurant}
      */
-    public void sendCallLog(final Restaurant restaurant, final int category_id) {
+    public void sendCallLog(final Restaurant restaurant, final int categoryServerId, final int hasRecentCall) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -235,10 +235,11 @@ public class Server {
                     HttpPost post = new HttpPost(BASE_URL + CALL_LOGS);
                     ArrayList<BasicNameValuePair> value = new ArrayList<>();
                     value.add(new BasicNameValuePair("campus_id", Preferences.getCampusId(context)));
-                    value.add(new BasicNameValuePair("category_id", Integer.toString(category_id)));
+                    value.add(new BasicNameValuePair("category_id", Integer.toString(categoryServerId)));
                     value.add(new BasicNameValuePair("restaurant_id", Integer.toString(restaurant.getRestaurantId())));
                     value.add(new BasicNameValuePair("uuid", Preferences.getDeviceUuid(context)));
                     value.add(new BasicNameValuePair("number_of_calls", Integer.toString(restaurant.getNumberOfCalls(context, restaurant.getRestaurantId()))));
+                    value.add(new BasicNameValuePair("has_recent_call", Integer.toString(hasRecentCall)));
                     post.setEntity(new UrlEncodedFormEntity(value, "UTF-8"));
                     client.execute(post);
                 } catch (Exception e) {

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,11 +22,56 @@ public class RestaurantListFragment extends Fragment {
      * RestaurantListAdapter}
      */
     public static RestaurantListAdapter latestAdapter;
-
+    boolean isChecked1 = false;
+    boolean isChecked2 = false;
+    int flag = 0;
+    int categoryId;
+    ListView listView;
+    ImageView onlyFlyer;
+    ImageView onlyOpenRestaurant;
     /**
      * The {@link android.app.Activity Activity} to which this attaches.
      */
     private Activity activity;
+    View.OnClickListener checkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.check_is_open) {
+                isChecked1 = !isChecked1;
+            } else if (view.getId() == R.id.check_has_flyer) {
+                isChecked2 = !isChecked2;
+            }
+
+            if (isChecked1) { //checked isopen
+                onlyOpenRestaurant.setImageResource(R.drawable.tab_dice_unselected);
+                if (isChecked2) { //checked isopen && checked hasflyer
+                    flag = 1;
+                    onlyFlyer.setImageResource(R.drawable.tab_dice_unselected);
+                } else { //checked isopen && unchecked hasflyer
+                    flag = 2;
+                    onlyFlyer.setImageResource(R.drawable.tab_dice_selected);
+                }
+            } else {
+                onlyOpenRestaurant.setImageResource(R.drawable.tab_dice_selected);
+                if (isChecked2) { //unchecked isopen && checked hasflyer
+                    flag = 3;
+                    onlyFlyer.setImageResource(R.drawable.tab_dice_unselected);
+                    RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
+                    latestAdapter = adapter;
+                    listView.setAdapter(adapter);
+                    Log.d("flag","3");
+                } else { //unchecked isopen && unchecked hasflyer
+                    flag = 0;
+                    onlyFlyer.setImageResource(R.drawable.tab_dice_selected);
+                    RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
+                    latestAdapter = adapter;
+                    listView.setAdapter(adapter);
+                    Log.d("flag", "0");
+                }
+
+            }
+        }
+    };
 
     public static RestaurantListFragment newInstance(int categoryId) {
         RestaurantListFragment rlf = new RestaurantListFragment();
@@ -63,22 +109,26 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("RestaurantFragment", "called");
-        int categoryId = getArguments().getInt("categoryId");
+        categoryId = getArguments().getInt("categoryId");
 //        final String category = getArguments().getString("CATEGORY");
 
-        RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId);
-        latestAdapter = adapter;
 //        Server server = new Server(activity);
 //        server.updateCategory(category);
 
-        View view = inflater.inflate(R.layout.list_view, container, false);
-        ListView listView = (ListView)view.findViewById(R.id.list_view);
+        View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
+
+        onlyFlyer = (ImageView) view.findViewById(R.id.check_has_flyer);
+        onlyOpenRestaurant = (ImageView) view.findViewById(R.id.check_is_open);
+        onlyFlyer.setOnClickListener(checkListener);
+        onlyOpenRestaurant.setOnClickListener(checkListener);
+
+        listView = (ListView) view.findViewById(R.id.list_view);
         TextView empty = (TextView) view.findViewById(R.id.empty);
         listView.setEmptyView(empty);
+        RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
+        latestAdapter = adapter;
         listView.setAdapter(adapter);
-
         return view;
     }
-
 
 }

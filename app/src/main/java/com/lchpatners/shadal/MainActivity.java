@@ -127,6 +127,7 @@ public class MainActivity extends ActionBarActivity {
         TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
         TextView categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
         TextView myCalls = (TextView) navigationView.findViewById(R.id.my_calls); //내 주문수
+        TextView administrator = (TextView) navigationView.findViewById(R.id.administrator);
 
         DatabaseHelper helper = DatabaseHelper.getInstance(MainActivity.this);
         if (helper.getLastDay() < 0) {
@@ -136,6 +137,10 @@ public class MainActivity extends ActionBarActivity {
         }
         myCalls.setText(helper.getTotalNumberOfMyCalls() + "회");
         categoryName.setText(helper.getTheMostOrderedFood());
+        administrator.setText(Preferences.getCampusKoreanShortName(MainActivity.this) +
+                "\n주변음식점 정보의 수정 및 관리는 \n" +
+                Preferences.getCampusAdministrator(MainActivity.this) + "에서 전담합니다.");
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         title = getString(R.string.drawer_order);
         toolbar.setTitle(title);

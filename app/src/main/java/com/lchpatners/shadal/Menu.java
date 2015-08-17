@@ -1,5 +1,7 @@
 package com.lchpatners.shadal;
 
+import java.util.ArrayList;
+
 /**
  * Model class representing a menu data.
  */
@@ -26,10 +28,17 @@ public class Menu {
      * Restaurant} this belongs to.
      * @see com.lchpatners.shadal.Restaurant#id
      */
-
+    private ArrayList<SubMenu> subMenus;
     private String description;
-
     private long restaurantId;
+
+    public ArrayList<SubMenu> getSubMenus() {
+        return subMenus;
+    }
+
+    public void setSubMenus(ArrayList<SubMenu> subMenus) {
+        this.subMenus = subMenus;
+    }
 
     public String getDescription() {
         return description;

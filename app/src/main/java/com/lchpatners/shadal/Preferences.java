@@ -29,6 +29,7 @@ public class Preferences {
             setCampusKoreanName(context, campus.getString("name_kor"));
             setCampusKoreanShortName(context, campus.getString("name_kor_short"));
             setCampusEmail(context, campus.getString("email"));
+            setCampusAdministrator(context, campus.getString("administrator"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -69,6 +70,13 @@ public class Preferences {
         editor.apply();
     }
 
+    public static void setCampusAdministrator(Context context, String administrator) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("ADMINISTRATOR", administrator);
+        editor.apply();
+    }
+
     public static String getCampusId(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         return settings.getString("CAMPUS_ID", null);
@@ -93,12 +101,18 @@ public class Preferences {
         return settings.getString("CAMPUS_ENG", null);
     }
 
+    public static String getCampusAdministrator(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        return settings.getString("ADMINISTRATOR", null);
+    }
+
     public static void setDeviceUuid(Context context, String id) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("DEVICE_ID", id);
         editor.apply();
     }
+
 
     /**
      * Get device {@link java.util.UUID UUID} from {@link com.lchpatners.shadal.Preferences

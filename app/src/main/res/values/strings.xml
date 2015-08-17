@@ -67,5 +67,6 @@
     <string name="title_activity_rsby_owner">음식점 입점하기</string>
     <string name="minimum">최소배달금액</string>
     <string name="title_activity_campuses">캠퍼스 선택하기</string>
+    <string name="retention">재주문률</string>
 
 </resources>

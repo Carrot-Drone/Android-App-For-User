@@ -39,13 +39,11 @@ public class RestaurantListAdapter extends BaseAdapter {
      * The number of view types.
      */
     private static final int VIEW_TYPE_COUNT = 2;
-
+    int flag;
     /**
      * {@link android.content.Context Context} this belongs to.
      */
     private Context context;
-
-
     private int categoryId;
     /**
      * List of all data, including both {@link #HEADER} and {@link #ITEM}.
@@ -56,13 +54,14 @@ public class RestaurantListAdapter extends BaseAdapter {
      */
     private List<String> headers;
 
-    public RestaurantListAdapter(Context context, int categoryId) {
+    public RestaurantListAdapter(Context context, int categoryId, int flag) {
         Log.d("RestaurantAdapter", "called");
         this.context = context;
         this.categoryId = categoryId;
         data = new ArrayList<>();
         headers = new ArrayList<>();
-        reloadData();
+        reloadData(flag);
+        this.flag = flag;
     }
 
     public RestaurantListAdapter(Context context, List<Object> data) {
@@ -90,8 +89,25 @@ public class RestaurantListAdapter extends BaseAdapter {
         Log.d("reloadData", "called");
         data.clear();
         headers.clear();
-        ArrayList<Restaurant> restaurants;
-        restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(categoryId);
+        ArrayList<Restaurant> restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(categoryId);
+        for (Restaurant restaurant : restaurants) {
+            data.add(restaurant);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void reloadData(int flag) {
+        Log.d("reloadData", "called");
+        data.clear();
+        headers.clear();
+        ArrayList<Restaurant> restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategory(categoryId); //flag 0 default
+        if (flag == 1) {
+
+        } else if (flag == 2) {
+        } else if (flag == 3) {
+            restaurants = DatabaseHelper.getInstance(context).getRestaurantsByCategoryFilteredFlyer(categoryId);
+        }
+
         for (Restaurant restaurant : restaurants) {
             data.add(restaurant);
         }

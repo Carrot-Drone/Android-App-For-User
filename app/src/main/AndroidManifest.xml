@@ -94,10 +94,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
         </activity>
-        <activity
-            android:name=".CampusesActivity"
-            android:label="@string/title_activity_campuses">
-        </activity>
     </application>
 
 </manifest>

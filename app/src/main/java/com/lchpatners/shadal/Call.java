@@ -1,6 +1,9 @@
 package com.lchpatners.shadal;
 
+import android.content.Context;
 import android.database.Cursor;
+
+import java.util.Date;
 
 /**
  * Created by eunhyekim on 2015. 7. 13..
@@ -14,6 +17,20 @@ public class Call {
         restaurantId = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0)));
         restaurantName = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)));
         count = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2)));
+
+    }
+
+    public static void updateCallLog(Context context, Restaurant restaurant) {
+        DatabaseHelper DBhelper = DatabaseHelper.getInstance(context);
+        Server server = new Server(context);
+        Date date = new Date();
+        int categoryServerId = DBhelper.getCategoryServerIdFromId(restaurant.getCategoryId());
+        if (!DBhelper.hasRecent(date.getTime())) {
+            DBhelper.insertRecentCalls(restaurant.getRestaurantId(), restaurant.getCategoryId());
+            server.sendCallLog(restaurant, categoryServerId, 0);
+        } else {
+            server.sendCallLog(restaurant, categoryServerId, 1);
+        }
 
     }
 
@@ -40,6 +57,5 @@ public class Call {
     public void setCount(int count) {
         this.count = count;
     }
-
 
 }

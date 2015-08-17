@@ -144,6 +144,12 @@ public class MenuListActivity extends ActionBarActivity {
             TextView retention = (TextView) header.findViewById(R.id.retention);
             TextView numberOfMyCalls = (TextView) header.findViewById(R.id.number_of_my_calls);
             TextView totalNumberOfCalls = (TextView) header.findViewById(R.id.total_number_of_calls);
+            TextView notice = (TextView) header.findViewById(R.id.notice);
+            if (restaurant.getNotice() != null && restaurant.getNotice().length() > 0) {
+                notice.setText(restaurant.getNotice());
+            } else {
+                notice.setVisibility(View.GONE);
+            }
 
             retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
             numberOfMyCalls.setText(restaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "회");
@@ -165,10 +171,7 @@ public class MenuListActivity extends ActionBarActivity {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
 //                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
-                    DatabaseHelper DBhelper = DatabaseHelper.getInstance(MenuListActivity.this);
-                    DBhelper.insertRecentCalls(restaurant.getRestaurantId(), restaurant.getCategoryId());
-
-                    //server.sendCallLog(restaurant);
+                    Call.updateCallLog(MenuListActivity.this, restaurant);
                     String number = "tel:" + restaurant.getPhoneNumber();
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                     startActivity(intent);
@@ -179,14 +182,16 @@ public class MenuListActivity extends ActionBarActivity {
             officeHours.setText(hourFormatString(restaurant));
 
             TextView minimum = (TextView) findViewById(R.id.minimum);
-            minimum.setText(restaurant.getMinimumPrice() + "원");
-
-            TextView couponString = (TextView) findViewById(R.id.coupon_string);
-            if (restaurant.getNotice() != null && restaurant.getNotice().length() > 0) {
-                couponString.setText(restaurant.getNotice());
+            TextView labelMinimum = (TextView) findViewById(R.id.label_minimum);
+            if (restaurant.getMinimumPrice() != 0) {
+                minimum.setText(restaurant.getMinimumPrice() + "원");
             } else {
-                couponString.setVisibility(View.GONE);
+                minimum.setVisibility(View.GONE);
+                labelMinimum.setVisibility(View.GONE);
+
             }
+
+
         }
     }
 

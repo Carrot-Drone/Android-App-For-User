@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int VERSION = 20;
+    private static final int VERSION = 21;
     /**
      * The restaurants table's name.
      */
@@ -250,6 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         values.put("section", menu.getString("section"));
                         values.put("description", menu.getString("description"));
                         values.put("restaurant_id", restaurantId);
+                        values.put("price", 0);
                         db.insert(MENUS, null, values);
 
                         db.execSQL(String.format(
@@ -257,13 +258,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 SUBMENUS, menu_id
                         ));
 
-                        values = new ContentValues();
-                        JSONObject submenu = submenus.getJSONObject(0);
-                        values.put("name", submenu.getString("name"));
-                        values.put("price", submenu.getInt("price"));
-                        values.put("menu_id", menu_id);
-                        db.insert(SUBMENUS, null, values);
-
+                        for (int k = 0; k < submenus.length(); k++) {
+                            values = new ContentValues();
+                            JSONObject submenu = submenus.getJSONObject(k);
+                            values.put("name", submenu.getString("name"));
+                            values.put("price", submenu.getInt("price"));
+                            values.put("menu_id", menu_id);
+                            db.insert(SUBMENUS, null, values);
+                        }
 
                     }
                 }
@@ -374,6 +376,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             values.put("section", menu.getString("section"));
                             values.put("description", menu.getString("description"));
                             values.put("restaurant_id", restaurantId);
+                            values.put("price", 0);
                             db.insert(MENUS, null, values);
 
                             db.execSQL(String.format(
@@ -381,13 +384,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                     SUBMENUS, menu_id
                             ));
 
-                            values = new ContentValues();
-                            JSONObject submenu = submenus.getJSONObject(0);
-                            values.put("name", submenu.getString("name"));
-                            values.put("price", submenu.getInt("price"));
-                            values.put("menu_id", menu_id);
-                            db.insert(SUBMENUS, null, values);
-
+                            for (int k = 0; k < submenus.length(); k++) {
+                                values = new ContentValues();
+                                JSONObject submenu = submenus.getJSONObject(k);
+                                values.put("name", submenu.getString("name"));
+                                values.put("price", submenu.getInt("price"));
+                                values.put("menu_id", menu_id);
+                                db.insert(SUBMENUS, null, values);
+                            }
 
                         }
                     }
@@ -476,6 +480,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Menu> list = new ArrayList<>();
         ArrayList<String> sections = new ArrayList<>();
+        ArrayList<SubMenu> subMenus;
         Cursor cursor = null;
         try {
             cursor = db.rawQuery(String.format(
@@ -504,10 +509,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         menu.setSection(cursor.getString(cursor.getColumnIndex("section")));
                         menu.setPrice(cursor.getInt(cursor.getColumnIndex("price")));
                         menu.setRestaurantId(cursor.getInt(cursor.getColumnIndex("restaurant_id")));
+
+                        int menuId = cursor.getInt((cursor.getColumnIndex("id")));
+                        Log.d("menuId", cursor.getInt((cursor.getColumnIndex("id"))) + "");
+                        subMenus = new ArrayList<>();
+                        Cursor result = db.rawQuery(String.format(
+                                "SELECT * FROM %s WHERE menu_id = %d;",
+                                SUBMENUS, menuId
+                        ), null);
+                        if (result != null && result.moveToFirst()) {
+                            do {
+                                SubMenu subMenu = new SubMenu();
+                                subMenu.setId(result.getInt(result.getColumnIndex("id")));
+                                subMenu.setItem(result.getString(result.getColumnIndex("name")));
+                                subMenu.setPrice(result.getInt(result.getColumnIndex("price")));
+                                subMenu.setMenuId(result.getInt(result.getColumnIndex("menu_id")));
+                                subMenus.add(subMenu);
+                                Log.d("submenu", result.getInt(result.getColumnIndex("menu_id")) + result.getString(result.getColumnIndex("name")));
+                            } while (result.moveToNext());
+
+                        }
+
+                        menu.setSubMenus(subMenus);
                         list.add(menu);
                     } while (cursor.moveToNext());
+
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -692,6 +721,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return list;
     }
+
     public ArrayList<Call> getRecentCallsList(String orderBy) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Call> list = new ArrayList<>();
@@ -734,16 +764,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public int getCategoryIdFromTitle(String title) {
+    public int getCategoryServerIdFromId(int id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
-        int id = 0;
+        int serverId = 0;
         try {
             cursor = db.rawQuery(String.format(
-                    "SELECT %s FROM %s WHERE title = %s;",
-                    "id", CATEGORIES, title), null);
+                    "SELECT %s FROM %s WHERE id = %d;",
+                    "server_id", CATEGORIES, id), null);
             if (cursor != null && cursor.moveToFirst()) {
-                id = cursor.getInt(0);
+                serverId = cursor.getInt(0);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -752,7 +782,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-        return id;
+        return serverId;
     }
 
     public int getLastDay() {
@@ -817,5 +847,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return numberOfMyCalls;
+    }
+
+    public boolean hasRecent(long timestamp) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        long time = 0;
+        double hour = 0;
+        boolean hasRecent = false;
+        try {
+            cursor = db.rawQuery(String.format("SELECT called_at FROM %s ORDER BY id desc LIMIT 1 ", CALLLOGS), null);
+            if (cursor != null && cursor.moveToFirst()) {
+                time = cursor.getLong(0);
+                Log.d("getRecentcallTime", time / (1000 * 60 * 60) + "");
+                Log.d("timestamp", time / (1000 * 60 * 60) + "");
+                hour = (timestamp - time) / (1000 * 60 * 60);
+                if (hour < 3.0) {
+                    hasRecent = true;
+                }
+                Log.d("hour", hour + "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return hasRecent;
+
     }
 }
