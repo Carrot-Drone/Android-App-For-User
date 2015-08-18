@@ -3,7 +3,7 @@
 
     <color name="primary_light">#fb7010</color>
     <color name="primary">#fb7010</color>
-    <color name="primary_dark">#fb7010</color>
+    <color name="primary_dark">#d65f0e</color>
 
     <color name="white100">#FFFFFF</color>
     <color name="white70">#B2FFFFFF</color>
@@ -20,4 +20,11 @@
 
     <color name="transparent">#0000</color>
 
+    <color name="list_content">#333333</color>
+    <color name="bg">#EEEEEE</color>
+    <color name="divider">#C8C7CC</color>
+    <color name="list_text_color">#727272</color>
+    <color name="tab_unselected">#b54f08</color>
+    <color name="tool_bar_background">#19000000</color>
+    <color name="white_divider">#B2FFFFFF</color>
 </resources>

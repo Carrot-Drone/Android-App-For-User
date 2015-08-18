@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white100"
     tools:context="com.lchpatners.shadal.FlyerActivity"
     >
 
@@ -18,43 +19,59 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tool_bar"
+        android:layout_above="@+id/tool_bar_layout"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:orientation="horizontal"/>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:id="@+id/tool_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/primary"
+        android:background="@color/tool_bar_background"
+        android:gravity="center">
 
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        <TextView
-            android:id="@+id/tool_bar_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tool_bar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="344dp"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="Phone number"
-            android:textColor="@color/white100"/>
-        <ImageView
-            android:id="@+id/iv_tool_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@+id/tool_bar_text"
-            android:background="@drawable/ic_call"/>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+            android:background="@drawable/tool_bar"
+            android:gravity="center"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_tool_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/tool_bar_text"
+                    android:background="@drawable/icon_btn_call"/>
+
+                <TextView
+                    android:id="@+id/tool_bar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="033-2736-2746"
+                    android:textColor="@color/white100"
+                    android:textSize="15dp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -58,31 +58,30 @@ public class Category {
     public int getCategoryIcon(String title) {
         int iconId;
         switch (title) {
-
             case "치킨":
-                iconId = R.drawable.ic_chic;
+                iconId = R.drawable.icon_list_food_chicken;
                 break;
             case "피자":
-                iconId = R.drawable.ic_pizza;
+                iconId = R.drawable.icon_list_food_pizza;
                 break;
             case "중국집":
-                iconId = R.drawable.ic_chinese;
+                iconId = R.drawable.icon_list_food_chinese_dishes;
                 break;
             case "한식/분식":
-                iconId = R.drawable.ic_bob;
+                iconId = R.drawable.icon_list_food_korean_dishes;
                 break;
             case "도시락/돈까스":
-                iconId = R.drawable.ic_dosirak;
+                iconId = R.drawable.icon_list_food_lunch;
                 break;
             case "족발/보쌈":
-                iconId = R.drawable.ic_bossam;
+                iconId = R.drawable.icon_list_food_jokbal;
                 break;
             case "냉면":
-                iconId = R.drawable.ic_noodle;
+                iconId = R.drawable.icon_list_food_cold_noodles;
                 break;
             case "기타":
             default:
-                iconId = R.drawable.ic_etc;
+                iconId = R.drawable.icon_list_food_etc;
                 break;
         }
         return iconId;

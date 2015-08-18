@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white100">
+                android:background="@color/white100"
+                android:paddingBottom="14dp"
+                android:paddingTop="14dp">
 
 
     <ImageButton
@@ -15,7 +17,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="24dp"
-        android:src="@drawable/ic_action_flyer"/>
+        android:background="@drawable/icon_list_advertisement_flyer"/>
 
 
     <TextView
@@ -23,28 +25,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="39dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/retention"
+        android:layout_toRightOf="@+id/retention_layout"
 
         android:singleLine="true"
         android:text="@string/hello_world"
-        android:textColor="@color/black87"
-        android:textSize="20sp"
+        android:textColor="@color/list_content"
+        android:textSize="18dp"
         android:transitionName="@string/hello_world"/>
 
-    <TextView
-        android:id="@+id/retention"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/retention_layout"
+        android:layout_width="33dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="24dp"
-        android:text="24%"
-        android:textColor="@color/black87"
-        android:textSize="20sp"/>
+        android:layout_marginLeft="16dp"
+        android:gravity="center">
 
+        <TextView
+            android:id="@+id/retention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="24"
+            android:textColor="@color/primary"
+            android:textSize="19dp"/>
+
+        <TextView
+            android:id="@+id/percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/retention"
+            android:layout_toRightOf="@+id/retention"
+            android:text="%"
+            android:textColor="@color/primary"
+            android:textSize="15dp"/>
+    </LinearLayout>
 </RelativeLayout>

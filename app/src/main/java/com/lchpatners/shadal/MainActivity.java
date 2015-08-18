@@ -60,17 +60,16 @@ public class MainActivity extends ActionBarActivity {
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.drawer_1:
-                    drawerLayout.closeDrawers();
-                    break;
-                case R.id.drawer_2:
-                    break;
-                case R.id.drawer_3:
-                    Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    break;
+            if (view.getId() == R.id.drawer_ic_1 || view.getId() == R.id.drawer_1) {
+                drawerLayout.closeDrawers();
+            } else if (view.getId() == R.id.drawer_ic_2 || view.getId() == R.id.drawer_2) {
+                Intent intent = new Intent(MainActivity.this, RecommendActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else if (view.getId() == R.id.drawer_ic_3 || view.getId() == R.id.drawer_3) {
+                Intent intent = new Intent(MainActivity.this, SeeMoreActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }
     };
@@ -119,7 +118,9 @@ public class MainActivity extends ActionBarActivity {
         updateCampusMetaData();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
+        navigationView.findViewById(R.id.drawer_ic_1).setOnClickListener(clickListener);
+        navigationView.findViewById(R.id.drawer_ic_2).setOnClickListener(clickListener);
+        navigationView.findViewById(R.id.drawer_ic_3).setOnClickListener(clickListener);
         navigationView.findViewById(R.id.drawer_1).setOnClickListener(clickListener); //주문하기
         navigationView.findViewById(R.id.drawer_2).setOnClickListener(clickListener); //추천
         navigationView.findViewById(R.id.drawer_3).setOnClickListener(clickListener); //더보기
@@ -137,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
         }
         myCalls.setText(helper.getTotalNumberOfMyCalls() + "회");
         categoryName.setText(helper.getTheMostOrderedFood());
-        administrator.setText(Preferences.getCampusKoreanShortName(MainActivity.this) +
+        administrator.setText(Preferences.getCampusKoreanName(MainActivity.this) +
                 "\n주변음식점 정보의 수정 및 관리는 \n" +
                 Preferences.getCampusAdministrator(MainActivity.this) + "에서 전담합니다.");
 
@@ -145,9 +146,9 @@ public class MainActivity extends ActionBarActivity {
         title = getString(R.string.drawer_order);
         toolbar.setTitle(title);
 
-
+        toolbar.setNavigationIcon(R.drawable.icon_action_bar_menu);
         viewPager = (ViewPager) findViewById(R.id.main_pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.MAINACTIVITY);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.MAIN_ACTIVITY);
         viewPager.setAdapter(adapter);
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);

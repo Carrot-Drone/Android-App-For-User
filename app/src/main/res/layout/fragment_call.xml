@@ -7,8 +7,9 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white100"
+        android:layout_height="38dp"
+        android:background="@color/bg"
+        android:gravity="center_vertical"
         android:paddingBottom="3dp"
         android:paddingTop="3dp">
 
@@ -19,13 +20,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="32dp"
+
             android:text="내 주문수"
-            android:textColor="@color/black87"
-            android:textSize="15sp"/>
+            android:textColor="@color/list_text_color"
+            android:textSize="13dp"/>
 
         <TextView
             android:id="@+id/title_name"
@@ -37,18 +37,18 @@
             android:maxLength="12"
             android:singleLine="true"
             android:text="이름"
-            android:textColor="@color/black87"
-            android:textSize="15sp"/>
+            android:textColor="@color/list_text_color"
+            android:textSize="13dp"/>
 
         <ImageView
             android:id="@+id/iv_name_order"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="3dp"
             android:layout_toEndOf="@+id/title_name"
             android:layout_toRightOf="@+id/title_name"
-            android:src="@drawable/tab_dice_selected"
+            android:src="@drawable/icon_list_recent_arrow"
             android:visibility="invisible"/>
 
 
@@ -59,36 +59,31 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/iv_order"
             android:text="최근"
-            android:textColor="@color/black87"
-            android:textSize="15sp"/>
+            android:textColor="@color/list_text_color"
+            android:textSize="13dp"/>
 
         <ImageView
             android:id="@+id/iv_order"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="12dp"
-            android:src="@drawable/tab_dice_selected"/>
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="14dp"
+            android:src="@drawable/icon_list_recent_arrow"
+            />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/relativeLayout"
-        android:background="@color/black12">
     </RelativeLayout>
 
     <ListView
         android:id="@+id/call_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout2"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:divider="@color/divider"
+        android:dividerHeight="0.5dp"/>
 
     <TextView
         android:id="@android:id/empty"

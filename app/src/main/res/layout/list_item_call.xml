@@ -2,50 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white100">
+                android:background="@color/white100"
+                android:paddingBottom="14dp"
+                android:paddingTop="14dp">
 
 
     <ImageButton
         android:id="@+id/iv_call"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginRight="19dp"
         android:background="#00000000"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_call_button"/>
+        android:src="@drawable/icon_list_call"
+        />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/icons"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="34dp"
+        android:layout_marginRight="24dp"
         android:layout_toEndOf="@+id/call_count"
         android:layout_toRightOf="@+id/call_count"
-        android:maxLength="12"
         android:singleLine="true"
         android:text="@string/hello_world"
-        android:textColor="@color/black87"
-        android:textSize="20sp"
-        android:transitionName="@string/hello_world"/>
+        android:textColor="@color/list_content"
+        android:textSize="18dp"/>
 
     <TextView
         android:id="@+id/call_count"
-        android:layout_width="wrap_content"
+        android:layout_width="25dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="34dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="42dp"
+        android:gravity="center"
         android:text="24"
-        android:textColor="@color/black87"
-        android:textSize="20sp"/>
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        android:textSize="19dp"/>
 
 </RelativeLayout>

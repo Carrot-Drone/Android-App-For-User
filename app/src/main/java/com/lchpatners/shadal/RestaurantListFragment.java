@@ -43,26 +43,26 @@ public class RestaurantListFragment extends Fragment {
             }
 
             if (isChecked1) { //checked isopen
-                onlyOpenRestaurant.setImageResource(R.drawable.tab_dice_unselected);
+                onlyOpenRestaurant.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                 if (isChecked2) { //checked isopen && checked hasflyer
                     flag = 1;
-                    onlyFlyer.setImageResource(R.drawable.tab_dice_unselected);
+                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                 } else { //checked isopen && unchecked hasflyer
                     flag = 2;
-                    onlyFlyer.setImageResource(R.drawable.tab_dice_selected);
+                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                 }
             } else {
-                onlyOpenRestaurant.setImageResource(R.drawable.tab_dice_selected);
+                onlyOpenRestaurant.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                 if (isChecked2) { //unchecked isopen && checked hasflyer
                     flag = 3;
-                    onlyFlyer.setImageResource(R.drawable.tab_dice_unselected);
+                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                     RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
                     latestAdapter = adapter;
                     listView.setAdapter(adapter);
                     Log.d("flag","3");
                 } else { //unchecked isopen && unchecked hasflyer
                     flag = 0;
-                    onlyFlyer.setImageResource(R.drawable.tab_dice_selected);
+                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                     RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
                     latestAdapter = adapter;
                     listView.setAdapter(adapter);

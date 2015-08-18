@@ -1,6 +1,7 @@
 package com.lchpatners.shadal;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -33,7 +34,7 @@ public class RestaurantActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.main_pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.RESTAURANTACTIVITY);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.RESTAURANT_ACTIVITY);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
 
@@ -82,7 +83,12 @@ public class RestaurantActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                onBackPressed();
+            } else {
+                super.onBackPressed();
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

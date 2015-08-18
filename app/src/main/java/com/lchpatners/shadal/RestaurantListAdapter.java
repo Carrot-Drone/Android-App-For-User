@@ -152,7 +152,7 @@ public class RestaurantListAdapter extends BaseAdapter {
             case ITEM:
                 Restaurant restaurant = (Restaurant) data.get(position);
                 TextView retention = (TextView) convertView.findViewById(R.id.retention);
-                retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
+                retention.setText(Math.round(restaurant.getRetention() * 100) + "");
                 TextView name = (TextView) convertView.findViewById(R.id.name);
                 name.setText(restaurant.getName());
                 convertView.findViewById(R.id.flyer).setVisibility(restaurant.hasFlyer() ? View.VISIBLE : View.GONE);

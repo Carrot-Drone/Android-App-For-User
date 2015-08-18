@@ -94,6 +94,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
         </activity>
+        <activity
+            android:name=".RecommendActivity"
+            android:label="@string/title_activity_recommend"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lchpatners.shadal.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

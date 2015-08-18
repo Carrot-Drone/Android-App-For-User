@@ -142,7 +142,10 @@ public class MenuListAdapter extends BaseAdapter {
                             }
                         }
                         price.setText(subMenuString);
+                    } else {
+                        price.setVisibility(View.GONE);
                     }
+
 
                 }
 

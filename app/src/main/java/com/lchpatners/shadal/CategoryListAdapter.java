@@ -105,29 +105,29 @@ public class CategoryListAdapter extends BaseAdapter {
         int iconId;
         switch (position) {
             case CHICKEN:
-                iconId = R.drawable.ic_chic;
+                iconId = R.drawable.icon_list_food_chicken;
                 break;
             case PIZZA:
-                iconId = R.drawable.ic_pizza;
+                iconId = R.drawable.icon_list_food_pizza;
                 break;
             case CHINESE:
-                iconId = R.drawable.ic_chinese;
+                iconId = R.drawable.icon_list_food_chinese_dishes;
                 break;
             case KOREAN:
-                iconId = R.drawable.ic_bob;
+                iconId = R.drawable.icon_list_food_korean_dishes;
                 break;
             case DOSIRAK:
-                iconId = R.drawable.ic_dosirak;
+                iconId = R.drawable.icon_list_food_lunch;
                 break;
             case BOSSAM:
-                iconId = R.drawable.ic_bossam;
+                iconId = R.drawable.icon_list_food_jokbal;
                 break;
             case NAENGMYEON:
-                iconId = R.drawable.ic_noodle;
+                iconId = R.drawable.icon_list_food_cold_noodles;
                 break;
             case ETC:
             default:
-                iconId = R.drawable.ic_etc;
+                iconId = R.drawable.icon_list_food_etc;
                 break;
         }
         icon.setImageResource(iconId);

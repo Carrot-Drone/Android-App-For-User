@@ -11,16 +11,20 @@
     app:theme="@style/AlertDialog.AppCompat.Light"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center_horizontal">
 
-        <include layout="@layout/header"/>
+        <include
+            android:id="@+id/header"
+            layout="@layout/header"/>
 
         <TextView
+            android:id="@+id/menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="20dp"
@@ -28,14 +32,20 @@
             android:textSize="12sp"/>
 
         <LinearLayout
+            android:id="@+id/line_1"
             android:layout_width="210dp"
             android:layout_height="1dp"
+            android:layout_below="@+id/menu"
             android:layout_gravity="center"
-            android:background="@color/black12"/>
+            android:layout_marginLeft="16dp"
+            android:background="@color/black12"
+            android:orientation="horizontal"/>
 
         <LinearLayout
+            android:id="@+id/menu_item_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/line_1"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="20dp"
@@ -44,10 +54,11 @@
             >
 
             <ImageView
+                android:id="@+id/drawer_ic_1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginRight="16dp"
-                android:background="@drawable/ic_call_button"/>
+                android:background="@drawable/icon_list_call"/>
 
             <TextView
                 android:id="@+id/drawer_1"
@@ -55,12 +66,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:onClick="click"
-                android:text="주문하기"/>
+                android:text="주문하기                  "
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/menu_item_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/menu_item_1"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="20dp"
@@ -69,6 +83,7 @@
             >
 
             <ImageView
+                android:id="@+id/drawer_ic_2"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginRight="16dp"
@@ -81,12 +96,16 @@
                 android:layout_marginLeft="5dp"
                 android:background="@color/white100"
                 android:onClick="click"
-                android:text="추천"/>
+
+                android:text="추천                            "
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/menu_item_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/menu_item_2"
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="20dp"
@@ -95,6 +114,7 @@
             >
 
             <ImageView
+                android:id="@+id/drawer_ic_3"
                 android:layout_width="24dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
@@ -106,102 +126,119 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:onClick="click"
-                android:text="더 보기"/>
+                android:text="더 보기                          "
+                android:textSize="15sp"/>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
+            android:layout_above="@+id/line_3"
+            android:orientation="vertical">
 
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:text="마지막 주문으로부터"
-            android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/label_last_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="마지막 주문으로부터"
+                android:textSize="12sp"/>
+
+            <LinearLayout
+                android:layout_width="210dp"
+                android:layout_height="1dp"
+                android:layout_below="@id/label_last_day"
+                android:layout_gravity="center"
+                android:background="@color/black12"/>
+
+            <TextView
+                android:id="@+id/last_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="12일"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:text="제일 많이 시킨 음식"
+                android:textSize="12sp"/>
+
+            <LinearLayout
+                android:layout_width="210dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="@color/black12"/>
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="도시락/돈까스"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:text="총 주문수"
+                android:textSize="12sp"/>
+
+            <LinearLayout
+                android:layout_width="210dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="@color/black12"/>
+
+            <TextView
+                android:id="@+id/my_calls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="17회"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
 
         <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:background="@color/black12"/>
-
-        <TextView
-            android:id="@+id/last_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="5dp"
-            android:text="12일"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:text="제일 많이 시킨 음식"
-            android:textSize="12sp"/>
-
-        <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:background="@color/black12"/>
-
-        <TextView
-            android:id="@+id/category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="5dp"
-            android:text="도시락/돈까스"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="20dp"
-            android:text="총 주문수"
-            android:textSize="12sp"/>
-
-        <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:background="@color/black12"/>
-
-        <TextView
-            android:id="@+id/my_calls"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="35dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="5dp"
-            android:text="17회"
-            android:textSize="20sp"/>
-
-        <LinearLayout
+            android:id="@+id/line_3"
             android:layout_width="240dp"
             android:layout_height="1dp"
+            android:layout_above="@+id/administrator"
             android:layout_gravity="center"
-            android:background="@color/black12"/>
+            android:background="@color/black12"
+            android:orientation="vertical"/>
 
         <TextView
             android:id="@+id/administrator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_alignLeft="@+id/line_1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/line_1"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
             android:text=
                 "서울대학교 관악캠퍼스\n주변 음식점 정보의 수정 및 관리는\n서울대학교 학생회에서 전담합니다."
             android:textSize="12sp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.design.widget.NavigationView>

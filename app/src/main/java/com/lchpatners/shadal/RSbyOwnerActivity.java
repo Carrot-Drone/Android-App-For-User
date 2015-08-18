@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -91,7 +90,7 @@ public class RSbyOwnerActivity extends ActionBarActivity {
                 value.add(new BasicNameValuePair("phone_number", String.valueOf(restaurantPhoneNumber.getText())));
                 value.add(new BasicNameValuePair("is_suggested_by_restaurant", String.valueOf(1)));
                 value.add(new BasicNameValuePair("office_hours", String.valueOf(officeHours.getText())));
-                value.add(new BasicNameValuePair("files", String.valueOf(files)));
+                value.add(new BasicNameValuePair("files[]", files[0]));
                 server.sendRestaurantSuggestion(value);
                 //문의해주셔서감사합니다.
                 finish();
@@ -137,7 +136,6 @@ public class RSbyOwnerActivity extends ActionBarActivity {
                     }
 
                 }
-                Log.d("RSbyOwnerActivity", files[0] + "," + files[1] + "," + files[2]);
                 break;
             case SELECTED_CAMPUS:
                 if (resultCode == RESULT_OK) {

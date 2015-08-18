@@ -7,43 +7,47 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#ffe9e9e9"
+        android:layout_height="38dp"
+        android:background="@color/bg"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="14dp"
             android:text="@string/retention"
+            android:textColor="@color/list_text_color"
             android:textSize="12sp"/>
 
         <ImageView
             android:id="@+id/check_is_open"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/tab_dice_selected"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_list_bar_check_box_normal"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:text="현재 영업중인 가게만"
+            android:textColor="@color/list_text_color"
             android:textSize="12sp"/>
 
         <ImageView
             android:id="@+id/check_has_flyer"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/tab_dice_selected"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:src="@drawable/icon_list_bar_check_box_normal"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
             android:text="전단지 등록가게만"
-
+            android:textColor="@color/list_text_color"
             android:textSize="12sp"/>
 
     </LinearLayout>
@@ -51,6 +55,8 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="@color/divider"
+        android:dividerHeight="0.5dp">
     </ListView>
 </LinearLayout>

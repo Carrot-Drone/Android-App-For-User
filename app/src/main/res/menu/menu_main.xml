@@ -4,15 +4,15 @@
       tools:context=".MainActivity">
     <item
         android:id="@+id/action_restaurant_suggestion"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/icon_action_bar_plus"
         android:orderInCategory="100"
         android:title="request"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:orderInCategory="90"
+        android:icon="@drawable/icon_action_bar_search"
+        android:orderInCategory="95"
         android:title="search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>

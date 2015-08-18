@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -122,7 +123,10 @@ public class MenuListActivity extends ActionBarActivity {
 //                menu.findItem(R.id.see_flyer).setVisible(restaurant.hasFlyer());
 //            }
             ImageButton flyer = (ImageButton) findViewById(R.id.flyer);
-            flyer.setVisibility((restaurant.hasFlyer()) ? View.VISIBLE : View.INVISIBLE);
+            RelativeLayout divider = (RelativeLayout) findViewById(R.id.divider_layout);
+            divider.setVisibility((restaurant.hasFlyer()) ? View.VISIBLE : View.GONE);
+            flyer.setVisibility((restaurant.hasFlyer()) ? View.VISIBLE : View.GONE);
+
             flyer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -239,6 +243,7 @@ public class MenuListActivity extends ActionBarActivity {
         close = String.format("%02d:%02d", hour, 0);
 
         return open + " ~ " + close;
+
     }
 
 
