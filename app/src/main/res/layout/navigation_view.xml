@@ -18,7 +18,7 @@
 
         <include
             android:id="@+id/header"
-            layout="@layout/header"/>
+            layout="@layout/drawer_header"/>
 
         <TextView
             android:id="@+id/menu"

@@ -1,7 +1,6 @@
 package com.lchpatners.shadal;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -27,18 +26,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
      * @see com.lchpatners.shadal.CallListFragment CallListFragment
      */
     public static final int RECENT = 0;
-    /**
-     * Indicates the see-more {@link android.support.v4.app.Fragment Fragment}.
-     *
-     * @see com.lchpatners.shadal.SeeMoreFragment SeeMoreFragment
-     */
-    public static final int SEE_MORE = 2;
-    /**
-     * Indicates the random {@link android.support.v4.app.Fragment Fragment}.
-     *
-     * @see com.lchpatners.shadal.RandomFragment RandomFragment
-     */
-    // public static final int RANDOM = 2;
+
     /**
      * The number of {@link android.support.v4.app.Fragment Fragments}.
      */
@@ -134,23 +122,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return title;
     }
 
-    public Drawable getPageIcon(int page, boolean selected) {
-        Drawable icon = null;
-        switch (page) {
-            case CATEGORY:
-                icon = context.getResources().getDrawable(
-                        selected ? R.drawable.tab_main_selected : R.drawable.tab_main_unselected
-                );
-                break;
-            case RECENT:
-                icon = context.getResources().getDrawable(
-                        selected ? R.drawable.tab_star_selected : R.drawable.tab_star_unselected
-                );
-                break;
-
-        }
-        return icon;
-    }
 
 
 }
