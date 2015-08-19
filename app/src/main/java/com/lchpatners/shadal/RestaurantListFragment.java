@@ -29,6 +29,7 @@ public class RestaurantListFragment extends Fragment {
     ListView listView;
     ImageView onlyFlyer;
     ImageView onlyOpenRestaurant;
+
     /**
      * The {@link android.app.Activity Activity} to which this attaches.
      */

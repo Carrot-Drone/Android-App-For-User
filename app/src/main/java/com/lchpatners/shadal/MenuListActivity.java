@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -140,10 +141,9 @@ public class MenuListActivity extends ActionBarActivity {
 
 
             final ListView listView = (ListView) findViewById(R.id.menu_list);
-
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View header = inflater.inflate(
-                    R.layout.menu_header, null, false);
+            View header = inflater.inflate(R.layout.menu_header, null, false);
+            View footer = inflater.inflate(R.layout.list_footer, null, false);
 
             TextView retention = (TextView) header.findViewById(R.id.retention);
             TextView numberOfMyCalls = (TextView) header.findViewById(R.id.number_of_my_calls);
@@ -155,12 +155,15 @@ public class MenuListActivity extends ActionBarActivity {
                 notice.setVisibility(View.GONE);
             }
 
-            retention.setText(Math.round(restaurant.getRetention() * 100) + "%");
-            numberOfMyCalls.setText(restaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "회");
-            totalNumberOfCalls.setText(restaurant.getTotalNumberOfCalls() + "회");
+            retention.setText(Math.round(restaurant.getRetention() * 100) + "");
+            numberOfMyCalls.setText(restaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "");
+            totalNumberOfCalls.setText(numberOfCallsFormatString(restaurant.getTotalNumberOfCalls()));
 
             if (listView.getHeaderViewsCount() == 0) {
                 listView.addHeaderView(header, null, false);
+            }
+            if (listView.getFooterViewsCount() == 0) {
+                listView.addFooterView(footer, null, false);
             }
 
             MenuListAdapter adapter = new MenuListAdapter(this, restaurant);
@@ -244,6 +247,19 @@ public class MenuListActivity extends ActionBarActivity {
 
         return open + " ~ " + close;
 
+    }
+
+    public String numberOfCallsFormatString(int numberOfCalls) {
+
+        if ((numberOfCalls >= 10) && (numberOfCalls < 100)) {
+            numberOfCalls = (numberOfCalls / 10) * 10;
+        } else if ((numberOfCalls >= 100)) {
+            numberOfCalls = (numberOfCalls / 100) * 100;
+        }
+
+        DecimalFormat formatter = new DecimalFormat("###,###,###");
+        String strNumberOfCalls = formatter.format(numberOfCalls);
+        return strNumberOfCalls;
     }
 
 

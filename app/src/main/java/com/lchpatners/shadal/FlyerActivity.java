@@ -50,7 +50,7 @@ public class FlyerActivity extends ActionBarActivity {
             public void onClick(View view) {
 
 
-                Call.updateCallLog(FlyerActivity.this,restaurant);
+                Call.updateCallLog(FlyerActivity.this, restaurant);
 
                 String number = "tel:" + restaurant.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
@@ -61,6 +61,7 @@ public class FlyerActivity extends ActionBarActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.flyer_pager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), urls));
+
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -127,7 +128,6 @@ public class FlyerActivity extends ActionBarActivity {
 
             final int page = getArguments().getInt("PAGE");
             TouchImageView img = new TouchImageView(context);
-
 
             Picasso.Builder builder = new Picasso.Builder(context);
             builder.listener(new Picasso.Listener() {

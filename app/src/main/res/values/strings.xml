@@ -5,10 +5,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    
+
     <string name="app_subtitle">우리 학교 배달앱</string>
     <string name="select_campus">캠퍼스 선택하기</string>
-    
+
     <string name="main">메인</string>
     <string name="bookmark">즐겨찾기</string>
     <string name="random">아무거나</string>
@@ -26,7 +26,7 @@
     </string-array>
 
     <string name="title_activity_info">상세 정보</string>
-    <string name="open_time">영업시간</string>
+    <string name="open_time"> • 영업시간</string>
     <string name="won">원</string>
     <string name="see_flyer">전단지 보기</string>
     <string name="random_guide">"아무거나 먹고 싶다면
@@ -39,7 +39,7 @@
     <string name="change_campus">캠퍼스 변경하기</string>
 
     <string name="report_camdal_title">캠달에게 건의/문의합니다!</string>
-    <string name="report_camdal_content" />
+    <string name="report_camdal_content"/>
     <string name="report_restaurant_title">[Android][맛집제보]</string>
     <string name="report_restaurant_content">이 가게도 추가해 주세요!</string>
     <string name="select_app">사용할 앱을 선택하세요.</string>
@@ -65,9 +65,16 @@
     <string name="restaurant_suggestion">음식점추가 / 입점문의</string>
     <string name="title_activity_rsby_user">음식점 제보하기</string>
     <string name="title_activity_rsby_owner">음식점 입점하기</string>
-    <string name="minimum">최소배달금액</string>
+    <string name="minimum"> • 최소배달금액</string>
     <string name="title_activity_campuses">캠퍼스 선택하기</string>
     <string name="retention">재주문율</string>
     <string name="title_activity_recommend">추천</string>
+    <string name="title_activity_restaurant_correction">매장정보 수정</string>
+    <string name="share">맛집공유</string>
+    <string name="evaluation">평가하기</string>
+    <string name="campus">현재캠퍼스</string>
+    <string name="select_another_campus">다른 캠퍼스 선택하기</string>
+    <string name="request">문의하기</string>
+    <string name="request_of_camdal">캠달 팀에 문의하기</string>
 
 </resources>

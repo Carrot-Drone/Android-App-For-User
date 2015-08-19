@@ -7,6 +7,13 @@
     tools:context="com.lchpatners.shadal.FlyerActivity"
     >
 
+    <ImageView
+        android:id="@+id/wating_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/icon_flyer_waiting"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/flyer_pager"
         android:layout_width="match_parent"
@@ -14,6 +21,7 @@
         android:layout_above="@+id/pager"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
 
     <LinearLayout
         android:id="@+id/pager"

@@ -30,7 +30,7 @@
         android:layout_toRightOf="@+id/call_count"
         android:singleLine="true"
         android:text="@string/hello_world"
-        android:textColor="@color/list_content"
+        android:textColor="@color/dark_grey"
         android:textSize="18dp"/>
 
     <TextView

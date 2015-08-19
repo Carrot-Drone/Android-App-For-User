@@ -20,11 +20,14 @@
 
     <color name="transparent">#0000</color>
 
-    <color name="list_content">#333333</color>
+    <color name="dark_grey">#333333</color>
     <color name="bg">#EEEEEE</color>
     <color name="divider">#C8C7CC</color>
-    <color name="list_text_color">#727272</color>
+    <color name="light_grey">#727272</color>
     <color name="tab_unselected">#b54f08</color>
-    <color name="tool_bar_background">#19000000</color>
+    <color name="tool_bar_background">#21000000</color>
     <color name="white_divider">#B2FFFFFF</color>
+    <color name="detail_bar">#fdcdba</color>
+    <color name="point_color_mint">#4cd9c0</color>
+    <color name="button_divider">#FDB787</color>
 </resources>

@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:text="@string/retention"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="12sp"/>
 
         <ImageView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:text="현재 영업중인 가게만"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="12sp"/>
 
         <ImageView
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:text="전단지 등록가게만"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="12sp"/>
 
     </LinearLayout>

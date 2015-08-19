@@ -17,10 +17,10 @@
         android:layout_height="56dp"
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/extra_bar"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/tool_bar"
         android:background="@color/primary"
         android:orientation="horizontal"
@@ -30,72 +30,57 @@
             android:id="@+id/label_office_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="8dp"
             android:text="@string/open_time"
-            android:textColor="@color/white70"
-            android:textSize="10sp"/>
+            android:textColor="@color/detail_bar"
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/office_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/label_office_hours"
             android:text="16:00 ~ 02:00"
             android:textColor="@color/white100"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/label_minimum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/minimum"
             android:text="@string/minimum"
-            android:textColor="@color/white70"
-            android:textSize="10sp"/>
+            android:textColor="@color/detail_bar"
+            android:textSize="12sp"
+            />
 
 
         <TextView
             android:id="@+id/minimum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="20dp"
             android:text="10000원"
             android:textColor="@color/white100"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
 
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/coupon_string"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/hello_world"
-        android:textColor="@color/black87"
-        android:textSize="16sp"
-        android:visibility="gone"/>
+    </RelativeLayout>
 
 
     <ListView
         android:id="@+id/menu_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tool_bar_layout"
         android:layout_below="@+id/extra_bar"
         android:divider="@color/divider"
         android:dividerHeight="0.5dp"/>
@@ -110,72 +95,73 @@
         android:background="@color/tool_bar_background"
         android:gravity="center">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/bottom_bar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="344dp"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/tool_bar"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/flyer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="18dp"
-                android:background="@drawable/icon_detail_page_btn_advertisement_flyer"/>
-
-            <RelativeLayout
-                android:id="@+id/divider_layout"
-                android:layout_width="0.5dp"
-                android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/flyer"
-                android:background="@color/white_divider"
-                ></RelativeLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/bottom_bar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="344dp"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/tool_bar"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/divider_layout"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                >
-            <TextView
-                android:id="@+id/phone_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="033-2736-2746"
-                android:textColor="@color/white100"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                />
-
-                <ImageView
-                    android:id="@+id/iv_phone"
+                <ImageButton
+                    android:id="@+id/flyer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toLeftOf="@id/phone_number"
-                    android:background="@drawable/icon_btn_call"/>
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="18dp"
+                    android:background="@drawable/icon_detail_page_btn_advertisement_flyer"/>
+
+                <RelativeLayout
+                    android:id="@+id/divider_layout"
+                    android:layout_width="0.5dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/flyer"
+                    android:background="@color/white_divider"
+                    ></RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/divider_layout"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/phone_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:text="033-2736-2746"
+                        android:textColor="@color/white100"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@id/phone_number"
+                        android:background="@drawable/icon_btn_call"/>
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
     </RelativeLayout>
 </RelativeLayout>
 

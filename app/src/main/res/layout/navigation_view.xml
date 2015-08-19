@@ -44,11 +44,10 @@
         <LinearLayout
             android:id="@+id/menu_item_1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@id/line_1"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="20dp"
+
             android:gravity="center_vertical"
             android:orientation="horizontal"
             >
@@ -57,27 +56,28 @@
                 android:id="@+id/drawer_ic_1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_gravity="center"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/icon_list_call"/>
 
             <TextView
                 android:id="@+id/drawer_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
                 android:onClick="click"
-                android:text="주문하기                  "
+                android:text="주문하기"
                 android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/menu_item_2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@+id/menu_item_1"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             >
@@ -91,24 +91,25 @@
 
             <TextView
                 android:id="@+id/drawer_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+
                 android:background="@color/white100"
+                android:gravity="center_vertical"
                 android:onClick="click"
 
-                android:text="추천                            "
+                android:text="추천"
                 android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/menu_item_3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_below="@+id/menu_item_2"
-            android:layout_marginBottom="30dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             >
@@ -118,15 +119,19 @@
                 android:layout_width="24dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
-                android:background="@drawable/tab_more_unselected"/>
+
+                android:background="@drawable/tab_more_unselected"
+                android:gravity="center_vertical"/>
 
             <TextView
                 android:id="@+id/drawer_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+
                 android:onClick="click"
-                android:text="더 보기                          "
+                android:text="더 보기"
                 android:textSize="15sp"/>
         </LinearLayout>
 

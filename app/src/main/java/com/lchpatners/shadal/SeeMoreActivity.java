@@ -1,14 +1,11 @@
 package com.lchpatners.shadal;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 
@@ -29,7 +26,20 @@ public class SeeMoreActivity extends ActionBarActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowHomeEnabled(true);
+
+        TextView campus = (TextView) findViewById(R.id.campus);
+        campus.setText(Preferences.getCampusKoreanName(SeeMoreActivity.this));
+        TextView changeCampus = (TextView) findViewById(R.id.change_campus);
+        changeCampus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SeeMoreActivity.this, CampusSelectionActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+/*
         ListView listView = (ListView) findViewById(R.id.listView);
 
         // Set headers and items.
@@ -104,5 +114,7 @@ public class SeeMoreActivity extends ActionBarActivity {
                 }
             }
         });
+   */
     }
+
 }

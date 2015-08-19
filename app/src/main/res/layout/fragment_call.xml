@@ -24,7 +24,7 @@
             android:layout_marginRight="32dp"
 
             android:text="내 주문수"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="13dp"/>
 
         <TextView
@@ -37,7 +37,7 @@
             android:maxLength="12"
             android:singleLine="true"
             android:text="이름"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="13dp"/>
 
         <ImageView
@@ -59,7 +59,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/iv_order"
             android:text="최근"
-            android:textColor="@color/list_text_color"
+            android:textColor="@color/light_grey"
             android:textSize="13dp"/>
 
         <ImageView

@@ -136,7 +136,8 @@
                     <EditText
                         android:id="@+id/restaurant_phone_number"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:inputType="phone"/>
                 </LinearLayout>
 
                 <LinearLayout
