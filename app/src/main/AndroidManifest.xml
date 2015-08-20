@@ -57,7 +57,8 @@
         </activity>
         <activity
             android:name=".SeeMoreActivity"
-            android:label="@string/title_activity_see_more">
+            android:label="@string/title_activity_see_more"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MainActivity"/>
@@ -65,7 +66,8 @@
         <activity
             android:name=".RestaurantActivity"
             android:label="@string/title_activity_restaurant"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MainActivity"/>
@@ -73,7 +75,8 @@
         <activity
             android:name=".RestaurantSuggestionActivity"
             android:label="@string/title_activity_restaurant_suggestion"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MainActivity"/>
@@ -81,7 +84,8 @@
         <activity
             android:name=".RSbyUserActivity"
             android:label="@string/title_activity_rsby_user"
-            android:parentActivityName=".RestaurantSuggestionActivity">
+            android:parentActivityName=".RestaurantSuggestionActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
@@ -89,7 +93,8 @@
         <activity
             android:name=".RSbyOwnerActivity"
             android:label="@string/title_activity_rsby_owner"
-            android:parentActivityName=".RestaurantSuggestionActivity">
+            android:parentActivityName=".RestaurantSuggestionActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
@@ -97,10 +102,20 @@
         <activity
             android:name=".RecommendActivity"
             android:label="@string/title_activity_recommend"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".RestaurantCorrectionActivity"
+            android:label="@string/title_activity_restaurant_correction"
+            android:parentActivityName=".MenuListActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lchpatners.shadal.MenuListActivity"/>
         </activity>
     </application>
 

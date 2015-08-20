@@ -64,25 +64,15 @@ public class MenuListActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_menu_list, menu);
 
-        this.menu = menu;
-
-        MenuItem flyer = menu.findItem(R.id.see_flyer);
-        flyer.setVisible(restaurant.hasFlyer());
-        // The icon resource was kinda too big.
-        // So it was resized programmatically.
-        flyer.setIcon(resizeDrawable(flyer.getIcon(), 0.8f));
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.see_flyer) {
-            DatabaseHelper helper = DatabaseHelper.getInstance(this);
-            ArrayList<String> urls = helper.getFlyerUrlsByRestaurantServerId(restaurant.getRestaurantId());
-            Intent intent = new Intent(this, FlyerActivity.class);
-            intent.putExtra(RestaurantListAdapter.URLS, urls);
-            intent.putExtra(RestaurantListAdapter.RESTAURANT, restaurant);
+        if (id == R.id.pen) {
+            Intent intent = new Intent(this, RestaurantCorrectionActivity.class);
+            intent.putExtra("restaurant_id", restaurant.getRestaurantId());
             startActivity(intent);
             return true;
         } else if (id == android.R.id.home) {

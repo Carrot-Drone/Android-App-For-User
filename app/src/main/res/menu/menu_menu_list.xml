@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.lchpatners.shadal.MenuListActivity">
 
-    <item android:id="@+id/see_flyer"
-          android:icon="@drawable/ic_action_flyer"
+    <item
+        android:id="@+id/pen"
+        android:icon="@drawable/icon_action_bar_pen"
           android:orderInCategory="100"
-        android:title="@string/see_flyer"
+        android:title="@string/title_activity_restaurant_correction"
         app:showAsAction="ifRoom" />
 </menu>
