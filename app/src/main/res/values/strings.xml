@@ -84,4 +84,7 @@
     <string name="wrong_office_hours">영업시간 정보가 틀려요</string>
     <string name="correction_detail">자세한 수정사항을 적어주세요</string>
     <string name="send_correction">수정 사항 보내기</string>
+    <string name="title_activity_request">캠달 팀에 문의하기</string>
+    <string name="email">문의하시는 분 이메일</string>
+    <string name="request_detail">문의사항을 적어주세요</string>
 </resources>

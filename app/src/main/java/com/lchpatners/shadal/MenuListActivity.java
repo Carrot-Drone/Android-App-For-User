@@ -19,6 +19,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kakao.kakaolink.KakaoLink;
+import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
+import com.kakao.util.KakaoParameterException;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -36,6 +40,28 @@ public class MenuListActivity extends ActionBarActivity {
      */
     private DatabaseHelper helper;
     private Restaurant restaurant;
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.click_share) {
+                try {
+                    Log.d("button clicked", "");
+                    final KakaoLink kakaoLink = KakaoLink.getKakaoLink(MenuListActivity.this);
+                    final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder();
+
+                    String text = restaurant.getName() + "\n(" + Preferences.getCampusKoreanName(MenuListActivity.this) + ")\n" + restaurant.getPhoneNumber();
+                    final String linkContent =
+                            kakaoTalkLinkMessageBuilder
+                                    .addText(text)
+                                    .addAppButton("캠퍼스:달 앱으로 이동").build();
+                    kakaoLink.sendMessage(linkContent, MenuListActivity.this);
+                } catch (KakaoParameterException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    };
     /**
      * {@link android.view.Menu} of this {@link android.support.v7.app.ActionBarActivity
      * ActionBarActivity}.
@@ -58,7 +84,6 @@ public class MenuListActivity extends ActionBarActivity {
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +164,10 @@ public class MenuListActivity extends ActionBarActivity {
             TextView numberOfMyCalls = (TextView) header.findViewById(R.id.number_of_my_calls);
             TextView totalNumberOfCalls = (TextView) header.findViewById(R.id.total_number_of_calls);
             TextView notice = (TextView) header.findViewById(R.id.notice);
+
+            TextView click_share = (TextView) header.findViewById(R.id.click_share);
+            click_share.setOnClickListener(clickListener);
+
             if (restaurant.getNotice() != null && restaurant.getNotice().length() > 0) {
                 notice.setText(restaurant.getNotice());
             } else {

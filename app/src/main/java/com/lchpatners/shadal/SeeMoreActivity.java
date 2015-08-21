@@ -39,6 +39,15 @@ public class SeeMoreActivity extends ActionBarActivity {
             }
         });
 
+        TextView request = (TextView) findViewById(R.id.request_of_camdal);
+        request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SeeMoreActivity.this, RequestActivity.class);
+                startActivity(intent);
+            }
+        });
+
 /*
         ListView listView = (ListView) findViewById(R.id.listView);
 

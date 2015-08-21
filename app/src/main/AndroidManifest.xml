@@ -48,6 +48,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.RestaurantActivity"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="@string/kakao_host"
+                    android:scheme="@string/kakao_scheme"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".FlyerActivity"
@@ -116,6 +127,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MenuListActivity"/>
+        </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key"/>
+
+        <activity
+            android:name=".RequestActivity"
+            android:label="@string/title_activity_request"
+            android:parentActivityName=".SeeMoreActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lchpatners.shadal.SeeMoreActivity"/>
         </activity>
     </application>
 
