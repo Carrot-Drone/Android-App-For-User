@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
-            android:text="@string/campus"
+            android:text="@string/current_campus"
             android:textColor="@color/light_grey"
             android:textSize="14sp"
             />
@@ -41,6 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <TextView
@@ -48,8 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/campus"
+            android:text="@string/current_campus"
             android:textColor="@color/primary"
             android:textSize="19sp"
             android:textStyle="bold"
@@ -83,7 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
-        android:background="@color/bg"
+        android:background="@color/list_background"
         android:orientation="horizontal">
 
         <TextView
@@ -125,7 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
-        android:background="@color/bg"
+        android:background="@color/list_background"
         android:orientation="horizontal">
 
         <TextView

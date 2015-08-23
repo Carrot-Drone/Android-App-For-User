@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +42,12 @@ public class MenuListActivity extends ActionBarActivity {
      */
     private DatabaseHelper helper;
     private Restaurant restaurant;
+    private TextView click_evaluation;
+    private TextView tvEvaluation;
+    private ImageView ivEvaluation;
+    private LinearLayout btn_divider;
+    private ImageButton btnLike;
+    private ImageButton btnHate;
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -58,6 +66,45 @@ public class MenuListActivity extends ActionBarActivity {
                 } catch (KakaoParameterException e) {
                     e.printStackTrace();
                 }
+
+            } else if (view.getId() == R.id.click_evaluation) {
+
+                click_evaluation.setVisibility(View.GONE);
+                tvEvaluation.setVisibility(View.GONE);
+                ivEvaluation.setVisibility(View.GONE);
+                btn_divider.setVisibility(View.GONE);
+
+
+                btnHate.setVisibility(View.VISIBLE);
+                btnLike.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+    private boolean likeBtnChecked = false;
+    private boolean hateBtnChecked = false;
+    View.OnClickListener onButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            if (view.getId() == R.id.btn_like) {
+                if (!likeBtnChecked) {
+                    likeBtnChecked = !likeBtnChecked;
+                    btnLike.setImageResource(R.drawable.icon_detail_page_btn_check);
+                } else {
+                    likeBtnChecked = !likeBtnChecked;
+                    btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
+                }
+                btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
+
+            } else if (view.getId() == R.id.btn_hate) {
+                if (!hateBtnChecked) {
+                    hateBtnChecked = !hateBtnChecked;
+                    btnHate.setImageResource(R.drawable.icon_detail_page_btn_check_selected);
+                } else {
+                    hateBtnChecked = !hateBtnChecked;
+                    btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
+                }
+                btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
 
             }
         }
@@ -166,7 +213,19 @@ public class MenuListActivity extends ActionBarActivity {
             TextView notice = (TextView) header.findViewById(R.id.notice);
 
             TextView click_share = (TextView) header.findViewById(R.id.click_share);
+            click_evaluation = (TextView) header.findViewById(R.id.click_evaluation);
+            ivEvaluation = (ImageView) header.findViewById(R.id.iv_evaluation);
+            tvEvaluation = (TextView) header.findViewById(R.id.tv_evaluation);
+            btn_divider = (LinearLayout) header.findViewById(R.id.btn_divider);
+
+            btnHate = (ImageButton) header.findViewById(R.id.btn_hate);
+            btnLike = (ImageButton) header.findViewById(R.id.btn_like);
+
             click_share.setOnClickListener(clickListener);
+            click_evaluation.setOnClickListener(clickListener);
+
+            btnHate.setOnClickListener(onButtonClickListener);
+            btnLike.setOnClickListener(onButtonClickListener);
 
             if (restaurant.getNotice() != null && restaurant.getNotice().length() > 0) {
                 notice.setText(restaurant.getNotice());

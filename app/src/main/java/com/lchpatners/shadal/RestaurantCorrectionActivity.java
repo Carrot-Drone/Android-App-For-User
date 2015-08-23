@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ public class RestaurantCorrectionActivity extends ActionBarActivity {
     EditText editText;
     TextView[] textView;
     ImageView[] checkBox;
-    Toolbar bottomBar;
+    Button button;
     Boolean[] checked;
     int restaurantId;
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -36,7 +37,7 @@ public class RestaurantCorrectionActivity extends ActionBarActivity {
             } else if (v.getId() == R.id.et_detail) {
                 editText.setFocusable(true);
                 position = -1;
-            } else if (v.getId() == R.id.bottom_bar) {
+            } else if (v.getId() == R.id.button) {
                 position = -1;
                 String majorCorrection = "";
                 String details = "";
@@ -78,7 +79,7 @@ public class RestaurantCorrectionActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editText = (EditText) findViewById(R.id.et_detail);
-        bottomBar = (Toolbar) findViewById(R.id.bottom_bar);
+        button = (Button) findViewById(R.id.button);
 
         textView = new TextView[5];
         textView[0] = (TextView) findViewById(R.id.tv_1);
@@ -102,7 +103,7 @@ public class RestaurantCorrectionActivity extends ActionBarActivity {
             checked[i] = false;
         }
         editText.setOnClickListener(clickListener);
-        bottomBar.setOnClickListener(clickListener);
+        button.setOnClickListener(clickListener);
 
 
     }

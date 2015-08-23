@@ -184,7 +184,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/divider"
             android:layout_width="0.5dp"
             android:layout_height="38dp"
             android:background="@color/divider"
@@ -275,10 +274,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_divider"
                 android:layout_width="0.5dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:background="@color/button_divider"></LinearLayout>
+                android:background="@color/button_divider"
+                android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="165dp"
@@ -293,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_detail_page_btn_evaluation"
-                    android:visibility="gone"/>
+                    />
 
                 <TextView
                     android:id="@+id/tv_evaluation"
@@ -303,38 +304,27 @@
                     android:text="@string/evaluation"
                     android:textColor="@color/primary"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:textStyle="bold"/>
 
-                <LinearLayout
-                    android:id="@+id/layout_like"
+                <ImageButton
+                    android:id="@+id/btn_like"
                     android:layout_width="82.5dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
                     android:background="@color/primary"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:src="@drawable/icon_detail_page_btn_like"
+                    android:visibility="gone"
+                    />
 
-                    <ImageView
-                        android:id="@+id/iv_like_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_detail_page_btn_like"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_hate"
+                <ImageButton
+                    android:id="@+id/btn_hate"
                     android:layout_width="82.5dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/iv_hate_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_detail_page_btn_hate"/>
-                </LinearLayout>
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/btn_border"
+                    android:src="@drawable/icon_detail_page_btn_hate"
+                    android:visibility="gone"
+                    />
 
             </LinearLayout>
         </LinearLayout>
@@ -345,19 +335,18 @@
 
             <TextView
                 android:id="@+id/click_share"
-                android:layout_width="match_parent"
+                android:layout_width="165dp"
                 android:layout_height="35dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
-                android:layout_weight="1"
+
                 />
 
             <TextView
                 android:id="@+id/click_evaluation"
-                android:layout_width="match_parent"
+                android:layout_width="165dp"
                 android:layout_height="35dp"
                 android:layout_centerVertical="true"
-                android:layout_weight="1"
                 />
         </LinearLayout>
     </RelativeLayout>

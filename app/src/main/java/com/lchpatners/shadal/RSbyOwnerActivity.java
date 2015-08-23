@@ -67,6 +67,7 @@ public class RSbyOwnerActivity extends ActionBarActivity {
             }
         });
 
+/*
 
         TextView addFlyer = (TextView) findViewById(R.id.add_flyer);
         addFlyer.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +78,7 @@ public class RSbyOwnerActivity extends ActionBarActivity {
                 startActivityForResult(intent, SELECTED_PICTURE);
             }
         });
+*/
 
         suggestion = (Button) findViewById(R.id.button);
         suggestion.setOnClickListener(new View.OnClickListener() {

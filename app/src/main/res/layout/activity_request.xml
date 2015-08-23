@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/icon_small_add_pen"/>
+                android:src="@drawable/icon_small_add_email"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:background="@color/bg"
+            android:background="@color/list_background"
             android:inputType="textEmailAddress"
             android:paddingLeft="20dp"/>
 
@@ -82,16 +82,15 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
-            android:background="@color/bg"
+            android:background="@color/list_background"
             android:clickable="true"
             android:editable="true"
             android:gravity="top"
             android:inputType="textMultiLine"/>
     </LinearLayout>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/bottom_bar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <Button
+        android:id="@+id/button"
         android:layout_width="344dp"
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
@@ -100,26 +99,9 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/tool_bar"
-        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+        android:text="@string/request"
+        android:textColor="@color/white100"
+        android:textSize="15dp"
+        android:textStyle="bold"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/phone_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="@string/request"
-                android:textColor="@color/white100"
-                android:textSize="15dp"
-                android:textStyle="bold"/>
-
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
 </RelativeLayout>

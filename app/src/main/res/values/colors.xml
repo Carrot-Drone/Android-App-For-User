@@ -31,4 +31,8 @@
     <color name="point_color_mint">#4cd9c0</color>
     <color name="button_divider">#FDB787</color>
     <color name="hate">#B0B0B0</color>
+    <color name="point_color_pink">#ff8989</color>
+    <color name="list_background">#FAFAFA</color>
+    <color name="image_background">#DEDEDE</color>
+    <color name="recommend_background">#D0D0D0</color>
 </resources>

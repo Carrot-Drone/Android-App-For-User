@@ -28,6 +28,7 @@
             android:src="@drawable/icon_list_bar_check_box_normal"/>
 
         <TextView
+            android:id="@+id/tv_open"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
@@ -43,6 +44,7 @@
             android:src="@drawable/icon_list_bar_check_box_normal"/>
 
         <TextView
+            android:id="@+id/tv_flyer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"

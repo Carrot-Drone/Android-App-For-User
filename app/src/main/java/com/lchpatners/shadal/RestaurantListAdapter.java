@@ -64,14 +64,6 @@ public class RestaurantListAdapter extends BaseAdapter {
         this.flag = flag;
     }
 
-    public RestaurantListAdapter(Context context, List<Object> data) {
-        Log.d("RestaurantAdapter", "called");
-        this.context = context;
-        this.data = data;
-        headers = new ArrayList<>();
-
-    }
-
 
     @Override
     public int getItemViewType(int position) {

@@ -27,9 +27,10 @@ public class RestaurantListFragment extends Fragment {
     int flag = 0;
     int categoryId;
     ListView listView;
-    ImageView onlyFlyer;
-    ImageView onlyOpenRestaurant;
-
+    ImageView checkBoxFlyer;
+    ImageView checkBoxOpen;
+    TextView textViewFlyer;
+    TextView textViewOpen;
     /**
      * The {@link android.app.Activity Activity} to which this attaches.
      */
@@ -37,33 +38,33 @@ public class RestaurantListFragment extends Fragment {
     View.OnClickListener checkListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.check_is_open) {
+            if (view.getId() == R.id.check_is_open || view.getId() == R.id.tv_open) {
                 isChecked1 = !isChecked1;
-            } else if (view.getId() == R.id.check_has_flyer) {
+            } else if (view.getId() == R.id.check_has_flyer || view.getId() == R.id.tv_flyer) {
                 isChecked2 = !isChecked2;
             }
 
             if (isChecked1) { //checked isopen
-                onlyOpenRestaurant.setImageResource(R.drawable.icon_list_bar_check_box_selected);
+                checkBoxOpen.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                 if (isChecked2) { //checked isopen && checked hasflyer
                     flag = 1;
-                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
+                    checkBoxFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                 } else { //checked isopen && unchecked hasflyer
                     flag = 2;
-                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
+                    checkBoxFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                 }
             } else {
-                onlyOpenRestaurant.setImageResource(R.drawable.icon_list_bar_check_box_normal);
+                checkBoxOpen.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                 if (isChecked2) { //unchecked isopen && checked hasflyer
                     flag = 3;
-                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
+                    checkBoxFlyer.setImageResource(R.drawable.icon_list_bar_check_box_selected);
                     RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
                     latestAdapter = adapter;
                     listView.setAdapter(adapter);
-                    Log.d("flag","3");
+                    Log.d("flag", "3");
                 } else { //unchecked isopen && unchecked hasflyer
                     flag = 0;
-                    onlyFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
+                    checkBoxFlyer.setImageResource(R.drawable.icon_list_bar_check_box_normal);
                     RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
                     latestAdapter = adapter;
                     listView.setAdapter(adapter);
@@ -118,10 +119,15 @@ public class RestaurantListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
 
-        onlyFlyer = (ImageView) view.findViewById(R.id.check_has_flyer);
-        onlyOpenRestaurant = (ImageView) view.findViewById(R.id.check_is_open);
-        onlyFlyer.setOnClickListener(checkListener);
-        onlyOpenRestaurant.setOnClickListener(checkListener);
+        checkBoxFlyer = (ImageView) view.findViewById(R.id.check_has_flyer);
+        checkBoxOpen = (ImageView) view.findViewById(R.id.check_is_open);
+        textViewFlyer = (TextView) view.findViewById(R.id.tv_flyer);
+        textViewOpen = (TextView) view.findViewById(R.id.tv_open);
+
+        checkBoxFlyer.setOnClickListener(checkListener);
+        checkBoxOpen.setOnClickListener(checkListener);
+        textViewOpen.setOnClickListener(checkListener);
+        textViewFlyer.setOnClickListener(checkListener);
 
         listView = (ListView) view.findViewById(R.id.list_view);
         TextView empty = (TextView) view.findViewById(R.id.empty);

@@ -71,8 +71,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     fragment = TrendFragment.newInstance();
                     break;
                 case NEW:
-
-                    fragment = TrendFragment.newInstance();
+                    fragment = NewFragment.newInstance();
                     break;
             }
         }
