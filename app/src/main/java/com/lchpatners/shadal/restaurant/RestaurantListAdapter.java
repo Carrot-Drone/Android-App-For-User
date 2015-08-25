@@ -2,6 +2,7 @@ package com.lchpatners.shadal.restaurant;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +25,12 @@ import io.realm.RealmList;
  * Created by YoungKim on 2015. 8. 25..
  */
 public class RestaurantListAdapter extends BaseAdapter {
+    private static final String TAG = LogUtils.makeTag(RestaurantListAdapter.class);
+
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
+
     private Context mContext;
     private List<Restaurant> mRestaurantList;
 
@@ -49,7 +55,7 @@ public class RestaurantListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, ViewGroup viewGroup) {
         final int pos = position;
         final Restaurant restaurant = mRestaurantList.get(pos);
 
@@ -84,23 +90,17 @@ public class RestaurantListAdapter extends BaseAdapter {
                 }
             });
         }
-//
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (getItem(pos) instanceof com.lchpatners.shadal.Restaurant) {
-//                    com.lchpatners.shadal.Restaurant restaurant = (com.lchpatners.shadal.Restaurant) getItem(pos);
-//
-////                    AnalyticsHelper helper = new AnalyticsHelper(context);
-////                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
-//
-//                    Intent intent = new Intent(context, MenuListActivity.class);
-//                    intent.putExtra("RESTAURANT", restaurant);
-//                    intent.putExtra("REFERRER", "RestaurantListFragment");
-//                    context.startActivity(intent);
-//                }
-//            }
-//        });
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                AnalyticsHelper helper = new AnalyticsHelper(context);
+//                helper.sendEvent("UX", "res_clicked", restaurant.getName());
+                Intent intent = new Intent(mContext, MenuListActivity.class);
+                intent.putExtra(RESTAURANT_ID, restaurant.getId());
+                mContext.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

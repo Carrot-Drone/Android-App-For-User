@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
 
 import java.util.ArrayList;
 import java.util.List;

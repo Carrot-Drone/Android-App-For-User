@@ -36,7 +36,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".MenuListActivity"
+            android:name=".restaurant.menu.MenuListActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_info"
             android:screenOrientation="portrait">
@@ -117,11 +117,11 @@
         <activity
             android:name=".RestaurantCorrectionActivity"
             android:label="@string/title_activity_restaurant_correction"
-            android:parentActivityName=".MenuListActivity"
+            android:parentActivityName=".restaurant.menu.MenuListActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MenuListActivity"/>
+                android:value=".restaurant.menu.MenuListActivity"/>
         </activity>
 
         <meta-data
@@ -165,7 +165,7 @@
             android:label="@string/title_activity_root">
         </activity>
         <activity
-            android:name=".restaurant.RestaurantActivity"
+            android:name=".restaurant.RestaurantListActivity"
             android:label="@string/title_activity_restaurant"
             android:parentActivityName=".MainActivity">
             <meta-data

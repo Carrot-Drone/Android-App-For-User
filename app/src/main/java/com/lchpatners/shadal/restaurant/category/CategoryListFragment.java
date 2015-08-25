@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.restaurant.RestaurantActivity;
+import com.lchpatners.shadal.restaurant.RestaurantListActivity;
 
 /**
  * Created by youngkim on 2015. 8. 25..
@@ -81,7 +81,7 @@ public class CategoryListFragment extends Fragment {
 //                        .addToBackStack(null)
 //                        .commit();
 
-                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                Intent intent = new Intent(getActivity(), RestaurantListActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("category", category);
                 intent.putExtra("position", position);

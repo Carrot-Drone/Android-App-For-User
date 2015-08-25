@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
 import com.lchpatners.shadal.unused.CategoryItem;
 import com.lchpatners.shadal.util.Preferences;
 
@@ -156,10 +157,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Insert if new to the table, or otherwise update the existing data.
      * Data are identified by the server-side id value. And then
-     * reload the {@link com.lchpatners.shadal.MenuListActivity activity}.
+     * reload the {@link MenuListActivity activity}.
      *
      * @param categoryJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
-     * @param activity     {@link com.lchpatners.shadal.MenuListActivity MenuListActivity} to reload.
+     * @param activity     {@link MenuListActivity MenuListActivity} to reload.
      */
     public void updateAll(JSONObject categoryJson, int categoryId, final MenuListActivity activity) {
         Cursor cursor = null;
@@ -647,7 +648,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Reload a {@link com.lchpatners.shadal.MenuListActivity activity}.
+     * Reload a {@link MenuListActivity activity}.
      *
      * @param activity An activity to be reloaded.
      */

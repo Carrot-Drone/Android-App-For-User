@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.CallListAdapter;
 import com.lchpatners.shadal.DatabaseHelper;
-import com.lchpatners.shadal.MenuListActivity;
+import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.Restaurant;
 

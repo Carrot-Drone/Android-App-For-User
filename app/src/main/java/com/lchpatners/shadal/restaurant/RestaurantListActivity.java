@@ -14,7 +14,7 @@ import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.SlidingTabLayout;
 
 
-public class RestaurantActivity extends ActionBarActivity {
+public class RestaurantListActivity extends ActionBarActivity {
     //TODO : delete this disgusting variables
     private static final int CHICKEN = 0;
     private static final int PIZZA = 1;
@@ -136,7 +136,7 @@ public class RestaurantActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(RestaurantActivity.this, RootActivity.class);
+        Intent intent = new Intent(RestaurantListActivity.this, RootActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //TODO: set back button destination
         //intent.putExtra("setcurrentpage", "s");
