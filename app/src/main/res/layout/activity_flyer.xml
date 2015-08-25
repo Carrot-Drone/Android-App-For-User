@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white100"
-    tools:context="com.lchpatners.shadal.FlyerActivity"
+    tools:context="com.lchpatners.shadal.restaurant.flyer.FlyerActivity"
     >
 
     <ImageView

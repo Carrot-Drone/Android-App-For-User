@@ -17,7 +17,6 @@ public class Call {
         restaurantId = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0)));
         restaurantName = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)));
         count = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2)));
-
     }
 
     public static void updateCallLog(Context context, Restaurant restaurant) {

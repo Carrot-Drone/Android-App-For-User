@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.util.Preferences;
+
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.ByteArrayOutputStream;

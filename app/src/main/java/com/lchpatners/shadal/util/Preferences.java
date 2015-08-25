@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /**
- * Manages {@link SharedPreferences SharedPreferences}.
+ * Manages {@link android.content.SharedPreferences SharedPreferences}.
  * Saves campus meta-data and device UUID.
  */
 public class Preferences {
@@ -91,7 +91,6 @@ public class Preferences {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         return settings.getString("CAMPUS_KOR", null);
     }
-
     public static String getCampusKoreanShortName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         return settings.getString("CAMPUS_KOR_SHORT", null);
@@ -116,11 +115,10 @@ public class Preferences {
 
 
     /**
-     * Get device {@link UUID UUID} from {@link Preferences
+     * Get device {@link java.util.UUID UUID} from {@link Preferences
      * Preferences}, or generate newly when none is stored.
-     *
-     * @param context {@link Context}
-     * @return {@link UUID UUID} {@link String String}.
+     * @param context {@link android.content.Context}
+     * @return {@link java.util.UUID UUID} {@link java.lang.String String}.
      */
     public static String getDeviceUuid(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);

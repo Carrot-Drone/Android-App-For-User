@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.lchpatners.shadal.restaurant.category.CategoryListAdapter;
+
 /**
  * Model class representing a restaurant data.
  */
@@ -61,7 +63,7 @@ public class Restaurant implements Parcelable {
     private String phoneNumber;                             // Server-side name: phone_number
     /**
      * The restaurant's category.
-     * @see com.lchpatners.shadal.CategoryListAdapter CategoryListAdapter
+     * @see CategoryListAdapter CategoryListAdapter
      */
     private String category;
     /**

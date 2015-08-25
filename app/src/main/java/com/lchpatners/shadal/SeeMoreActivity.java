@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.util.Preferences;
+
 
 public class SeeMoreActivity extends ActionBarActivity {
     Toolbar toolbar;

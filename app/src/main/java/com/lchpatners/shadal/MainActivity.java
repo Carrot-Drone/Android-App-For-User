@@ -28,28 +28,48 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.login.LoginCampusSelectActivity;
+import com.lchpatners.shadal.restaurant.RestaurantAPI;
+import com.lchpatners.shadal.restaurant.RestaurantListFragment;
+import com.lchpatners.shadal.restaurant.category.*;
+import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.util.LogUtils;
+import com.lchpatners.shadal.util.Preferences;
+import com.lchpatners.shadal.util.RetrofitConverter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 /**
  * The main {@link android.app.Activity Activity}.
  * Displays the {@link android.support.v4.app.Fragment Fragments}.
  */
 public class MainActivity extends ActionBarActivity {
-
+    private static final String TAG = LogUtils.makeTag(MainActivity.class);
     public static boolean ready = true;
     /**
      * The main {@link android.support.v4.view.ViewPager ViewPager}.
      */
     protected ViewPager viewPager;
     /**
-     * Indicates the last instance of {@link com.lchpatners.shadal.RestaurantListFragment
+     * Indicates the last instance of {@link RestaurantListFragment
      * RestaurantListFragment}.
      */
-    RestaurantListFragment restaurantListFragmentCurrentlyOn;
+    public RestaurantListFragment restaurantListFragmentCurrentlyOn;
     private Menu menu;
     private String title;
     private Toolbar toolbar;
@@ -87,16 +107,15 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-
         drawerTitle = (TextView) findViewById(R.id.drawer_title);
 
         new Server(this).checkAppMinimumVersion();
 
 
         // If no campus is selected, have the user select one.
-        if (Preferences.getCampusKoreanShortName(this) == null) {
+        if (Preferences.getCampusId(this) == null) {
             ready = false;
-            startActivity(new Intent(this, InitializationActivity.class));
+            startActivity(new Intent(this, LoginCampusSelectActivity.class));
             finish();
         } else {
             drawerTitle.setText(Preferences.getCampusKoreanName(this));
@@ -145,8 +164,8 @@ public class MainActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         title = getString(R.string.drawer_order);
         toolbar.setTitle(title);
-
         toolbar.setNavigationIcon(R.drawable.icon_action_bar_menu);
+
         viewPager = (ViewPager) findViewById(R.id.main_pager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), this, ViewPagerAdapter.MAIN_ACTIVITY);
         viewPager.setAdapter(adapter);
@@ -192,8 +211,6 @@ public class MainActivity extends ActionBarActivity {
         };
 
         drawerLayout.setDrawerListener(drawerToggle);
-
-
     }
 
     @Override

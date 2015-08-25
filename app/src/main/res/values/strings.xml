@@ -77,6 +77,14 @@
     <string name="select_another_campus">다른 캠퍼스 선택하기</string>
     <string name="request">문의하기</string>
     <string name="request_of_camdal">캠달 팀에 문의하기</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login_campus_select">LoginCampusSelectActivity</string>
+    <string name="title_activity_entrypoint">EntrypointActivity</string>
+    <string name="title_activity_recent_call_fragment">RecentCallFragment</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_root">RootActivity</string>
 
     <string name="disappear">이 매장이 없어졌어요</string>
     <string name="wrong_menu">메뉴 정보가 틀려요</string>
