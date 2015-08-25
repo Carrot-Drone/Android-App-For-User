@@ -1,4 +1,4 @@
-package com.lchpatners.shadal.login;
+package com.lchpatners.shadal.setting;
 
 import android.app.Activity;
 import android.util.Log;
@@ -24,11 +24,9 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-/**
- * Created by youngkim on 2015. 8. 20..
- */
-public class LoginController {
-    private static final String TAG = LogUtils.makeTag(LoginController.class);
+
+public class CampusChangeController {
+    private static final String TAG = LogUtils.makeTag(CampusChangeController.class);
     private static final String BASE_URL = "http://www.shadal.kr:3000";
     private CampusAPI mCampusAPI;
     private Activity activity;
@@ -36,9 +34,9 @@ public class LoginController {
     private Campus mSelectedCampus;
     private int mSelectedCampusId = -1;
 
-    public LoginController(Activity activity) {
+    public CampusChangeController(Activity activity) {
         this.activity = activity;
-        this.lvCampusListView = (ListView) activity.findViewById(R.id.LoginCampusSelect_campusList);
+        this.lvCampusListView = (ListView) activity.findViewById(R.id.campusSelect_campusList);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)

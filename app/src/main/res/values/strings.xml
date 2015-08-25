@@ -36,7 +36,7 @@
     <string name="report_restaurant">맛집 제보하기</string>
     <string name="report_to_camdal">캠달에 건의/문의하기</string>
     <string name="settings">설정</string>
-    <string name="change_campus">캠퍼스 변경하기</string>
+    <string name="change_campus">캠퍼스 바꾸기</string>
 
     <string name="report_camdal_title">캠달에게 건의/문의합니다!</string>
     <string name="report_camdal_content"/>
@@ -112,4 +112,6 @@
     <string name="title_activity_rcpop_up">RCPopUpActivity</string>
     <string name="success">제보가 완료되었습니다!</string>
     <string name="correction_popup_detail">캠퍼스:달에서 해당음식점을 확인하고\n빠른시일내에 수정하겠습니다.</string>
+    <string name="title_activity_campus_selection">CampusSelectionActivity</string>
+    <string name="new_campus">새로운 캠퍼스</string>
 </resources>
