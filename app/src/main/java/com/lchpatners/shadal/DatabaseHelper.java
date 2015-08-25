@@ -849,14 +849,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return numberOfMyCalls;
     }
 
-    public boolean hasRecent(long timestamp) {
+    public boolean hasRecent(long timestamp, int restaurantId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
         long time = 0;
         double hour = 0;
         boolean hasRecent = false;
         try {
-            cursor = db.rawQuery(String.format("SELECT called_at FROM %s ORDER BY id desc LIMIT 1 ", CALLLOGS), null);
+            cursor = db.rawQuery(String.format("SELECT called_at FROM %s WHERE restaurant_id = %s ORDER BY id desc LIMIT 1 ", CALLLOGS, restaurantId), null);
             if (cursor != null && cursor.moveToFirst()) {
                 time = cursor.getLong(0);
                 Log.d("getRecentcallTime", time / (1000 * 60 * 60) + "");

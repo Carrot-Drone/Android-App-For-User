@@ -25,7 +25,7 @@ public class Call {
         Server server = new Server(context);
         Date date = new Date();
         int categoryServerId = DBhelper.getCategoryServerIdFromId(restaurant.getCategoryId());
-        if (!DBhelper.hasRecent(date.getTime())) {
+        if (!DBhelper.hasRecent(date.getTime(), restaurant.getRestaurantId())) {
             DBhelper.insertRecentCalls(restaurant.getRestaurantId(), restaurant.getCategoryId());
             server.sendCallLog(restaurant, categoryServerId, 0);
         } else {

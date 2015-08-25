@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -130,7 +131,7 @@ public class RestaurantListFragment extends Fragment {
         textViewFlyer.setOnClickListener(checkListener);
 
         listView = (ListView) view.findViewById(R.id.list_view);
-        TextView empty = (TextView) view.findViewById(R.id.empty);
+        RelativeLayout empty = (RelativeLayout) view.findViewById(R.id.empty);
         listView.setEmptyView(empty);
         RestaurantListAdapter adapter = new RestaurantListAdapter(activity, categoryId, flag);
         latestAdapter = adapter;

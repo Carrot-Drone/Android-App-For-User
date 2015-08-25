@@ -141,6 +141,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.SeeMoreActivity"/>
         </activity>
+        <activity
+            android:name=".RSbyUserPopUpActivity"
+            android:label="@string/title_activity_rsby_user_dialog"
+            android:parentActivityName=".RSbyUserActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lchpatners.shadal.RSbyUserActivity"/>
+        </activity>
+        <activity
+            android:name=".RCPopUpActivity"
+            android:label="@string/title_activity_rcpop_up">
+        </activity>
     </application>
 
 </manifest>
