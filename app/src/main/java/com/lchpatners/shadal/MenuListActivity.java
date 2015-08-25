@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
+import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.util.Preferences;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

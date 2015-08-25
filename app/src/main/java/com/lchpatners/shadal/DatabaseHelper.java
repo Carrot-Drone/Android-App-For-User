@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.lchpatners.shadal.unused.CategoryItem;
+import com.lchpatners.shadal.util.Preferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
