@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.lchpatners.shadal.unused.CategoryItem;
+
 
 public class RestaurantActivity extends ActionBarActivity {
 
@@ -62,9 +64,9 @@ public class RestaurantActivity extends ActionBarActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Category[] categories = Category.getCategory(RestaurantActivity.this);
-                Category category = categories[position];
-                toolbar.setTitle(category.getTitle());
+                CategoryItem[] categories = CategoryItem.getCategory(RestaurantActivity.this);
+                CategoryItem categoryItem = categories[position];
+                toolbar.setTitle(categoryItem.getTitle());
             }
 
             @Override

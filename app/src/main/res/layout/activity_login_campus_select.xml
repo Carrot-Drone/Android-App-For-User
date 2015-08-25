@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#FFFFFFFF"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/LoginCampusSelect_toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_select_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon_select_campus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_small_add_campus"/>
+
+        <TextView
+            android:id="@+id/text_new_campus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/icon_select_campus"
+            android:layout_toEndOf="@+id/icon_select_campus"
+            android:layout_toRightOf="@+id/icon_select_campus"
+            android:text="새로운 캠퍼스"
+            android:textColor="#FF727272"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_divider_Top_CampusList"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignBottom="@+id/layout_select_field"
+        android:layout_marginTop="5dp"
+        android:background="#FFc8c7cc"></RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_campusList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/layout_divider_Top_CampusList">
+
+        <ListView
+            android:id="@+id/LoginCampusSelect_campusList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white100"/>
+
+        <Button
+            android:id="@+id/LoginCampusSelect_confirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:background="@drawable/tool_bar"
+            android:text="시작하기"
+            android:textAlignment="center"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16dp"/>
+    </RelativeLayout>
+
+
+    <!--<include-->
+    <!--android:id="@+id/LoginCampusSelect_toolBar"-->
+    <!--layout="@layout/tool_bar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentTop="true" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/LoginCampusSelect_confirmSelectButton"-->
+    <!--android:layout_width="210dp"-->
+    <!--android:layout_height="36dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginBottom="72dp"-->
+    <!--android:alpha="0.5"-->
+    <!--android:background="@drawable/bg_long_white_button"-->
+    <!--android:clickable="false"-->
+    <!--android:text="GO!"-->
+    <!--android:textColor="@color/primary"-->
+    <!--android:textSize="15sp"-->
+    <!--android:visibility="gone" />-->
+
+    <!--<ListView-->
+    <!--android:id="@+id/LoginCampusSelect_campusList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_above="@+id/select"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_below="@+id/tool_bar"-->
+    <!--android:background="@color/white100" />-->
+
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/select"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:background="@color/primary"-->
+    <!--android:clickable="false"-->
+    <!--android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"-->
+    <!--android:visibility="gone">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center"-->
+    <!--android:text="선택"-->
+    <!--android:textColor="@color/white100" />-->
+    <!--</android.support.v7.widget.Toolbar>-->
+</LinearLayout>

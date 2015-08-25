@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.lchpatners.shadal.unused.CategoryItem;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -701,9 +703,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return numberOfCalls;
     }
 
-    public ArrayList<Category> getCategoryList() {
+    public ArrayList<CategoryItem> getCategoryList() {
         SQLiteDatabase db = getReadableDatabase();
-        ArrayList<Category> list = new ArrayList<>();
+        ArrayList<CategoryItem> list = new ArrayList<>();
 
         Cursor cursor;
 
@@ -711,7 +713,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor = db.rawQuery(String.format("SELECT * FROM %s ORDER BY %s;", CATEGORIES, "server_id"), null);
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    list.add(new Category(cursor));
+                    list.add(new CategoryItem(cursor));
                 } while (cursor.moveToNext());
 
             }

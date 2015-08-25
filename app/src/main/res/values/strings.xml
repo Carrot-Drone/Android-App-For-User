@@ -104,4 +104,11 @@
     <string name="title_activity_rcpop_up">RCPopUpActivity</string>
     <string name="success">제보가 완료되었습니다!</string>
     <string name="correction_popup_detail">캠퍼스:달에서 해당음식점을 확인하고\n빠른시일내에 수정하겠습니다.</string>
+
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login_campus_select">LoginCampusSelectActivity</string>
+    <string name="title_activity_entrypoint">EntrypointActivity</string>
+    <string name="title_activity_recent_call_fragment">RecentCallFragment</string>
+    <string name="title_activity_root">RootActivity</string>
 </resources>

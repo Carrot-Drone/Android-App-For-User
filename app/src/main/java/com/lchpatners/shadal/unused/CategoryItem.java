@@ -1,30 +1,32 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.unused;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import com.lchpatners.shadal.DatabaseHelper;
+import com.lchpatners.shadal.R;
 
 import java.util.ArrayList;
 
 /**
  * Created by eunhyekim on 2015. 8. 4..
  */
-public class Category {
-    Context context;
+public class CategoryItem {
     private int categoryId;
     private int campusId;
     private String title;
     private int CategoryIcon;
 
-    public Category(Cursor cursor) {
+    public CategoryItem(Cursor cursor) {
         categoryId = cursor.getInt(cursor.getColumnIndex("id"));
         campusId = cursor.getInt(cursor.getColumnIndex("campus_id"));
         title = cursor.getString(cursor.getColumnIndex("title"));
     }
 
-    public static Category[] getCategory(Context context) {
+    public static CategoryItem[] getCategory(Context context) {
         DatabaseHelper helper = DatabaseHelper.getInstance(context);
-        ArrayList<Category> data = helper.getCategoryList();
-        Category[] categories = new Category[data.size()];
+        ArrayList<CategoryItem> data = helper.getCategoryList();
+        CategoryItem[] categories = new CategoryItem[data.size()];
         for (int i = 0; i < data.size(); i++) {
             categories[i] = data.get(i);
         }

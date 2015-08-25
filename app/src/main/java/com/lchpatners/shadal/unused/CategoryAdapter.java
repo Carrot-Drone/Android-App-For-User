@@ -1,4 +1,4 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.unused;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,15 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.R;
+
 /**
  * Created by eunhyekim on 2015. 8. 6..
  */
 public class CategoryAdapter extends BaseAdapter {
 
     private Context mContext;
-    private Category[] mCategories;
+    private CategoryItem[] mCategories;
 
-    public CategoryAdapter(Context context, Category[] categories) {
+    public CategoryAdapter(Context context, CategoryItem[] categories) {
         mContext = context;
         mCategories = categories;
 
@@ -49,7 +51,7 @@ public class CategoryAdapter extends BaseAdapter {
         categoryTitle = (TextView) convertView.findViewById(R.id.category_text);
 
 
-        Category category = mCategories[position];
+        CategoryItem category = mCategories[position];
 
         iconImageView.setImageResource(category.getCategoryIcon(category.getTitle()));
         categoryTitle.setText(category.getTitle());

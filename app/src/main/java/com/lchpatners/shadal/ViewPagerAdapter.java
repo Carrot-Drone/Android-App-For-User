@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import com.lchpatners.shadal.restaurant.category.CategoryListFragment;
+import com.lchpatners.shadal.unused.CategoryItem;
+
 /**
  * Created by eunhyekim on 2015. 7. 28..
  */
@@ -37,14 +40,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     //public static final String[] categories = {"치킨", "피자", "중국집", "한식/분식", "도시락/돈까스", "족발/보쌈", "냉면", "기타"};
     Context context;
     String type;
-    Category[] categories;
+    CategoryItem[] categories;
 
     public ViewPagerAdapter(FragmentManager fm, Context context, String type) {
         super(fm);
         this.type = type;
         this.context = context;
         if (this.type.equals(RESTAURANT_ACTIVITY)) {
-            this.categories = Category.getCategory(context);
+            this.categories = CategoryItem.getCategory(context);
         }
     }
 
@@ -104,9 +107,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                     break;
             }
         } else if (type.equals(RESTAURANT_ACTIVITY)) {
-            Category category = categories[position];
-            title = category.getTitle();
-            Log.d("getPageTitle", category.getTitle());
+            CategoryItem categoryItems = categories[position];
+            title = categoryItems.getTitle();
+            Log.d("getPageTitle", categoryItems.getTitle());
         } else if (type.equals(RECOMMEND_ACTIVITY)) {
             switch (position) {
                 case TREND:
