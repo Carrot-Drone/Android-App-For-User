@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/black54"
+              android:gravity="center"
+              tools:context="com.lchpatners.shadal.RSbyUserPopUpActivity">
+
+    <RelativeLayout
+        android:layout_width="324dp"
+        android:layout_height="384dp"
+        android:background="@color/white100">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="37dp"
+            android:layout_marginTop="27dp"
+            android:text="@string/thanks"
+            android:textColor="@color/dark_grey"
+            android:textSize="21sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/icon_popup_good"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/popup_detail"
+            android:textColor="@color/dark_grey"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:lineSpacingExtra="1dp"
+            android:text="@string/popup_description"
+            android:textColor="@color/light_grey"
+            android:textSize="12sp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/textView4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/divider"></RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/button"
+            android:gravity="center_vertical|right"
+            android:paddingRight="25dp"
+            android:text="@string/ok"
+            android:textColor="@color/dark_grey"
+            android:textSize="17sp"/>
+    </RelativeLayout>
+</LinearLayout>
