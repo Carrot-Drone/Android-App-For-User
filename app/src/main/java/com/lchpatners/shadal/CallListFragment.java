@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 
 /**
  * Displays bookmarks.
@@ -114,7 +114,7 @@ public class CallListFragment extends Fragment {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
 //                    helper.sendEvent("UX", "res_in_favorite_clicked", restaurant.getName());
 
-                    Intent intent = new Intent(activity, MenuListActivity.class);
+                    Intent intent = new Intent(activity, RestaurantInfoActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "CallListFragment");
                     startActivity(intent);

@@ -2,7 +2,6 @@ package com.lchpatners.shadal.restaurant;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.restaurant.menu.RestaurantMenu;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -37,6 +38,28 @@ public class RestaurantListAdapter extends BaseAdapter {
     public RestaurantListAdapter(Context context, List<Restaurant> restaurantList) {
         this.mContext = context;
         this.mRestaurantList = restaurantList;
+        sortRestaurantMenu();
+    }
+
+    private void sortRestaurantMenu() {
+        List<Restaurant> tempRestaurantList = new ArrayList<Restaurant>();
+
+        for (Restaurant restaurant : mRestaurantList) {
+            tempRestaurantList.add(restaurant);
+        }
+
+        Collections.sort(tempRestaurantList, new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant restaurant, Restaurant t1) {
+                String compare = restaurant.getName();
+                String compareT = t1.getName();
+
+                //ascending order
+                return compare.compareTo(compareT);
+            }
+        });
+
+        mRestaurantList = tempRestaurantList;
     }
 
     @Override
@@ -96,7 +119,7 @@ public class RestaurantListAdapter extends BaseAdapter {
             public void onClick(View view) {
 //                AnalyticsHelper helper = new AnalyticsHelper(context);
 //                helper.sendEvent("UX", "res_clicked", restaurant.getName());
-                Intent intent = new Intent(mContext, MenuListActivity.class);
+                Intent intent = new Intent(mContext, RestaurantInfoActivity.class);
                 intent.putExtra(RESTAURANT_ID, restaurant.getId());
                 mContext.startActivity(intent);
             }

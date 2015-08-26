@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +108,7 @@ public class CallListAdapter extends BaseAdapter {
                     DatabaseHelper helper = DatabaseHelper.getInstance(context);
                     Restaurant restaurant = helper.getRestaurantFromId(call.getRestaurantId());
 
-                    Intent intent = new Intent(context, MenuListActivity.class);
+                    Intent intent = new Intent(context, RestaurantInfoActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "CallListFragment");
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

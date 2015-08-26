@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +181,7 @@ public class RestaurantListAdapter extends BaseAdapter {
 //                    AnalyticsHelper helper = new AnalyticsHelper(context);
 //                    helper.sendEvent("UX", "res_clicked", restaurant.getName());
 
-                    Intent intent = new Intent(context, MenuListActivity.class);
+                    Intent intent = new Intent(context, RestaurantInfoActivity.class);
                     intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "RestaurantListFragment");
                     context.startActivity(intent);

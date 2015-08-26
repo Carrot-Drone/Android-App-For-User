@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.util.Preferences;
 
 import org.apache.http.HttpEntity;
@@ -215,12 +215,12 @@ public class Server {
      * @param id          Server-side id of the {@link Restaurant Restaurant}
      * @param updatedTime The time when the {@link Restaurant Restaurant}
      *                    was updated for the last time on the device.
-     * @param activity    {@link MenuListActivity MenuListActivity}
+     * @param activity    {@link RestaurantInfoActivity MenuListActivity}
      *                    to be refreshed as soon as the update is done.
      * @see Server.RestaurantUpdateTask RestaurantUpdateTask
-     * @see MenuListActivity#setView() MenuListActivity.setView()
+     * @see RestaurantInfoActivity#setView() MenuListActivity.setView()
      */
-    public void updateRestaurant(int id, String updatedTime, int categoryId, MenuListActivity activity) {
+    public void updateRestaurant(int id, String updatedTime, int categoryId, RestaurantInfoActivity activity) {
         new RestaurantUpdateTask(updatedTime, activity, categoryId).execute(BASE_URL + RESTAURANT + "/" + id);
     }
 
@@ -492,9 +492,9 @@ public class Server {
     private class RestaurantUpdateTask extends AsyncTask<String, Void, Void> {
         private int categoryId;
         private String updatedTime;
-        private MenuListActivity activity;
+        private RestaurantInfoActivity activity;
 
-        public RestaurantUpdateTask(String updatedTime, MenuListActivity activity, int categoryId) {
+        public RestaurantUpdateTask(String updatedTime, RestaurantInfoActivity activity, int categoryId) {
             this.updatedTime = updatedTime;
             this.activity = activity;
             this.categoryId = categoryId;

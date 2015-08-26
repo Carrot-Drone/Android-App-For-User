@@ -1,4 +1,4 @@
-package com.lchpatners.shadal.restaurant.menu;
+package com.lchpatners.shadal.restaurant;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +19,10 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RestaurantCorrectionActivity;
-import com.lchpatners.shadal.restaurant.Restaurant;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.restaurant.menu.MenuListAdapter;
+import com.lchpatners.shadal.restaurant.menu.MenuListController;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.text.DecimalFormat;
@@ -32,8 +33,8 @@ import io.realm.RealmList;
 /**
  * Created by YoungKim on 2015. 8. 25..
  */
-public class MenuListActivity extends ActionBarActivity {
-    private static final String TAG = LogUtils.makeTag(MenuListActivity.class);
+public class RestaurantInfoActivity extends ActionBarActivity {
+    private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
@@ -121,7 +122,7 @@ public class MenuListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_menu_list);
 
         mIntent = getIntent();
-        mMenuListController = new MenuListController(MenuListActivity.this);
+        mMenuListController = new MenuListController(RestaurantInfoActivity.this);
         mRestaurant = mMenuListController.getRestaurant(mIntent.getIntExtra(RESTAURANT_ID, 0));
 
         setView();
@@ -172,11 +173,11 @@ public class MenuListActivity extends ActionBarActivity {
                     flyer_urls.add(flyer.getUrl());
                 }
 
-                Intent intent = new Intent(MenuListActivity.this, FlyerActivity.class);
+                Intent intent = new Intent(RestaurantInfoActivity.this, FlyerActivity.class);
                 intent.putExtra(FLYER_URLS, flyer_urls);
                 intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 intent.putExtra(RESTAURANT_PHONE_NUMBER, mRestaurant.getPhone_number());
-                MenuListActivity.this.startActivity(intent);
+                RestaurantInfoActivity.this.startActivity(intent);
             }
         });
 
@@ -224,8 +225,8 @@ public class MenuListActivity extends ActionBarActivity {
             listView.addFooterView(footer, null, false);
         }
 
-//        MenuListAdapter adapter = new MenuListAdapter(this, mRestaurant);
-//        listView.setAdapter(adapter);
+        MenuListAdapter adapter = new MenuListAdapter(this, mRestaurant);
+        listView.setAdapter(adapter);
 
         TextView phoneNumber = (TextView) findViewById(R.id.phone_number);
         phoneNumber.setText(mRestaurant.getPhone_number());

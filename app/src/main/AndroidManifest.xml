@@ -36,7 +36,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".restaurant.menu.MenuListActivity"
+            android:name=".restaurant.RestaurantInfoActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_info"
             android:screenOrientation="portrait">
@@ -117,11 +117,11 @@
         <activity
             android:name=".RestaurantCorrectionActivity"
             android:label="@string/title_activity_restaurant_correction"
-            android:parentActivityName=".restaurant.menu.MenuListActivity"
+            android:parentActivityName=".restaurant.RestaurantInfoActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".restaurant.menu.MenuListActivity"/>
+                android:value=".restaurant.RestaurantInfoActivity"/>
         </activity>
 
         <meta-data

@@ -13,10 +13,16 @@ import com.lchpatners.shadal.Menu;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.Restaurant;
 import com.lchpatners.shadal.SubMenu;
+import com.lchpatners.shadal.restaurant.RestaurantMenuController;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import io.realm.RealmList;
 
 /**
  * Created by YoungKim on 2015. 8. 25..
@@ -27,42 +33,58 @@ public class MenuListAdapter extends BaseAdapter {
     private static final int SECTION = 0;
     private static final int ITEM = 1;
     private static final int VIEW_TYPE_COUNT = 2;
-    private Context context;
-    private Restaurant restaurant;
-    private List<Object> data;
-    private List<String> headers;
+
+    private Context mContext;
+    private RestaurantMenuController mRestaurantMenuController;
+    private List<RestaurantMenu> mRestaurantMenus;
+    private ArrayList mMenuData = new ArrayList();
 
     public MenuListAdapter(Context context, Restaurant restaurant) {
-        this.context = context;
-        this.restaurant = restaurant;
-        data = new ArrayList<>();
-        headers = new ArrayList<>();
-        reloadData();
+        this.mContext = context;
+        this.mRestaurantMenuController = new RestaurantMenuController(context, restaurant);
+        this.mRestaurantMenus = mRestaurantMenuController.getRestaurantMenus();
+        convertMenuList();
     }
 
-    /**
-     * Reload all menu data of {@link #restaurant}.
-     */
-    public void reloadData() {
-        data.clear();
-        List<Menu> menus = DatabaseHelper.getInstance(context)
-                .getMenusByRestaurantServerId(restaurant.getRestaurantId());
-        String header = null;
-        for (Menu menu : menus) {
-            if (!menu.getSection().equals(header)) {
-                header = menu.getSection();
-                data.add(header);
-                headers.add(header);
+    private void convertMenuList() {
+        sortMenuList();
+
+        String currentSection = mRestaurantMenus.get(0).getSection();
+        mMenuData.add(currentSection);
+
+        for (RestaurantMenu menu : mRestaurantMenus) {
+            if (!currentSection.equals(menu.getSection())) {
+                currentSection = menu.getSection();
+                mMenuData.add(currentSection);
             }
-            data.add(menu);
+            mMenuData.add(menu);
         }
-        notifyDataSetChanged();
+    }
+
+    private void sortMenuList() {
+        List<RestaurantMenu> tempMenuList = new ArrayList<RestaurantMenu>();
+
+        for (RestaurantMenu restaurantMenu : mRestaurantMenus) {
+            tempMenuList.add(restaurantMenu);
+        }
+
+        Collections.sort(tempMenuList, new Comparator<RestaurantMenu>() {
+            @Override
+            public int compare(RestaurantMenu restaurantMenu, RestaurantMenu t1) {
+                String compare = restaurantMenu.getSection();
+                String compareT = t1.getSection();
+
+                //ascending order
+                return compare.compareTo(compareT);
+            }
+        });
+
+        mRestaurantMenus = tempMenuList;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return data.get(position) instanceof String &&
-                headers.contains(data.get(position)) ? SECTION : ITEM;
+        return mMenuData.get(position) instanceof String ? SECTION : ITEM;
     }
 
     @Override
@@ -72,12 +94,12 @@ public class MenuListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return mMenuData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return data.get(position);
+        return mMenuData.get(position);
     }
 
     @Override
@@ -87,58 +109,57 @@ public class MenuListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            switch (getItemViewType(position)) {
-                case SECTION:
-                    convertView = inflater.inflate(R.layout.list_header_menu, parent, false);
-                    break;
-                case ITEM:
-                    convertView = inflater.inflate(R.layout.list_item_menu, parent, false);
-                    break;
-            }
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+
+//        if (convertView != null) {
+        switch (getItemViewType(position)) {
+            case SECTION:
+                convertView = inflater.inflate(R.layout.list_header_menu, null);
+                break;
+            case ITEM:
+                convertView = inflater.inflate(R.layout.list_item_menu, null);
+                break;
         }
-        assert convertView != null;
+//        }
+
         switch (getItemViewType(position)) {
             case SECTION:
                 TextView header = (TextView) convertView.findViewById(R.id.header);
-                header.setText((String) data.get(position));
+                header.setText((String) mMenuData.get(position));
                 break;
             case ITEM:
                 TextView item = (TextView) convertView.findViewById(R.id.item);
-                item.setText(((Menu) data.get(position)).getItem());
+                item.setText(((RestaurantMenu) mMenuData.get(position)).getName());
                 TextView price = (TextView) convertView.findViewById(R.id.price);
-                int value = ((Menu) data.get(position)).getPrice();
-                price.setText(value + context.getString(R.string.won));
-                if (value == 0) {
-                    ArrayList<SubMenu> subMenus = ((Menu) data.get(position)).getSubMenus();
-                    Log.d("submenu size", subMenus.size() + "");
-                    if (!subMenus.isEmpty() && subMenus.size() > 0) {
-                        String subMenuString = "";
-                        int count = 0;
-                        for (SubMenu subMenu : subMenus) {
-                            count++;
-                            subMenuString += subMenu.getItem() + " : " + subMenu.getPrice() + context.getString(R.string.won);
-                            if (count < subMenus.size()) {
-                                subMenuString += "\n";
-                            }
+
+                if (((RestaurantMenu) mMenuData.get(position)).getSubMenus().size() != 0) {
+                    RealmList<RestaurantSubMenu> subMenus = ((RestaurantMenu) mMenuData.get(position)).getSubMenus();
+                    String subMenuString = "";
+                    int count = 0;
+                    for (RestaurantSubMenu subMenu : subMenus) {
+                        count++;
+                        subMenuString += subMenu.getName() + " : " + subMenu.getPrice() + mContext.getString(R.string.won);
+                        if (count < subMenus.size()) {
+                            subMenuString += "\n";
                         }
-                        price.setText(subMenuString);
-                    } else {
-                        price.setVisibility(View.GONE);
                     }
-
-
+                    price.setText(subMenuString);
+                } else {
+                    int value = ((RestaurantMenu) mMenuData.get(position)).getPrice();
+                    if (value == 0) {
+                        price.setVisibility(View.GONE);
+                    } else {
+                        price.setText(value + mContext.getString(R.string.won));
+                    }
                 }
-
 
                 TextView description = (TextView) convertView.findViewById(R.id.description);
 
-                if (((Menu) data.get(position)).getDescription() != null &&
-                        ((Menu) data.get(position)).getDescription().length() > 0 &&
-                        !((Menu) data.get(position)).getDescription().equals("null")) {
+                if (((RestaurantMenu) mMenuData.get(position)).getDescription() != null &&
+                        ((RestaurantMenu) mMenuData.get(position)).getDescription().length() > 0 &&
+                        !((RestaurantMenu) mMenuData.get(position)).getDescription().equals("null")) {
                     description.setVisibility(View.VISIBLE);
-                    description.setText(((Menu) data.get(position)).getDescription());
+                    description.setText(((RestaurantMenu) mMenuData.get(position)).getDescription());
                 } else {
                     description.setVisibility(View.GONE);
                 }

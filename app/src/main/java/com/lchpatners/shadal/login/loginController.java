@@ -64,17 +64,20 @@ public class LoginController {
     public void setCampus() {
         Realm realm = Realm.getInstance(activity);
 
-        realm.beginTransaction();
+        try {
+            realm.beginTransaction();
 
-        RealmQuery<Campus> query = realm.where(Campus.class);
-        RealmResults<Campus> currentCampus = query.findAll();
-        currentCampus.clear();
+            RealmQuery<Campus> query = realm.where(Campus.class);
+            RealmResults<Campus> currentCampus = query.findAll();
+            currentCampus.clear();
 
-        //insert campus to realm
-        realm.copyToRealm(mSelectedCampus);
-        realm.commitTransaction();
+            //insert campus to realm
+            realm.copyToRealm(mSelectedCampus);
 
-        realm.close();
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
     }
 
     private void markSelectedCampus(CampusAdapter adapter, int position) {

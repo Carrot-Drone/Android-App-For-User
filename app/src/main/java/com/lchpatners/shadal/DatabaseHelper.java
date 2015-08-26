@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lchpatners.shadal.restaurant.menu.MenuListActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.unused.CategoryItem;
 import com.lchpatners.shadal.util.Preferences;
 
@@ -157,12 +157,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Insert if new to the table, or otherwise update the existing data.
      * Data are identified by the server-side id value. And then
-     * reload the {@link MenuListActivity activity}.
+     * reload the {@link RestaurantInfoActivity activity}.
      *
      * @param categoryJson {@link org.json.JSONObject JSONObject} from {@link com.lchpatners.shadal.Server Server}.
-     * @param activity     {@link MenuListActivity MenuListActivity} to reload.
+     * @param activity     {@link RestaurantInfoActivity MenuListActivity} to reload.
      */
-    public void updateAll(JSONObject categoryJson, int categoryId, final MenuListActivity activity) {
+    public void updateAll(JSONObject categoryJson, int categoryId, final RestaurantInfoActivity activity) {
         Cursor cursor = null;
         try {
             Log.d("DH updateAll()", categoryJson.toString());
@@ -298,7 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateRestaurant(JSONObject restaurant, int categoryId, MenuListActivity activity) {
+    public void updateRestaurant(JSONObject restaurant, int categoryId, RestaurantInfoActivity activity) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
         ContentValues values;
@@ -648,11 +648,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Reload a {@link MenuListActivity activity}.
+     * Reload a {@link RestaurantInfoActivity activity}.
      *
      * @param activity An activity to be reloaded.
      */
-    public void reloadMenuListActivity(final MenuListActivity activity) {
+    public void reloadMenuListActivity(final RestaurantInfoActivity activity) {
         if (activity != null) {
             ((Activity) context).runOnUiThread(new Runnable() {
                 @Override

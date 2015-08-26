@@ -101,10 +101,15 @@ public class RootController {
             @Override
             public void success(List<Category> categories, Response response) {
                 Realm realm = Realm.getInstance(mActivity);
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(categories);
-                realm.commitTransaction();
-                realm.close();
+                try {
+                    realm.beginTransaction();
+
+                    realm.copyToRealmOrUpdate(categories);
+
+                    realm.commitTransaction();
+                } finally {
+                    realm.close();
+                }
             }
 
             @Override
