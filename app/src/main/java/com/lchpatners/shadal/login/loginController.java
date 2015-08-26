@@ -63,10 +63,8 @@ public class LoginController {
 
     public void setCampus() {
         Realm realm = Realm.getInstance(activity);
-
+        realm.beginTransaction();
         try {
-            realm.beginTransaction();
-
             RealmQuery<Campus> query = realm.where(Campus.class);
             RealmResults<Campus> currentCampus = query.findAll();
             currentCampus.clear();
@@ -75,6 +73,8 @@ public class LoginController {
             realm.copyToRealm(mSelectedCampus);
 
             realm.commitTransaction();
+        } catch (Exception e) {
+            realm.cancelTransaction();
         } finally {
             realm.close();
         }

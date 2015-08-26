@@ -66,18 +66,21 @@ public class RootController {
             @Override
             public void success(Campus campus, Response response) {
                 Realm realm = Realm.getInstance(mActivity);
-
                 realm.beginTransaction();
+                try {
+                    RealmQuery<Campus> query = realm.where(Campus.class);
+                    RealmResults<Campus> currentCampus = query.findAll();
+                    currentCampus.clear();
 
-                RealmQuery<Campus> query = realm.where(Campus.class);
-                RealmResults<Campus> currentCampus = query.findAll();
-                currentCampus.clear();
+                    //insert campus to realm
+                    realm.copyToRealm(campus);
 
-                //insert campus to realm
-                realm.copyToRealm(campus);
-                realm.commitTransaction();
-
-                realm.close();
+                    realm.commitTransaction();
+                } catch (Exception e) {
+                    realm.cancelTransaction();
+                } finally {
+                    realm.close();
+                }
             }
 
             @Override
@@ -101,12 +104,13 @@ public class RootController {
             @Override
             public void success(List<Category> categories, Response response) {
                 Realm realm = Realm.getInstance(mActivity);
+                realm.beginTransaction();
                 try {
-                    realm.beginTransaction();
-
                     realm.copyToRealmOrUpdate(categories);
-
                     realm.commitTransaction();
+                } catch (Exception e) {
+                    realm.cancelTransaction();
+                    e.printStackTrace();
                 } finally {
                     realm.close();
                 }
