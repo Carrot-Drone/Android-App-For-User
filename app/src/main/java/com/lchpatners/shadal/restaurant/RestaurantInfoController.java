@@ -3,10 +3,13 @@ package com.lchpatners.shadal.restaurant;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,26 +21,39 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.call.CallLog.CallLogController;
+import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
+import com.lchpatners.shadal.util.Preferences;
+import com.lchpatners.shadal.util.RetrofitConverter;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.UUID;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 /**
  * Created by YoungKim on 2015. 8. 26..
  */
 public class RestaurantInfoController {
     private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
     public static final int GOOD = 1;
     public static final int BAD = 0;
-
 
     private Activity mActivity;
     private Restaurant mRestaurant;
@@ -46,16 +62,79 @@ public class RestaurantInfoController {
 
     private boolean likeBtnChecked = false;
     private boolean hateBtnChecked = false;
+    private int goodCount = 0;
+    private int badCount = 0;
 
-    public RestaurantInfoController(Activity activity, Restaurant restaurant) {
+    public RestaurantInfoController(Activity activity) {
         this.mActivity = activity;
-        this.mRestaurant = restaurant;
         this.mRestaurantEvaluationController = new RestaurantEvaluationController(mActivity);
+        // TODO: set Restaurant Info at constructor
+    }
+
+    public Restaurant getRestaurant(int restaurant_id) {
+        Restaurant restaurant = null;
+
+        Realm realm = Realm.getInstance(mActivity);
+        realm.beginTransaction();
+
+        try {
+            RealmQuery<Restaurant> query = realm.where(Restaurant.class);
+            restaurant = query.equalTo("id", restaurant_id).findFirst();
+            realm.commitTransaction();
+            mRestaurant = restaurant;
+            updateCurrentRestaurant();
+        } catch (Exception e) {
+            realm.cancelTransaction();
+        } finally {
+            realm.close();
+        }
+
+        return restaurant;
+    }
+
+    private void updateCurrentRestaurant() {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new GsonConverter(new RetrofitConverter().createRestaurantConverter()))
+                .setEndpoint(BASE_URL) // The base API endpoint.
+                .build();
+
+        RestaurantAPI restaurantAPI = restAdapter.create(RestaurantAPI.class);
+
+        restaurantAPI.getRestaurant(mRestaurant.getId(), new Callback<Restaurant>() {
+            @Override
+            public void success(Restaurant restaurant, Response response) {
+                Realm realm = Realm.getInstance(mActivity);
+                realm.beginTransaction();
+                try {
+                    setHeaderData();
+                    mRestaurant = restaurant;
+                    goodCount = restaurant.getTotal_number_of_goods();
+                    badCount = restaurant.getTotal_number_of_bads();
+                    realm.copyToRealmOrUpdate(restaurant);
+                    realm.commitTransaction();
+                } catch (Exception e) {
+                    realm.cancelTransaction();
+                    e.printStackTrace();
+                } finally {
+                    realm.close();
+                }
+
+                goodCount = mRestaurant.getTotal_number_of_goods();
+                badCount = mRestaurant.getTotal_number_of_bads();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.toString());
+                error.printStackTrace();
+            }
+        });
     }
 
     public void setHeader() {
         setHeaderWidget();
-        checkPreEvaluateByUser();
+        setHeaderData();
         setHeaderButtonListener();
         setEvaluateButtonListener();
         attachHeader();
@@ -74,6 +153,11 @@ public class RestaurantInfoController {
     private void setHeaderWidget() {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mHeader = inflater.inflate(R.layout.menu_header, null, false);
+    }
+
+    private void setHeaderData() {
+        checkPreEvaluateByUser();
+        //TODO : GET my call count
 
         TextView retention = (TextView) mHeader.findViewById(R.id.retention);
         TextView numberOfMyCalls = (TextView) mHeader.findViewById(R.id.number_of_my_calls);
@@ -87,7 +171,6 @@ public class RestaurantInfoController {
         }
 
         retention.setText(Math.round(mRestaurant.getRetention() * 100) + "");
-        //TODO : GET my call count
 //        numberOfMyCalls.setText(mRestaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "");
         totalNumberOfCalls.setText(numberOfCallsFormatString(mRestaurant.getTotal_number_of_calls()));
     }
@@ -120,7 +203,6 @@ public class RestaurantInfoController {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
 //                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
 
-                //TODO: update call db
                 updateCallLog();
 //                Call.updateCallLog(MenuListActivity.this, restaurant);
                 String number = "tel:" + mRestaurant.getPhone_number();
@@ -131,7 +213,8 @@ public class RestaurantInfoController {
     }
 
     private void updateCallLog() {
-
+        //TODO: update call db
+        CallLogController.sendCallLog(mActivity, mRestaurant.getId());
     }
 
     public void setFlyerButtonListener() {
@@ -162,13 +245,15 @@ public class RestaurantInfoController {
     private void checkPreEvaluateByUser() {
         int score = mRestaurantEvaluationController.getEvaluationByCurrentUser(mRestaurant.getId());
 
-        final Button click_evaluation = (Button) mHeader.findViewById(R.id.click_evaluation);
+        final TextView click_evaluation = (TextView) mHeader.findViewById(R.id.click_evaluation);
         final ImageView ivEvaluation = (ImageView) mHeader.findViewById(R.id.iv_evaluation);
         final TextView tvEvaluation = (TextView) mHeader.findViewById(R.id.tv_evaluation);
         final LinearLayout btn_divider = (LinearLayout) mHeader.findViewById(R.id.btn_divider);
 
         final ImageButton btnHate = (ImageButton) mHeader.findViewById(R.id.btn_hate);
         final ImageButton btnLike = (ImageButton) mHeader.findViewById(R.id.btn_like);
+
+        //TODO : update EValuation
 
         if (score != -1) {
             if (score == GOOD) {
@@ -188,11 +273,14 @@ public class RestaurantInfoController {
             btnHate.setVisibility(View.VISIBLE);
             btnLike.setVisibility(View.VISIBLE);
         }
+
+        goodCount = mRestaurant.getTotal_number_of_goods();
+        badCount = mRestaurant.getTotal_number_of_bads();
     }
 
     private void setHeaderButtonListener() {
-        final Button click_share = (Button) mHeader.findViewById(R.id.click_share);
-        final Button click_evaluation = (Button) mHeader.findViewById(R.id.click_evaluation);
+        final TextView click_share = (TextView) mHeader.findViewById(R.id.click_share);
+        final TextView click_evaluation = (TextView) mHeader.findViewById(R.id.click_evaluation);
 
         final ImageView ivEvaluation = (ImageView) mHeader.findViewById(R.id.iv_evaluation);
         final TextView tvEvaluation = (TextView) mHeader.findViewById(R.id.tv_evaluation);
@@ -251,6 +339,7 @@ public class RestaurantInfoController {
                 if (view.getId() == R.id.btn_like) {
                     if (likeBtnChecked != true) {
                         mRestaurantEvaluationController.evaluate(GOOD, mRestaurant.getId());
+                        UserPreferenceController.sendUserPreference(mRestaurant.getId(), GOOD, Preferences.getDeviceUuid(mActivity));
                         if (!likeBtnChecked) {
                             likeBtnChecked = !likeBtnChecked;
                             hateBtnChecked = !likeBtnChecked;
@@ -265,6 +354,7 @@ public class RestaurantInfoController {
                 } else if (view.getId() == R.id.btn_hate) {
                     if (hateBtnChecked != true) {
                         mRestaurantEvaluationController.evaluate(BAD, mRestaurant.getId());
+                        UserPreferenceController.sendUserPreference(mRestaurant.getId(), BAD, Preferences.getDeviceUuid(mActivity));
                         if (!hateBtnChecked) {
                             hateBtnChecked = !hateBtnChecked;
                             likeBtnChecked = !hateBtnChecked;
@@ -282,5 +372,9 @@ public class RestaurantInfoController {
 
         btnLike.setOnClickListener(listener);
         btnHate.setOnClickListener(listener);
+    }
+
+    public Restaurant getUpdatedRestaurant() {
+        return mRestaurant;
     }
 }

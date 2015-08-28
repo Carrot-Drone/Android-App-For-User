@@ -14,4 +14,8 @@ public class RecentCallController {
         ArrayList<RecentCall> recentCallList = null;
         return recentCallList;
     }
+
+    public static int getRecentCallCount(int restaurant_id) {
+        return 1;
+    }
 }

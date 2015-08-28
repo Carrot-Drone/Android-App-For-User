@@ -51,7 +51,7 @@ public class RestaurantEvaluationController {
         RestaurantEvaluation restaurantEvaluation = query.findFirst();
         realm.close();
 
-        //When there's no pre-evaluation, send -1 as score
+        //When there's no pre-evaluation by user, send -1 as score
         return restaurantEvaluation != null ? restaurantEvaluation.getEvaluation() : -1;
     }
 }

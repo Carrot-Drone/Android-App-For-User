@@ -50,8 +50,9 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
             public void onClick(View view) {
                 if (controller.isCampusSelected()) {
                     controller.setCampus();
-                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
-                    startActivity(intent);
+                    //Go to RootActivity at setCampus function
+//                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
+//                    startActivity(intent);
                     finish();
                 }
             }

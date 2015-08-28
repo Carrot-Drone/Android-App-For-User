@@ -1,15 +1,19 @@
 package com.lchpatners.shadal.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusAdapter;
+import com.lchpatners.shadal.restaurant.RestaurantAPI;
+import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
@@ -82,6 +86,8 @@ public class LoginController {
         }
 
         DeviceController.sendDeviceInfo(mSelectedCampusId, Preferences.getDeviceUuid(mActivity));
+        updateCampusMetaData(mSelectedCampus);
+        insertOrUpdateAllRestaurantInfo(mSelectedCampus);
     }
 
     private void markSelectedCampus(CampusAdapter adapter, int position) {
@@ -110,6 +116,81 @@ public class LoginController {
             @Override
             public void success(List<Campus> campuses, Response response) {
                 fillCampusListView(campuses);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.toString());
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void updateCampusMetaData(Campus campus) {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new GsonConverter(new RetrofitConverter().createBasicConverter()))
+                .setEndpoint(BASE_URL) // The base API endpoint.
+                .build();
+
+        CampusAPI campusAPI = restAdapter.create(CampusAPI.class);
+
+        campusAPI.getCampusInfo(campus.getId(), new Callback<Campus>() {
+            @Override
+            public void success(Campus campus, Response response) {
+                Realm realm = Realm.getInstance(mActivity);
+                realm.beginTransaction();
+                try {
+                    RealmQuery<Campus> query = realm.where(Campus.class);
+                    RealmResults<Campus> currentCampus = query.findAll();
+                    currentCampus.clear();
+
+                    //insert campus to realm
+                    realm.copyToRealm(campus);
+
+                    realm.commitTransaction();
+                } catch (Exception e) {
+                    realm.cancelTransaction();
+                } finally {
+                    realm.close();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.toString());
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void insertOrUpdateAllRestaurantInfo(Campus campus) {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new GsonConverter(new RetrofitConverter().createRestaurantConverter()))
+                .setEndpoint(BASE_URL) // The base API endpoint.
+                .build();
+
+        RestaurantAPI restaurantAPI = restAdapter.create(RestaurantAPI.class);
+
+        restaurantAPI.getAllRestaurantList(campus.getId(), new Callback<List<Category>>() {
+            @Override
+            public void success(List<Category> categories, Response response) {
+                Realm realm = Realm.getInstance(mActivity);
+                realm.beginTransaction();
+                try {
+                    realm.copyToRealmOrUpdate(categories);
+                    realm.commitTransaction();
+                } catch (Exception e) {
+                    realm.cancelTransaction();
+                    e.printStackTrace();
+                } finally {
+                    realm.close();
+                }
+
+                Intent intent = new Intent(mActivity, RootActivity.class);
+                mActivity.startActivity(intent);
+//                spGlobalPref.edit().putBoolean(TEMP_UPDATED_RESTAURANT_DATA, true).commit();
             }
 
             @Override

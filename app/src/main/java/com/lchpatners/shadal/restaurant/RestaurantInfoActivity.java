@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,14 +13,18 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RestaurantCorrectionActivity;
+import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.restaurant.menu.MenuListAdapter;
-import com.lchpatners.shadal.restaurant.menu.MenuListController;
 import com.lchpatners.shadal.util.LogUtils;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
 
 /**
  * Created by YoungKim on 2015. 8. 25..
  */
 public class RestaurantInfoActivity extends ActionBarActivity {
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
@@ -27,7 +32,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
     private Intent mIntent;
     private RestaurantInfoController mRestaurantInfoController;
-    private MenuListController mMenuListController;
     private Restaurant mRestaurant;
 
     @Override
@@ -36,12 +40,28 @@ public class RestaurantInfoActivity extends ActionBarActivity {
         setContentView(R.layout.activity_menu_list);
 
         mIntent = getIntent();
-        mMenuListController = new MenuListController(RestaurantInfoActivity.this);
-        mRestaurant = mMenuListController.getRestaurant(mIntent.getIntExtra(RESTAURANT_ID, 0));
-        mRestaurantInfoController = new RestaurantInfoController(RestaurantInfoActivity.this, mRestaurant);
-
+        mRestaurantInfoController = new RestaurantInfoController(RestaurantInfoActivity.this);
+        mRestaurant = mRestaurantInfoController.getRestaurant(mIntent.getIntExtra(RESTAURANT_ID, 0));
         //TODO : set referrer
+        setReferrer(mRestaurant);
         setView();
+    }
+
+    private void setReferrer(Restaurant restaurant) {
+        Category category = null;
+
+        Realm realm = Realm.getInstance(RestaurantInfoActivity.this);
+        realm.beginTransaction();
+
+        try {
+            RealmQuery<Category> query = realm.where(Category.class).equalTo("restaurants.id", restaurant.getId());
+            category = query.findFirst();
+            realm.commitTransaction();
+        } catch (Exception e) {
+            realm.cancelTransaction();
+        } finally {
+            realm.close();
+        }
     }
 
     @Override
@@ -66,7 +86,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
     }
 
     public void setView() {
-        setRestaurantInfo();
+        setRestaurantStaticInfo();
         mRestaurantInfoController.setFlyerButtonListener();
         mRestaurantInfoController.setCallButtonListener();
         mRestaurantInfoController.setFooter();
@@ -77,7 +97,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
         listView.setAdapter(adapter);
     }
 
-    private void setRestaurantInfo() {
+    private void setRestaurantStaticInfo() {
         Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         toolbar.setTitle(mRestaurant.getName());
