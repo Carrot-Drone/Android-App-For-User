@@ -20,7 +20,7 @@ public class Preferences {
     /**
      * Preferences name.
      */
-    private static final String PREFS_NAME = "Prefs";
+    private static final String PREFS_NAME = "GlobalPref";
 
     public static void setCampus(Context context, JSONObject campus) {
         try {

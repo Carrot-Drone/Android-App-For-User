@@ -11,7 +11,9 @@ import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusAdapter;
 import com.lchpatners.shadal.util.LogUtils;
+import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
+import com.lchpatners.shadal.util.System.DeviceController;
 
 import java.util.List;
 
@@ -31,13 +33,13 @@ public class LoginController {
     private static final String TAG = LogUtils.makeTag(LoginController.class);
     private static final String BASE_URL = "http://www.shadal.kr:3000";
     private CampusAPI mCampusAPI;
-    private Activity activity;
+    private Activity mActivity;
     private ListView lvCampusListView;
     private Campus mSelectedCampus;
     private int mSelectedCampusId = -1;
 
     public LoginController(Activity activity) {
-        this.activity = activity;
+        this.mActivity = activity;
         this.lvCampusListView = (ListView) activity.findViewById(R.id.LoginCampusSelect_campusList);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -62,7 +64,7 @@ public class LoginController {
     }
 
     public void setCampus() {
-        Realm realm = Realm.getInstance(activity);
+        Realm realm = Realm.getInstance(mActivity);
         realm.beginTransaction();
         try {
             RealmQuery<Campus> query = realm.where(Campus.class);
@@ -78,6 +80,8 @@ public class LoginController {
         } finally {
             realm.close();
         }
+
+        DeviceController.sendDeviceInfo(mSelectedCampusId, Preferences.getDeviceUuid(mActivity));
     }
 
     private void markSelectedCampus(CampusAdapter adapter, int position) {
@@ -86,7 +90,7 @@ public class LoginController {
 
     private void fillCampusListView(final List<Campus> campusList) {
         final CampusAdapter campusListAdapter =
-                new CampusAdapter(activity, campusList);
+                new CampusAdapter(mActivity, campusList);
 
         lvCampusListView.setAdapter(campusListAdapter);
         lvCampusListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
