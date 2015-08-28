@@ -106,13 +106,9 @@
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
         </activity>
         <activity
-            android:name=".RecommendActivity"
+            android:name=".recommend.RecommendedRestaurantActivity"
             android:label="@string/title_activity_recommend"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
         </activity>
         <activity
             android:name=".RestaurantCorrectionActivity"

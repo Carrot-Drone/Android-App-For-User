@@ -114,4 +114,8 @@
     <string name="correction_popup_detail">캠퍼스:달에서 해당음식점을 확인하고\n빠른시일내에 수정하겠습니다.</string>
     <string name="title_activity_campus_selection">CampusSelectionActivity</string>
     <string name="new_campus">새로운 캠퍼스</string>
+    <string name="my_number_of_calls">내 주문수</string>
+    <string name="total_number_of_calls">총 주문수</string>
+    <string name="show_info">정보보기</string>
+    <string name="recommend">추천</string>
 </resources>
