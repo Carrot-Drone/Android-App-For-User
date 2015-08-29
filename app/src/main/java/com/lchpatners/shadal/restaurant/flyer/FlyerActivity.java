@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.TouchImageView;
+import com.lchpatners.shadal.call.CallLog.CallLogController;
+import com.lchpatners.shadal.call.RecentCallController;
+import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,17 +64,17 @@ public class FlyerActivity extends ActionBarActivity {
         TextView toolbarText = (TextView) findViewById(R.id.tool_bar_text);
         toolbarText.setText(mRestaurantPhoneNumber);
         toolbarText.setTextSize(20);
-//        toolbar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Call.updateCallLog(FlyerActivity.this, restaurant);
-//
-//                String number = "tel:" + restaurant.getPhoneNumber();
-//                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
-//                startActivity(intent);
-//
-//            }
-//        });
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String number = "tel:" + RestaurantController
+                        .getRestaurant(FlyerActivity.this, mRestaurantId).getPhone_number();
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
+                startActivity(intent);
+                RecentCallController.stackRecentCall(FlyerActivity.this, mRestaurantId);
+                CallLogController.sendCallLog(FlyerActivity.this, mRestaurantId);
+            }
+        });
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.flyer_pager);
         viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), mURLS));
@@ -138,7 +141,6 @@ public class FlyerActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
             final int page = getArguments().getInt("PAGE");
             TouchImageView img = new TouchImageView(context);
 
@@ -162,15 +164,12 @@ public class FlyerActivity extends ActionBarActivity {
                     Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
                 }
             });
-
-            //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             return img;
         }
 
     }
 
     private class PagerAdapter extends FragmentStatePagerAdapter {
-
         private ArrayList<String> urls;
 
         private PagerAdapter(FragmentManager fm, ArrayList<String> urls) {
@@ -187,8 +186,6 @@ public class FlyerActivity extends ActionBarActivity {
         public int getCount() {
             return urls.size();
         }
-
-
     }
 
 }

@@ -52,7 +52,6 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
         Realm realm = Realm.getInstance(RestaurantInfoActivity.this);
         realm.beginTransaction();
-
         try {
             RealmQuery<Category> query = realm.where(Category.class).equalTo("restaurants.id", restaurant.getId());
             category = query.findFirst();
@@ -126,22 +125,26 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
         int open_hour = (int) open_hours;
         if (open_hour < 10 && open_hour != 0) {
-            open_hour += 24;
+            open = "0" + open_hour;
+        } else {
+            open = open_hour + "";
         }
         if (open_hours > open_hour) {
-            open = open_hour + ":30";
+            open = open + ":30";
         } else {
-            open = open_hour + ":00";
+            open = open + ":00";
         }
 
         int close_hour = (int) close_hours;
         if (close_hour < 10 && close_hour != 0) {
-            close_hour += 24;
+            close = "0" + close_hour;
+        } else {
+            close = close_hour + "";
         }
         if (close_hours > close_hour) {
-            close = close_hour + ":30";
+            close = close + ":30";
         } else {
-            close = close_hour + ":00";
+            close = close + ":00";
         }
 
         if (open_hours == 0 && close_hours == 0) {

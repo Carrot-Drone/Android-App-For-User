@@ -1,11 +1,17 @@
 package com.lchpatners.shadal.call.CallLog;
 
 import android.app.Activity;
+import android.util.Log;
 
+import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.restaurant.category.CategoryController;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -29,12 +35,12 @@ public class CallLogController {
 
         CallLogAPI callLogAPI = restAdapter.create(CallLogAPI.class);
 
+        callLog.setRestaurant_id(restaurant_id);
+        callLog.setCategory_id(CategoryController.getRestaurantCategory(activity, restaurant_id));
         callLog.setCampus_id(CampusController.getCurrentCampus(activity).getId());
         callLog.setUuid(Preferences.getDeviceUuid(activity));
-        callLog.setCampus_id(CampusController.getCurrentCampus(activity).getId());
-//        callLog.setCategory_id();
-//        callLog.setHas_recent_call();
-//        callLog.setNumber_of_calls();
+        callLog.setNumber_of_calls(RecentCallController.getRecentCallCountByRestaurantId(activity, restaurant_id));
+        callLog.setHas_recent_call(RecentCallController.checkHasRecentCall(activity, restaurant_id));
 
         callLogAPI.sendCallLog(callLog, new Callback<CallLog>() {
             @Override

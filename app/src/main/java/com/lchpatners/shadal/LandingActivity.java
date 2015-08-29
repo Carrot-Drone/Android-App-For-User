@@ -3,14 +3,17 @@ package com.lchpatners.shadal;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
+import com.lchpatners.shadal.call.RecentCall;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.restaurant.RestaurantAPI;
 import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
@@ -44,30 +47,20 @@ public class LandingActivity extends ActionBarActivity {
         Log.i(TAG, "Successfully set entryActivity");
 
         //pause some second to show landing page
-        Thread timerThread = new Thread() {
-            public void run() {
-                try {
-                    sleep(5 * 100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    switch (entryActivity) {
-                        case 0:
-                            Log.i(TAG, "to loginCampusSelect page");
-                            Intent campusSelectIntent = new Intent(LandingActivity.this,
-                                    LoginCampusSelectActivity.class);
-                            startActivity(campusSelectIntent);
-                            break;
-                        case 1:
-                            Intent mainIntent = new Intent(LandingActivity.this,
-                                    RootActivity.class);
-                            startActivity(mainIntent);
-                            break;
-                    }
-                }
-            }
-        };
-        timerThread.start();
+        SystemClock.sleep(5 * 100);
+        switch (entryActivity) {
+            case 0:
+                Log.i(TAG, "to loginCampusSelect page");
+                Intent campusSelectIntent = new Intent(LandingActivity.this,
+                        LoginCampusSelectActivity.class);
+                startActivity(campusSelectIntent);
+                break;
+            case 1:
+                Intent mainIntent = new Intent(LandingActivity.this,
+                        RootActivity.class);
+                startActivity(mainIntent);
+                break;
+        }
     }
 
     private void setSharedPreference() {
@@ -143,7 +136,12 @@ public class LandingActivity extends ActionBarActivity {
             public void success(List<Category> categories, Response response) {
                 Realm realm = Realm.getInstance(LandingActivity.this);
                 realm.beginTransaction();
+
                 try {
+                    RealmQuery<Flyer> query = realm.where(Flyer.class);
+                    RealmResults<Flyer> flyers = query.findAll();
+                    flyers.clear();
+
                     realm.copyToRealmOrUpdate(categories);
                     realm.commitTransaction();
                 } catch (Exception e) {
@@ -152,7 +150,6 @@ public class LandingActivity extends ActionBarActivity {
                 } finally {
                     realm.close();
                 }
-//                spGlobalPref.edit().putBoolean(TEMP_UPDATED_RESTAURANT_DATA, true).commit();
             }
 
             @Override

@@ -3,10 +3,8 @@ package com.lchpatners.shadal.restaurant;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +19,19 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.call.RecentCallController;
+import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -76,18 +75,19 @@ public class RestaurantInfoController {
 
         Realm realm = Realm.getInstance(mActivity);
         realm.beginTransaction();
-
         try {
             RealmQuery<Restaurant> query = realm.where(Restaurant.class);
             restaurant = query.equalTo("id", restaurant_id).findFirst();
             realm.commitTransaction();
-            mRestaurant = restaurant;
-            updateCurrentRestaurant();
         } catch (Exception e) {
+            e.printStackTrace();
             realm.cancelTransaction();
         } finally {
             realm.close();
         }
+
+        mRestaurant = restaurant;
+        updateCurrentRestaurant();
 
         return restaurant;
     }
@@ -107,10 +107,6 @@ public class RestaurantInfoController {
                 Realm realm = Realm.getInstance(mActivity);
                 realm.beginTransaction();
                 try {
-                    setHeaderData();
-                    mRestaurant = restaurant;
-                    goodCount = restaurant.getTotal_number_of_goods();
-                    badCount = restaurant.getTotal_number_of_bads();
                     realm.copyToRealmOrUpdate(restaurant);
                     realm.commitTransaction();
                 } catch (Exception e) {
@@ -120,8 +116,10 @@ public class RestaurantInfoController {
                     realm.close();
                 }
 
-                goodCount = mRestaurant.getTotal_number_of_goods();
-                badCount = mRestaurant.getTotal_number_of_bads();
+                setHeaderData();
+                mRestaurant = restaurant;
+                goodCount = restaurant.getTotal_number_of_goods();
+                badCount = restaurant.getTotal_number_of_bads();
             }
 
             @Override
@@ -157,7 +155,7 @@ public class RestaurantInfoController {
 
     private void setHeaderData() {
         checkPreEvaluateByUser();
-        //TODO : GET my call count
+        //TODO : update Evaluation
 
         TextView retention = (TextView) mHeader.findViewById(R.id.retention);
         TextView numberOfMyCalls = (TextView) mHeader.findViewById(R.id.number_of_my_calls);
@@ -171,7 +169,7 @@ public class RestaurantInfoController {
         }
 
         retention.setText(Math.round(mRestaurant.getRetention() * 100) + "");
-//        numberOfMyCalls.setText(mRestaurant.getNumberOfCalls(MenuListActivity.this, restaurant.getRestaurantId()) + "");
+        numberOfMyCalls.setText(RecentCallController.getRecentCallCountByRestaurantId(mActivity, mRestaurant.getId()) + "");
         totalNumberOfCalls.setText(numberOfCallsFormatString(mRestaurant.getTotal_number_of_calls()));
     }
 
@@ -202,19 +200,19 @@ public class RestaurantInfoController {
             public void onClick(View v) {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
 //                    helper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
-
-                updateCallLog();
-//                Call.updateCallLog(MenuListActivity.this, restaurant);
                 String number = "tel:" + mRestaurant.getPhone_number();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
+                updateCallLog();
             }
         });
     }
 
     private void updateCallLog() {
-        //TODO: update call db
+        SystemClock.sleep(5 * 100);
+        RecentCallController.stackRecentCall(mActivity, mRestaurant.getId());
         CallLogController.sendCallLog(mActivity, mRestaurant.getId());
+        setHeaderData();
     }
 
     public void setFlyerButtonListener() {
@@ -227,7 +225,7 @@ public class RestaurantInfoController {
             @Override
             public void onClick(View view) {
                 ArrayList<String> flyer_urls = new ArrayList<String>();
-                RealmList<Flyer> flyers = mRestaurant.getFlyers();
+                List<Flyer> flyers = mRestaurant.getFlyers();
 
                 for (Flyer flyer : flyers) {
                     flyer_urls.add(flyer.getUrl());
@@ -252,8 +250,6 @@ public class RestaurantInfoController {
 
         final ImageButton btnHate = (ImageButton) mHeader.findViewById(R.id.btn_hate);
         final ImageButton btnLike = (ImageButton) mHeader.findViewById(R.id.btn_like);
-
-        //TODO : update EValuation
 
         if (score != -1) {
             if (score == GOOD) {
@@ -350,6 +346,7 @@ public class RestaurantInfoController {
                             btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
                         }
                         btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
+                        setHeaderData();
                     }
                 } else if (view.getId() == R.id.btn_hate) {
                     if (hateBtnChecked != true) {
@@ -365,6 +362,7 @@ public class RestaurantInfoController {
                             btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
                         }
                         btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
+                        setHeaderData();
                     }
                 }
             }

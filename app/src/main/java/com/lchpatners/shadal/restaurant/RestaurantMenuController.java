@@ -33,7 +33,10 @@ public class RestaurantMenuController {
             RealmList<RestaurantMenu> restaurantMenus = query.equalTo("id", mRestaurant.getId()).findFirst().getMenus();
             this.mRestaurantMenus = restaurantMenus;
             realm.commitTransaction();
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+            realm.cancelTransaction();
+        }finally {
             realm.close();
         }
 

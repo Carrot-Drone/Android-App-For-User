@@ -53,7 +53,6 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
                     //Go to RootActivity at setCampus function
 //                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
 //                    startActivity(intent);
-                    finish();
                 }
             }
         });

@@ -188,8 +188,10 @@ public class LoginController {
                     realm.close();
                 }
 
+                //change view
                 Intent intent = new Intent(mActivity, RootActivity.class);
                 mActivity.startActivity(intent);
+                mActivity.finish();
 //                spGlobalPref.edit().putBoolean(TEMP_UPDATED_RESTAURANT_DATA, true).commit();
             }
 
