@@ -62,7 +62,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".SeeMoreActivity"
+            android:name=".setting.SeeMoreActivity"
             android:label="@string/title_activity_see_more"
             android:screenOrientation="portrait">
             <meta-data
@@ -106,13 +106,9 @@
                 android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
         </activity>
         <activity
-            android:name=".RecommendActivity"
+            android:name=".recommend.RecommendedRestaurantActivity"
             android:label="@string/title_activity_recommend"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
         </activity>
         <activity
             android:name=".RestaurantCorrectionActivity"
@@ -131,10 +127,10 @@
         <activity
             android:name=".RequestActivity"
             android:label="@string/title_activity_request"
-            android:parentActivityName=".SeeMoreActivity">
+            android:parentActivityName=".setting.SeeMoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.SeeMoreActivity"/>
+                android:value=".setting.SeeMoreActivity"/>
         </activity>
         <activity
             android:name=".RSbyUserPopUpActivity"
@@ -157,6 +153,7 @@
             android:label="LandingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -172,12 +169,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.MainActivity"/>
         </activity>
-
         <activity
             android:name=".restaurant.flyer.FlyerActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:label="@string/title_activity_flyer"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".setting.CampusChangeActivity"
+            android:label="@string/title_activity_campus_selection"
+            android:parentActivityName=".setting.SeeMoreActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".setting.SeeMoreActivity"/>
+        </activity>
     </application>
 
 </manifest>

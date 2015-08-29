@@ -1,40 +1,41 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.lchpatners.shadal.RecommendActivity">
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/recommended_restaurant_drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecommendedRestaurantActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/tool_bar"
-            layout="@layout/tool_bar"
-            />
-
-        <com.lchpatners.shadal.SlidingTabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/tab_background"/>
-
-        <android.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black54"
-            />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/main_pager"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"/>
+            <include
+                android:id="@+id/tool_bar"
+                layout="@layout/tool_bar"
+                />
 
-    </LinearLayout>
+            <fr.castorflex.android.verticalviewpager.VerticalViewPager
+                android:id="@+id/recommend_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-</RelativeLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
+        <include
+            android:id="@+id/navigation_view"
+            layout="@layout/navigation_view"
+            />
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
 /**

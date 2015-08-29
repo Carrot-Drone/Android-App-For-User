@@ -28,31 +28,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
-import com.lchpatners.shadal.restaurant.RestaurantAPI;
 import com.lchpatners.shadal.restaurant.RestaurantListFragment;
-import com.lchpatners.shadal.restaurant.category.*;
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
-import com.lchpatners.shadal.util.RetrofitConverter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
 
 /**
  * The main {@link android.app.Activity Activity}.
@@ -62,14 +48,14 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = LogUtils.makeTag(MainActivity.class);
     public static boolean ready = true;
     /**
-     * The main {@link android.support.v4.view.ViewPager ViewPager}.
-     */
-    protected ViewPager viewPager;
-    /**
      * Indicates the last instance of {@link RestaurantListFragment
      * RestaurantListFragment}.
      */
     public RestaurantListFragment restaurantListFragmentCurrentlyOn;
+    /**
+     * The main {@link android.support.v4.view.ViewPager ViewPager}.
+     */
+    protected ViewPager viewPager;
     private Menu menu;
     private String title;
     private Toolbar toolbar;

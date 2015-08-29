@@ -46,7 +46,7 @@
         android:layout_height="0.5dp"
         android:layout_alignBottom="@+id/layout_select_field"
         android:layout_marginTop="5dp"
-        android:background="#FFc8c7cc"></RelativeLayout>
+        android:background="@color/divider"></RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_campusList"
@@ -58,20 +58,28 @@
             android:id="@+id/LoginCampusSelect_campusList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white100"/>
+            android:background="@color/white100"
+            android:divider="@color/divider"
+            android:dividerHeight="0.5dp"/>
 
-        <Button
-            android:id="@+id/LoginCampusSelect_confirmButton"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
-            android:background="@drawable/tool_bar"
-            android:text="시작하기"
-            android:textAlignment="center"
-            android:textColor="#FFFFFFFF"
-            android:textSize="16dp"/>
+            android:background="@color/tool_bar_background">
+
+            <Button
+                android:id="@+id/LoginCampusSelect_confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/tool_bar"
+                android:text="시작하기"
+                android:textAlignment="center"
+                android:textColor="@color/white100"
+                android:textSize="16dp"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 
