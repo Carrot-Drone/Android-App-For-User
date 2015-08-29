@@ -1,39 +1,47 @@
 package com.lchpatners.shadal.recommend;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.call.CallLog.CallLogController;
+import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
+import com.lchpatners.shadal.restaurant.RestaurantListActivity;
+import com.lchpatners.shadal.restaurant.flyer.Flyer;
+import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import io.realm.RealmList;
 
 /**
  * Created by eunhyekim on 2015. 8. 27..
  */
 
 public class RecommendedRestaurantFragment extends Fragment {
+    public static final String FLYER_URLS = "flyer_urls";
+    public static final String RESTAURANT_ID = "restaurant_id";
+    public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantFragment.class);
-
     private static Activity mActivity;
     private static RecommendedRestaurant mRecommendedRestaurant;
     private static ImageButton upButton;
     private static ImageButton downButton;
-    String restaurantName;
-    String reason;
-    String retention;
-    String number_of_my_calls;
-    String total_number_of_calls;
-    String phone_number;
-    String category_title;
     View.OnClickListener btnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -44,6 +52,61 @@ public class RecommendedRestaurantFragment extends Fragment {
             }
         }
     };
+    private Restaurant restaurant;
+    View.OnClickListener onInfoButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
+            intent.putExtra(RESTAURANT_ID, restaurant.getId());
+            mActivity.startActivity(intent);
+        }
+    };
+    View.OnClickListener onCallButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            RecentCallController.stackRecentCall(mActivity, restaurant.getId());
+            CallLogController.sendCallLog(mActivity, restaurant.getId());
+            String number = "tel:" + restaurant.getPhone_number();
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
+            mActivity.startActivity(intent);
+        }
+    };
+    View.OnClickListener onFlyerButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ArrayList<String> flyer_urls = new ArrayList<String>();
+            RealmList<Flyer> flyers = restaurant.getFlyers();
+            for (Flyer flyer : flyers) {
+                flyer_urls.add(flyer.getUrl());
+            }
+
+            Intent intent = new Intent(mActivity, FlyerActivity.class);
+            intent.putExtra(FLYER_URLS, flyer_urls);
+            intent.putExtra(RESTAURANT_ID, restaurant.getId());
+            intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
+            mActivity.startActivity(intent);
+        }
+    };
+    private String restaurantName;
+    private String reason;
+    private String retention;
+    private String number_of_my_calls;
+    private String total_number_of_calls;
+    private String phone_number;
+    private String category_title;
+    View.OnClickListener onCategoryButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int position = RecommendedRestaurantController.getCategoryPosition(category_title);
+            Intent intent = new Intent(getActivity(), RestaurantListActivity.class);
+            intent.putExtra("category", category_title);
+            intent.putExtra("position", position);
+            startActivity(intent);
+        }
+    };
+    private LinearLayout ll_flyer;
     private TextView tv_name;
     private TextView tv_reason;
     private TextView tv_retention;
@@ -55,6 +118,7 @@ public class RecommendedRestaurantFragment extends Fragment {
     private ImageView iv_flyer;
     private ImageView iv_info;
     private TextView tv_phone_number;
+    private Toolbar bottom_bar;
 
     public static RecommendedRestaurantFragment create(RecommendedRestaurant recommendedRestaurant) {
         RecommendedRestaurantFragment fragment = new RecommendedRestaurantFragment();
@@ -93,7 +157,7 @@ public class RecommendedRestaurantFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Restaurant restaurant = mRecommendedRestaurant.getRestaurant();
+        restaurant = mRecommendedRestaurant.getRestaurant();
 
         restaurantName = restaurant.getName();
         reason = "<" + mRecommendedRestaurant.getReason() + ">";
@@ -129,6 +193,8 @@ public class RecommendedRestaurantFragment extends Fragment {
         downButton = (ImageButton) view.findViewById(R.id.downButton);
         upButton.setOnClickListener(btnClickListener);
         downButton.setOnClickListener(btnClickListener);
+        bottom_bar = (Toolbar) view.findViewById(R.id.bottom_bar);
+        ll_flyer = (LinearLayout) view.findViewById(R.id.flyerLayout);
 
         tv_name.setText(restaurantName);
         tv_reason.setText(reason);
@@ -141,6 +207,14 @@ public class RecommendedRestaurantFragment extends Fragment {
         tv_category.setText(category_title);
         newIconVisible();
 
+        if (!restaurant.isHas_flyer()) {
+            ll_flyer.setVisibility(View.GONE);
+        } else {
+            iv_flyer.setOnClickListener(onFlyerButtonClickListener);
+        }
+        iv_category.setOnClickListener(onCategoryButtonClickListener);
+        iv_info.setOnClickListener(onInfoButtonClickListener);
+        bottom_bar.setOnClickListener(onCallButtonClickListener);
     }
 
     public void newIconVisible() {
@@ -181,4 +255,5 @@ public class RecommendedRestaurantFragment extends Fragment {
         }
         return icon_id;
     }
+
 }

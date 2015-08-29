@@ -1,7 +1,7 @@
 package com.lchpatners.shadal;
 
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
@@ -22,14 +24,19 @@ import com.lchpatners.shadal.util.LogUtils;
  * Created by youngkim on 2015. 8. 24..
  */
 public class RootActivity extends ActionBarActivity {
+    static final int REQUEST_CODE = 1;
     private static final String TAG = LogUtils.makeTag(RootActivity.class);
+    ImageView icon_drawer_1;
+    ImageView icon_drawer_2;
+    ImageView icon_drawer_3;
+    TextView tv_drawer_1;
+    TextView tv_drawer_2;
+    TextView tv_drawer_3;
     private RootController mController;
-
     private ViewPager mViewPager;
     private Toolbar mToolbar;
     private SlidingTabLayout mSlidingTabLayout;
     private RootViewPagerAdapter mViewPagerAdapter;
-
     private DrawerLayout mDrawerLayout;
     private TextView drawerTitle;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -40,16 +47,35 @@ public class RootActivity extends ActionBarActivity {
             if (view.getId() == R.id.drawer_ic_1 || view.getId() == R.id.drawer_1) {
                 mDrawerLayout.closeDrawers();
             } else if (view.getId() == R.id.drawer_ic_2 || view.getId() == R.id.drawer_2) {
-                Intent intent = new Intent(RootActivity.this, RecommendActivity.class);
+
+                setDrawerStyleItem2Clicked();
+                setDrawerStyleItem1NotClicked();
+
+                Intent intent = new Intent(RootActivity.this, RecommendedRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             } else if (view.getId() == R.id.drawer_ic_3 || view.getId() == R.id.drawer_3) {
+
+                setDrawerStyleItem3Clicked();
+                setDrawerStyleItem1NotClicked();
+
                 Intent intent = new Intent(RootActivity.this, SeeMoreActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                setDrawerStyleItem1Clicked();
+                setDrawerStyleItem3NotClicked();
+                setDrawerStyleItem2NotClicked();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,12 +131,23 @@ public class RootActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.findViewById(R.id.drawer_ic_1).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_ic_2).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_ic_3).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_1).setOnClickListener(navigationClickListener); //주문하기
-        navigationView.findViewById(R.id.drawer_2).setOnClickListener(navigationClickListener); //추천
-        navigationView.findViewById(R.id.drawer_3).setOnClickListener(navigationClickListener); //더보기
+        icon_drawer_1 = (ImageView) navigationView.findViewById(R.id.drawer_ic_1);
+        icon_drawer_2 = (ImageView) navigationView.findViewById(R.id.drawer_ic_2);
+        icon_drawer_3 = (ImageView) navigationView.findViewById(R.id.drawer_ic_3);
+        tv_drawer_1 = (TextView) navigationView.findViewById(R.id.drawer_1);
+        tv_drawer_2 = (TextView) navigationView.findViewById(R.id.drawer_2);
+        tv_drawer_3 = (TextView) navigationView.findViewById(R.id.drawer_3);
+
+        icon_drawer_1.setOnClickListener(navigationClickListener);
+        icon_drawer_2.setOnClickListener(navigationClickListener);
+        icon_drawer_3.setOnClickListener(navigationClickListener);
+        tv_drawer_1.setOnClickListener(navigationClickListener); //주문하기
+        tv_drawer_2.setOnClickListener(navigationClickListener); //추천
+        tv_drawer_3.setOnClickListener(navigationClickListener); //더보기
+
+        setDrawerStyleItem1Clicked();
+        setDrawerStyleItem2NotClicked();
+        setDrawerStyleItem3NotClicked();
 
         TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
         TextView categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
@@ -118,7 +155,11 @@ public class RootActivity extends ActionBarActivity {
         TextView administrator = (TextView) navigationView.findViewById(R.id.administrator);
 
         //TODO: get recent call information
-        administrator.setText(mController.getCampus().getAdministrator());
+        administrator.setText(mController.getCampus().getName() + "\n주변음식점 정보의 수정 및 관리는\n" +
+                mController.getCampus().getAdministrator() + "에서 전담합니다.");
+        myCalls.setText(NavigationDrawerController.getTotalCallCount(RootActivity.this) + "회");
+        lastDay.setText(NavigationDrawerController.getLastDay(RootActivity.this));
+        categoryName.setText(NavigationDrawerController.getTheMostOrderedFood(RootActivity.this));
     }
 
     private void setSlidingTabBar() {
@@ -138,18 +179,43 @@ public class RootActivity extends ActionBarActivity {
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mActionBarDrawerToggle.syncState();
+    private void setDrawerStyleItem1NotClicked() {
+        tv_drawer_1.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_1.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_1.setImageResource(R.drawable.icon_drawer_list_menu_call_normal);
+
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
+    private void setDrawerStyleItem2NotClicked() {
+        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
     }
 
+    private void setDrawerStyleItem3NotClicked() {
+        tv_drawer_3.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_normal);
+    }
+
+    private void setDrawerStyleItem1Clicked() {
+        tv_drawer_1.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_1.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_1.setImageResource(R.drawable.icon_drawer_list_menu_call_selected);
+
+    }
+
+    private void setDrawerStyleItem2Clicked() {
+        tv_drawer_2.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_selected);
+    }
+
+    private void setDrawerStyleItem3Clicked() {
+        tv_drawer_3.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
+    }
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {

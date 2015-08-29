@@ -7,7 +7,6 @@ import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.lchpatners.shadal.call.RecentCall;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
@@ -68,15 +67,21 @@ public class LandingActivity extends ActionBarActivity {
     }
 
     private int setEntryActivity() {
+        int entry;
         Realm realm = Realm.getInstance(LandingActivity.this);
+        realm.beginTransaction();
         RealmQuery<Campus> query = realm.where(Campus.class);
         RealmResults<Campus> campus = query.findAll();
         if (campus.size() == 1) {
             updateData(campus.get(0));
-            return 1;
+            entry = 1;
         } else {
-            return 0;
+            entry = 0;
         }
+
+        realm.commitTransaction();
+        realm.close();
+        return entry;
     }
 
     private void updateData(Campus campus) {

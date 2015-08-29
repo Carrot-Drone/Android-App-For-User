@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.NavigationDrawerController;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.campus.Campus;
@@ -39,13 +40,20 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         public void onClick(View view) {
             if (view.getId() == R.id.drawer_ic_1 || view.getId() == R.id.drawer_1) {
                 setDrawerStyleItem1Clicked();
+                setDrawerStyleItem2NotClicked();
+
                 Intent intent = new Intent(RecommendedRestaurantActivity.this, RootActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
             } else if (view.getId() == R.id.drawer_ic_2 || view.getId() == R.id.drawer_2) {
                 mDrawerLayout.closeDrawers();
+
             } else if (view.getId() == R.id.drawer_ic_3 || view.getId() == R.id.drawer_3) {
+
                 setDrawerStyleItem3Clicked();
+                setDrawerStyleItem2NotClicked();
+
                 Intent intent = new Intent(RecommendedRestaurantActivity.this, SeeMoreActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent, REQUEST_CODE);
@@ -57,40 +65,13 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                setDrawerStyleItem2NotClicked();
                 setDrawerStyleItem2Clicked();
+                setDrawerStyleItem3NotClicked();
             }
         }
     }
 
-
-    private void setDrawerStyleItem1Clicked() {
-        tv_drawer_1.setTypeface(Typeface.DEFAULT_BOLD);
-        tv_drawer_1.setTextColor(getResources().getColor(R.color.primary));
-        icon_drawer_1.setImageResource(R.drawable.icon_drawer_list_menu_call_selected);
-        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
-        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
-        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
-
-    }
-
-    private void setDrawerStyleItem2Clicked() {
-        tv_drawer_2.setTypeface(Typeface.DEFAULT_BOLD);
-        tv_drawer_2.setTextColor(getResources().getColor(R.color.primary));
-        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_selected);
-        tv_drawer_3.setTypeface(null, Typeface.NORMAL);
-        tv_drawer_3.setTextColor(getResources().getColor(R.color.light_grey));
-        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_normal);
-    }
-
-    private void setDrawerStyleItem3Clicked() {
-        tv_drawer_3.setTypeface(Typeface.DEFAULT_BOLD);
-        tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
-        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
-        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
-        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
-        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +133,41 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         //TODO: get recent call information
         administrator.setText(mCampus.getName() + "\n주변음식점 정보의 수정 및 관리는\n" +
                 mCampus.getAdministrator() + "에서 전담합니다.");
+        myCalls.setText(NavigationDrawerController.getTotalCallCount(RecommendedRestaurantActivity.this) + "회");
+        lastDay.setText(NavigationDrawerController.getLastDay(RecommendedRestaurantActivity.this));
+        categoryName.setText(NavigationDrawerController.getTheMostOrderedFood(RecommendedRestaurantActivity.this));
+    }
 
+    private void setDrawerStyleItem2NotClicked() {
+        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
 
+    }
+
+    private void setDrawerStyleItem3NotClicked() {
+        tv_drawer_3.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_normal);
+    }
+
+    private void setDrawerStyleItem1Clicked() {
+        tv_drawer_1.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_1.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_1.setImageResource(R.drawable.icon_drawer_list_menu_call_selected);
+
+    }
+
+    private void setDrawerStyleItem2Clicked() {
+        tv_drawer_2.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_selected);
+    }
+
+    private void setDrawerStyleItem3Clicked() {
+        tv_drawer_3.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
     }
 
     @Override
@@ -162,6 +176,8 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawers();
 
         } else {
+            setResult(RESULT_OK);
+            finish();
             super.onBackPressed();
         }
     }

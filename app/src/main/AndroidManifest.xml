@@ -42,7 +42,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.RestaurantActivity"/>
+                android:value="com.lchpatners.shadal.restaurant.RestaurantListActivity"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -56,27 +56,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FlyerActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/title_activity_flyer"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".setting.SeeMoreActivity"
             android:label="@string/title_activity_see_more"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
-        </activity>
-        <activity
-            android:name=".RestaurantActivity"
-            android:label="@string/title_activity_restaurant"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
         </activity>
         <activity
             android:name=".RestaurantSuggestionActivity"
@@ -150,7 +132,7 @@
         </activity>
         <activity
             android:name=".LandingActivity"
-            android:label="LandingActivity">
+            android:label="캠퍼스:달">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -163,11 +145,7 @@
         </activity>
         <activity
             android:name=".restaurant.RestaurantListActivity"
-            android:label="@string/title_activity_restaurant"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
+            android:label="@string/title_activity_restaurant">
         </activity>
         <activity
             android:name=".restaurant.flyer.FlyerActivity"

@@ -331,6 +331,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="17dp"
+                android:layout_marginRight="23dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -351,10 +352,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/flyerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="33dp"
-                android:layout_marginRight="33dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -376,6 +378,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="23dp"
                 android:layout_marginRight="17dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">

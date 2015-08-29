@@ -1,7 +1,6 @@
 package com.lchpatners.shadal.restaurant;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RestaurantListViewPagerAdapter;
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.SlidingTabLayout;
 
 
@@ -124,11 +122,12 @@ public class RestaurantListActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
         if (item.getItemId() == android.R.id.home) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                onBackPressed();
-            } else {
-                super.onBackPressed();
-            }
+            onBackPressed();
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                onBackPressed();
+//            } else {
+//                super.onBackPressed();
+//            }
 
         }
         return super.onOptionsItemSelected(item);
@@ -136,10 +135,6 @@ public class RestaurantListActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(RestaurantListActivity.this, RootActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //TODO: set back button destination
-        //intent.putExtra("setcurrentpage", "s");
-        startActivity(intent);
+        super.onBackPressed();
     }
 }

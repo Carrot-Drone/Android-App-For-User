@@ -71,6 +71,37 @@ public class RecommendedRestaurantController {
         return category_title;
     }
 
+    public static int getCategoryPosition(String category_title) {
+        int position;
+        switch (category_title) {
+            case "치킨":
+                position = 0;
+                break;
+            case "피자":
+                position = 1;
+                break;
+            case "중국집":
+                position = 2;
+                break;
+            case "한식/분식":
+                position = 3;
+                break;
+            case "도시락/돈까스":
+                position = 4;
+                break;
+            case "족발/보쌈":
+                position = 5;
+                break;
+            case "냉면":
+                position = 6;
+                break;
+            default:
+                position = 7;
+                break;
+        }
+        return position;
+    }
+
     public void getRecommendedRestaurantListFromServer() {
         recommendedRestaurantAPI.getRecommendedRestaurants(mCampus.getId(), new Callback<RecommendedRestaurantList>() {
             @Override
