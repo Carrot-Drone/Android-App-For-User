@@ -44,7 +44,7 @@ public class LoginController {
 
     public LoginController(Activity activity) {
         this.mActivity = activity;
-        this.lvCampusListView = (ListView) activity.findViewById(R.id.LoginCampusSelect_campusList);
+        this.lvCampusListView = (ListView) activity.findViewById(R.id.campusList);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)

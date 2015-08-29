@@ -71,6 +71,7 @@ public class FlyerActivity extends ActionBarActivity {
                         .getRestaurant(FlyerActivity.this, mRestaurantId).getPhone_number();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 startActivity(intent);
+                
                 RecentCallController.stackRecentCall(FlyerActivity.this, mRestaurantId);
                 CallLogController.sendCallLog(FlyerActivity.this, mRestaurantId);
             }

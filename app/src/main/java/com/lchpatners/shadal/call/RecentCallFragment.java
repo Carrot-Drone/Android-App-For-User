@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.CallListAdapter;
 import com.lchpatners.shadal.DatabaseHelper;
+import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.Restaurant;
@@ -24,7 +25,7 @@ import com.lchpatners.shadal.Restaurant;
 public class RecentCallFragment extends Fragment {
     private Activity activity;
     private ListView listView;
-    private CallListAdapter adapter;
+    private RecentCallAdapter mAdapter;
 
     private ImageView iv_call;
     private ImageView iv_name;
@@ -45,7 +46,6 @@ public class RecentCallFragment extends Fragment {
 
                 iv_name.setVisibility(View.INVISIBLE);
                 iv_call.setVisibility(View.VISIBLE);
-
             }
         }
     };
@@ -75,7 +75,6 @@ public class RecentCallFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_recent_call, container, false);
 
         listView = (ListView) view.findViewById(R.id.call_list_view);
@@ -91,16 +90,15 @@ public class RecentCallFragment extends Fragment {
         name.setOnClickListener(btnListener);
         call.setOnClickListener(btnListener);
 
-        adapter = new CallListAdapter(activity, DatabaseHelper.CALL);
+        mAdapter = new RecentCallAdapter(activity, RecentCallController.ORDER_BY_CALL_RECENT);
+//        mAdapter.notifyDataSetChanged();
 
-        adapter.notifyDataSetChanged();
-
-        listView.setAdapter(adapter);
+        listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (adapter.getItem(position) instanceof Restaurant) {
-                    Restaurant restaurant = (Restaurant) adapter.getItem(position);
+                if (mAdapter.getItem(position) instanceof Restaurant) {
+                    Restaurant restaurant = (Restaurant) mAdapter.getItem(position);
 
 //                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
 //                    helper.sendEvent("UX", "res_in_favorite_clicked", restaurant.getName());
@@ -109,7 +107,7 @@ public class RecentCallFragment extends Fragment {
                     intent.putExtra("RESTAURANT", restaurant);
                     intent.putExtra("REFERRER", "CallListFragment");
                     startActivity(intent);
-                    adapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                     listView.deferNotifyDataSetChanged();
                 }
             }

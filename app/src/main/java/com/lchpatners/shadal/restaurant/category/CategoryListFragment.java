@@ -57,7 +57,6 @@ public class CategoryListFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.list_view);
         final CategoryListAdapter adapter = new CategoryListAdapter(mActivity);
 
-//        emptyView.setText("문제가 생겼어요! \n 더 보기에 가서 캠퍼스를 다시 설정해주세요");
         listView.setAdapter(adapter);
 
         // TODO: KNOWN ISSUE: duplicated onItemClick() calls when double-tapping

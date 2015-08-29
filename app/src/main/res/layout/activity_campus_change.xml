@@ -93,7 +93,7 @@
         android:background="@color/divider"></RelativeLayout>
 
     <ListView
-        android:id="@+id/campusSelect_campusList"
+        android:id="@+id/campusList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/divider"

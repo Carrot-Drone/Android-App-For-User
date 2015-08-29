@@ -51,8 +51,8 @@ public class RestaurantInfoActivity extends ActionBarActivity {
         Category category = null;
 
         Realm realm = Realm.getInstance(RestaurantInfoActivity.this);
-        realm.beginTransaction();
         try {
+            realm.beginTransaction();
             RealmQuery<Category> query = realm.where(Category.class).equalTo("restaurants.id", restaurant.getId());
             category = query.findFirst();
             realm.commitTransaction();

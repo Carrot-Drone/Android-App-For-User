@@ -1,17 +1,26 @@
 package com.lchpatners.shadal.setting;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusAdapter;
+import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.login.LoginCampusSelectActivity;
+import com.lchpatners.shadal.restaurant.RestaurantAPI;
+import com.lchpatners.shadal.restaurant.RestaurantController;
+import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.util.LogUtils;
+import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
+import com.lchpatners.shadal.util.System.DeviceController;
 
 import java.util.List;
 
@@ -29,14 +38,14 @@ public class CampusChangeController {
     private static final String TAG = LogUtils.makeTag(CampusChangeController.class);
     private static final String BASE_URL = "http://www.shadal.kr:3000";
     private CampusAPI mCampusAPI;
-    private Activity activity;
+    private Activity mActivity;
     private ListView lvCampusListView;
     private Campus mSelectedCampus;
     private int mSelectedCampusId = -1;
 
     public CampusChangeController(Activity activity) {
-        this.activity = activity;
-        this.lvCampusListView = (ListView) activity.findViewById(R.id.campusSelect_campusList);
+        this.mActivity = activity;
+        this.lvCampusListView = (ListView) activity.findViewById(R.id.campusList);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -60,7 +69,7 @@ public class CampusChangeController {
     }
 
     public void setCampus() {
-        Realm realm = Realm.getInstance(activity);
+        Realm realm = Realm.getInstance(mActivity);
         try {
             realm.beginTransaction();
 
@@ -70,13 +79,17 @@ public class CampusChangeController {
 
             //insert campus to realm
             realm.copyToRealm(mSelectedCampus);
-            realm.commitTransaction();
 
+            realm.commitTransaction();
         } catch (Exception e) {
             realm.cancelTransaction();
         } finally {
             realm.close();
         }
+
+        DeviceController.sendDeviceInfo(mSelectedCampusId, Preferences.getDeviceUuid(mActivity));
+        CampusController.updateCampusMetaData(mActivity, mSelectedCampus);
+        RestaurantController.insertOrUpdateAllRestaurantInfo(mActivity, mSelectedCampus, RootActivity.class);
     }
 
     private void markSelectedCampus(CampusAdapter adapter, int position) {
@@ -85,7 +98,7 @@ public class CampusChangeController {
 
     private void fillCampusListView(final List<Campus> campusList) {
         final CampusAdapter campusListAdapter =
-                new CampusAdapter(activity, campusList);
+                new CampusAdapter(mActivity, campusList);
 
         lvCampusListView.setAdapter(campusListAdapter);
         lvCampusListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

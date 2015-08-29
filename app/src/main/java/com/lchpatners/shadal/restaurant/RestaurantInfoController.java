@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,8 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
-import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -74,8 +72,8 @@ public class RestaurantInfoController {
         Restaurant restaurant = null;
 
         Realm realm = Realm.getInstance(mActivity);
-        realm.beginTransaction();
         try {
+            realm.beginTransaction();
             RealmQuery<Restaurant> query = realm.where(Restaurant.class);
             restaurant = query.equalTo("id", restaurant_id).findFirst();
             realm.commitTransaction();
@@ -193,9 +191,11 @@ public class RestaurantInfoController {
     }
 
     public void setCallButtonListener() {
+        Toolbar phoneButton = (Toolbar) mActivity.findViewById(R.id.bottom_bar);
         TextView phoneNumber = (TextView) mActivity.findViewById(R.id.phone_number);
         phoneNumber.setText(mRestaurant.getPhone_number());
-        phoneNumber.setOnClickListener(new View.OnClickListener() {
+
+        phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());

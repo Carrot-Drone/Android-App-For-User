@@ -14,7 +14,7 @@ public class RecentCall extends RealmObject {
 
     private int call_count;
     private String restaurant_name;
-    private Date resent_call_date;
+    private Date recent_call_date;
     private int campus_id;
     private int category_id;
 
@@ -42,12 +42,12 @@ public class RecentCall extends RealmObject {
         this.restaurant_name = restaurant_name;
     }
 
-    public Date getResent_call_date() {
-        return resent_call_date;
+    public Date getRecent_call_date() {
+        return recent_call_date;
     }
 
-    public void setResent_call_date(Date resent_call_date) {
-        this.resent_call_date = resent_call_date;
+    public void setRecent_call_date(Date recent_call_date) {
+        this.recent_call_date = recent_call_date;
     }
 
     public int getCampus_id() {
