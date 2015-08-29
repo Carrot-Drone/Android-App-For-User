@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +20,6 @@ import io.realm.RealmQuery;
 
 public class SeeMoreActivity extends ActionBarActivity {
     private static final String TAG = LogUtils.makeTag(SeeMoreActivity.class);
-
     Toolbar toolbar;
     String mTitle;
 
@@ -76,5 +76,27 @@ public class SeeMoreActivity extends ActionBarActivity {
             realm.close();
         }
         return campusName;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            setResult(RESULT_OK);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+        super.onBackPressed();
     }
 }

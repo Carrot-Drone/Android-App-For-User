@@ -65,6 +65,7 @@ public class CampusChangeActivity extends ActionBarActivity {
                 if (mController.isCampusSelected()) {
                     mController.setCampus();
                     Intent intent = new Intent(CampusChangeActivity.this, RootActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }
@@ -93,12 +94,10 @@ public class CampusChangeActivity extends ActionBarActivity {
         String campusName = "";
         Realm realm = Realm.getInstance(CampusChangeActivity.this);
         try {
-
             realm.beginTransaction();
             RealmQuery<Campus> query = realm.where(Campus.class);
             Campus currentCampus = query.findFirst();
             campusName = currentCampus.getName();
-
             realm.commitTransaction();
         } catch (Exception e) {
             realm.cancelTransaction();

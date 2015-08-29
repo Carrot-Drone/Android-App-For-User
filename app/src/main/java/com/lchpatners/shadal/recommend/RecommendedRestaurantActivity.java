@@ -1,6 +1,7 @@
 package com.lchpatners.shadal.recommend;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
@@ -19,28 +21,76 @@ import com.lchpatners.shadal.setting.SeeMoreActivity;
 
 
 public class RecommendedRestaurantActivity extends ActionBarActivity {
+    static final int REQUEST_CODE = 0;
     Toolbar toolbar;
     DrawerLayout mDrawerLayout;
     TextView drawerTitle;
     Campus mCampus;
+    ImageView icon_drawer_1;
+    ImageView icon_drawer_2;
+    ImageView icon_drawer_3;
+    TextView tv_drawer_1;
+    TextView tv_drawer_2;
+    TextView tv_drawer_3;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.drawer_ic_1 || view.getId() == R.id.drawer_1) {
+                setDrawerStyleItem1Clicked();
                 Intent intent = new Intent(RecommendedRestaurantActivity.this, RootActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else if (view.getId() == R.id.drawer_ic_2 || view.getId() == R.id.drawer_2) {
                 mDrawerLayout.closeDrawers();
             } else if (view.getId() == R.id.drawer_ic_3 || view.getId() == R.id.drawer_3) {
+                setDrawerStyleItem3Clicked();
                 Intent intent = new Intent(RecommendedRestaurantActivity.this, SeeMoreActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                setDrawerStyleItem2Clicked();
+            }
+        }
+    }
+
+
+    private void setDrawerStyleItem1Clicked() {
+        tv_drawer_1.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_1.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_1.setImageResource(R.drawable.icon_drawer_list_menu_call_selected);
+        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
+
+    }
+
+    private void setDrawerStyleItem2Clicked() {
+        tv_drawer_2.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_selected);
+        tv_drawer_3.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_normal);
+    }
+
+    private void setDrawerStyleItem3Clicked() {
+        tv_drawer_3.setTypeface(Typeface.DEFAULT_BOLD);
+        tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
+        icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
+        tv_drawer_2.setTypeface(null, Typeface.NORMAL);
+        tv_drawer_2.setTextColor(getResources().getColor(R.color.light_grey));
+        icon_drawer_2.setImageResource(R.drawable.icon_drawer_list_menu_recommand_normal);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +127,22 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         mDrawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.findViewById(R.id.drawer_ic_1).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_ic_2).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_ic_3).setOnClickListener(navigationClickListener);
-        navigationView.findViewById(R.id.drawer_1).setOnClickListener(navigationClickListener); //주문하기
-        navigationView.findViewById(R.id.drawer_2).setOnClickListener(navigationClickListener); //추천
-        navigationView.findViewById(R.id.drawer_3).setOnClickListener(navigationClickListener); //더보기
+
+        icon_drawer_1 = (ImageView) navigationView.findViewById(R.id.drawer_ic_1);
+        icon_drawer_2 = (ImageView) navigationView.findViewById(R.id.drawer_ic_2);
+        icon_drawer_3 = (ImageView) navigationView.findViewById(R.id.drawer_ic_3);
+        tv_drawer_1 = (TextView) navigationView.findViewById(R.id.drawer_1);
+        tv_drawer_2 = (TextView) navigationView.findViewById(R.id.drawer_2);
+        tv_drawer_3 = (TextView) navigationView.findViewById(R.id.drawer_3);
+
+        icon_drawer_1.setOnClickListener(navigationClickListener);
+        icon_drawer_2.setOnClickListener(navigationClickListener);
+        icon_drawer_3.setOnClickListener(navigationClickListener);
+        tv_drawer_1.setOnClickListener(navigationClickListener); //주문하기
+        tv_drawer_2.setOnClickListener(navigationClickListener); //추천
+        tv_drawer_3.setOnClickListener(navigationClickListener); //더보기
+
+        setDrawerStyleItem2Clicked();
 
         TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
         TextView categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
