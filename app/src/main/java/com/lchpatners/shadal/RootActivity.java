@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
@@ -40,7 +41,7 @@ public class RootActivity extends ActionBarActivity {
             if (view.getId() == R.id.drawer_ic_1 || view.getId() == R.id.drawer_1) {
                 mDrawerLayout.closeDrawers();
             } else if (view.getId() == R.id.drawer_ic_2 || view.getId() == R.id.drawer_2) {
-                Intent intent = new Intent(RootActivity.this, RecommendActivity.class);
+                Intent intent = new Intent(RootActivity.this, RecommendedRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else if (view.getId() == R.id.drawer_ic_3 || view.getId() == R.id.drawer_3) {

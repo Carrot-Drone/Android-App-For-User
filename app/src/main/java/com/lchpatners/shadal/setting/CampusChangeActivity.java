@@ -1,6 +1,5 @@
 package com.lchpatners.shadal.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,12 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RootActivity;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.util.LogUtils;
-
-import io.realm.Realm;
-import io.realm.RealmQuery;
 
 public class CampusChangeActivity extends ActionBarActivity {
 
@@ -50,9 +45,9 @@ public class CampusChangeActivity extends ActionBarActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         tvCurrentCampus = (TextView) findViewById(R.id.campus);
-        tvCurrentCampus.setText(getCampusName());
+        tvCurrentCampus.setText(CampusController.getCurrentCampus(CampusChangeActivity.this).getName());
 
-        mCampusListView = (ListView) findViewById(R.id.campusSelect_campusList);
+        mCampusListView = (ListView) findViewById(R.id.campusList);
         LayoutInflater inflater = getLayoutInflater();
         FrameLayout listFooterView = (FrameLayout) inflater.inflate(
                 R.layout.list_footer, null);
@@ -64,10 +59,6 @@ public class CampusChangeActivity extends ActionBarActivity {
             public void onClick(View view) {
                 if (mController.isCampusSelected()) {
                     mController.setCampus();
-                    Intent intent = new Intent(CampusChangeActivity.this, RootActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
                 }
             }
         });
@@ -88,22 +79,5 @@ public class CampusChangeActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private String getCampusName() {
-        String campusName = "";
-        Realm realm = Realm.getInstance(CampusChangeActivity.this);
-        try {
-            realm.beginTransaction();
-            RealmQuery<Campus> query = realm.where(Campus.class);
-            Campus currentCampus = query.findFirst();
-            campusName = currentCampus.getName();
-            realm.commitTransaction();
-        } catch (Exception e) {
-            realm.cancelTransaction();
-        } finally {
-            realm.close();
-        }
-        return campusName;
     }
 }

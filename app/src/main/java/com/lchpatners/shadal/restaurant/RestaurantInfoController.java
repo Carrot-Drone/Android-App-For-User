@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -193,9 +194,11 @@ public class RestaurantInfoController {
     }
 
     public void setCallButtonListener() {
+        Toolbar phoneButton = (Toolbar) mActivity.findViewById(R.id.bottom_bar);
         TextView phoneNumber = (TextView) mActivity.findViewById(R.id.phone_number);
         phoneNumber.setText(mRestaurant.getPhone_number());
-        phoneNumber.setOnClickListener(new View.OnClickListener() {
+
+        phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                    AnalyticsHelper helper = new AnalyticsHelper(getApplication());
