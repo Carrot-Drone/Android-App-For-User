@@ -53,7 +53,6 @@ public class RestaurantListActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setSlidingTabLayout();
-
     }
 
     private void setSlidingTabLayout() {

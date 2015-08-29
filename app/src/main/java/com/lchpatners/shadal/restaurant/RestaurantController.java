@@ -61,12 +61,13 @@ public class RestaurantController {
             @Override
             public void success(List<Category> categories, Response response) {
                 Realm realm = Realm.getInstance(activity);
-                realm.beginTransaction();
-
                 try {
+                    realm.beginTransaction();
+
                     RealmQuery<Flyer> query = realm.where(Flyer.class);
                     RealmResults<Flyer> flyers = query.findAll();
                     flyers.clear();
+
                     realm.copyToRealmOrUpdate(categories);
                     realm.commitTransaction();
                 } catch (Exception e) {

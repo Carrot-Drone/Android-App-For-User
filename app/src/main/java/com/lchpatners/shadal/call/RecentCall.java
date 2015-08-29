@@ -3,17 +3,18 @@ package com.lchpatners.shadal.call;
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by youngkim on 2015. 8. 22..
  */
 public class RecentCall extends RealmObject {
-    @Index
+    @PrimaryKey
     private int restaurant_id;
-    private Date resent_call_date;
 
+    private int call_count;
     private String restaurant_name;
+    private Date recent_call_date;
     private int campus_id;
     private int category_id;
 
@@ -25,6 +26,14 @@ public class RecentCall extends RealmObject {
         this.restaurant_id = restaurant_id;
     }
 
+    public int getCall_count() {
+        return call_count;
+    }
+
+    public void setCall_count(int call_count) {
+        this.call_count = call_count;
+    }
+
     public String getRestaurant_name() {
         return restaurant_name;
     }
@@ -33,12 +42,12 @@ public class RecentCall extends RealmObject {
         this.restaurant_name = restaurant_name;
     }
 
-    public Date getResent_call_date() {
-        return resent_call_date;
+    public Date getRecent_call_date() {
+        return recent_call_date;
     }
 
-    public void setResent_call_date(Date resent_call_date) {
-        this.resent_call_date = resent_call_date;
+    public void setRecent_call_date(Date recent_call_date) {
+        this.recent_call_date = recent_call_date;
     }
 
     public int getCampus_id() {

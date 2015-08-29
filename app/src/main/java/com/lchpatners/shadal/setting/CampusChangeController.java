@@ -70,8 +70,9 @@ public class CampusChangeController {
 
     public void setCampus() {
         Realm realm = Realm.getInstance(mActivity);
-        realm.beginTransaction();
         try {
+            realm.beginTransaction();
+
             RealmQuery<Campus> query = realm.where(Campus.class);
             RealmResults<Campus> currentCampus = query.findAll();
             currentCampus.clear();

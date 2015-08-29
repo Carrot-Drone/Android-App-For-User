@@ -28,14 +28,10 @@ public class RestaurantListFragment extends Fragment {
     ImageView onlyFlyer;
     ImageView onlyOpenRestaurant;
     private RestaurantListAdapter mRestaurantListAdapter;
-    private int mCategoryNumber;
     private Activity mActivity;
     private boolean isChecked1 = false;
     private boolean isChecked2 = false;
 
-    public RestaurantListFragment(int categoryNumber) {
-        this.mCategoryNumber = categoryNumber;
-    }
 
 //    View.OnClickListener checkListener = new View.OnClickListener() {
 //        @Override
@@ -78,12 +74,13 @@ public class RestaurantListFragment extends Fragment {
 //    };
 
     public static RestaurantListFragment newInstance(int categoryId) {
-        RestaurantListFragment restaurantListFragment = new RestaurantListFragment(categoryId);
+        RestaurantListFragment restaurantListFragment = new RestaurantListFragment();
 
         // TODO : why I have to deliver this args like this?
-//        Bundle args = new Bundle();
-//        args.putInt("mCategoryNumber", categoryId);
-//        rlf.setArguments(args);
+        Bundle args = new Bundle();
+        args.putInt("mCategoryNumber", categoryId);
+        restaurantListFragment.setArguments(args);
+
         return restaurantListFragment;
     }
 
@@ -113,12 +110,9 @@ public class RestaurantListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        //need when I use bundle
-//        categoryId = getArguments().getInt("categoryId");
+        //need when I use bundle
+        final int mCategoryNumber = getArguments().getInt("mCategoryNumber");
 //        final String category = getArguments().getString("CATEGORY");
-
-//        Server server = new Server(activity);
-//        server.updateCategory(category);
 
         View view = inflater.inflate(R.layout.fragment_restaurant, container, false);
 
@@ -139,24 +133,30 @@ public class RestaurantListFragment extends Fragment {
     }
 
     private List<Restaurant> getRestaurantList(int categoryNumber, int flag) {
-        List<Restaurant> restaurantList;
+        List<Restaurant> restaurantList = null;
 
         Realm realm = Realm.getInstance(mActivity);
-        realm.beginTransaction();
-
-        RealmQuery<Category> categoryQuery = realm.where(Category.class);
-        RealmResults<Category> categoryList = categoryQuery.findAll();
-        switch (flag) {
-            case LIST_ALL:
-                restaurantList = categoryList.get(categoryNumber).getRestaurants();
-                break;
-            default:
-                restaurantList = categoryList.get(categoryNumber).getRestaurants();
-                break;
+        try {
+            realm.beginTransaction();
+            RealmQuery<Category> categoryQuery = realm.where(Category.class);
+            RealmResults<Category> categoryList = categoryQuery.findAll();
+            restaurantList = categoryList.get(categoryNumber).getRestaurants();
+            realm.commitTransaction();
+        } catch (Exception e) {
+            realm.cancelTransaction();
+            e.printStackTrace();
+        } finally {
+            realm.close();
         }
 
-        realm.commitTransaction();
-        realm.close();
+//        switch (flag) {
+//            case LIST_ALL:
+//                restaurantList = categoryList.get(categoryNumber).getRestaurants();
+//                break;
+//            default:
+//                restaurantList = categoryList.get(categoryNumber).getRestaurants();
+//                break;
+//        }
 
         return restaurantList;
     }

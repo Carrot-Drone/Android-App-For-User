@@ -57,11 +57,9 @@ public class RootActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
 
-        //TODO:checkAppMinimunVersion
+        //TODO:checkAppMinimumVersion
 
         mController = new RootController(RootActivity.this);
-
-        //TODO:check previous Database
 
         //TODO: set toast only one time
 

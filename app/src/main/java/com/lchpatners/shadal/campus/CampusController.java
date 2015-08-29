@@ -42,18 +42,13 @@ public class CampusController {
             @Override
             public void success(Campus campus, Response response) {
                 Realm realm = Realm.getInstance(activity);
-                realm.beginTransaction();
                 try {
-                    RealmQuery<Campus> query = realm.where(Campus.class);
-                    RealmResults<Campus> currentCampus = query.findAll();
-                    currentCampus.clear();
-
-                    //insert campus to realm
-                    realm.copyToRealm(campus);
-
+                    realm.beginTransaction();
+                    realm.copyToRealmOrUpdate(campus);
                     realm.commitTransaction();
                 } catch (Exception e) {
                     realm.cancelTransaction();
+                    e.printStackTrace();
                 } finally {
                     realm.close();
                 }

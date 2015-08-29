@@ -20,10 +20,8 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
-import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
@@ -35,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -75,8 +72,8 @@ public class RestaurantInfoController {
         Restaurant restaurant = null;
 
         Realm realm = Realm.getInstance(mActivity);
-        realm.beginTransaction();
         try {
+            realm.beginTransaction();
             RealmQuery<Restaurant> query = realm.where(Restaurant.class);
             restaurant = query.equalTo("id", restaurant_id).findFirst();
             realm.commitTransaction();
