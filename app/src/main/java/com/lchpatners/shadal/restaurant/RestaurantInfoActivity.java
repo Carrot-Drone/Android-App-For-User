@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RestaurantCorrectionActivity;
 import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.restaurant.menu.MenuListAdapter;
+import com.lchpatners.shadal.restaurant_correction.RestaurantCorrectionActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
 import io.realm.Realm;
@@ -24,12 +23,11 @@ import io.realm.RealmQuery;
  * Created by YoungKim on 2015. 8. 25..
  */
 public class RestaurantInfoActivity extends ActionBarActivity {
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
-    private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
-
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
     private Intent mIntent;
     private RestaurantInfoController mRestaurantInfoController;
     private Restaurant mRestaurant;

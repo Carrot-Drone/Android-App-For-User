@@ -1,9 +1,13 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.restaurant_correction;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.lchpatners.shadal.R;
 
 
 public class RCPopUpActivity extends ActionBarActivity {
@@ -12,6 +16,14 @@ public class RCPopUpActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rc_pop_up);
+        TextView okay = (TextView) findViewById(R.id.okay);
+        okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     @Override

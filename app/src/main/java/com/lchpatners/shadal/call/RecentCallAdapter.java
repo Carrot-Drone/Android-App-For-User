@@ -12,7 +12,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
+import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
@@ -23,10 +25,10 @@ import java.util.List;
  * Created by eunhyekim on 2015. 8. 22..
  */
 public class RecentCallAdapter extends BaseAdapter {
+    public static final String RESTAURANT_ID = "restaurant_id";
     private Activity mActivity;
     private String mOrder;
     private List<RecentCall> mRecentCallList;
-    public static final String RESTAURANT_ID = "restaurant_id";
 
     public RecentCallAdapter(Activity activity, String order) {
         this.mActivity = activity;
@@ -80,8 +82,10 @@ public class RecentCallAdapter extends BaseAdapter {
                 String number = "tel:" + restaurant.getPhone_number();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
-
                 loadData(mOrder);
+
+                RootActivity.updateNavigationView(mActivity);
+                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
         });
 

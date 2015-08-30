@@ -1,5 +1,6 @@
 package com.lchpatners.shadal;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,12 +21,15 @@ import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
+;
+
 /**
  * Created by youngkim on 2015. 8. 24..
  */
 public class RootActivity extends ActionBarActivity {
     static final int REQUEST_CODE = 1;
     private static final String TAG = LogUtils.makeTag(RootActivity.class);
+    static NavigationView navigationView;
     ImageView icon_drawer_1;
     ImageView icon_drawer_2;
     ImageView icon_drawer_3;
@@ -65,6 +69,10 @@ public class RootActivity extends ActionBarActivity {
             }
         }
     };
+
+    public static void updateNavigationView(Activity activity) {
+        NavigationDrawerController.updateNavigationDrawer(activity, navigationView);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,7 +138,7 @@ public class RootActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         icon_drawer_1 = (ImageView) navigationView.findViewById(R.id.drawer_ic_1);
         icon_drawer_2 = (ImageView) navigationView.findViewById(R.id.drawer_ic_2);
         icon_drawer_3 = (ImageView) navigationView.findViewById(R.id.drawer_ic_3);
@@ -157,9 +165,7 @@ public class RootActivity extends ActionBarActivity {
         //TODO: get recent call information
         administrator.setText(mController.getCampus().getName() + "\n주변음식점 정보의 수정 및 관리는\n" +
                 mController.getCampus().getAdministrator() + "에서 전담합니다.");
-        myCalls.setText(NavigationDrawerController.getTotalCallCount(RootActivity.this) + "회");
-        lastDay.setText(NavigationDrawerController.getLastDay(RootActivity.this));
-        categoryName.setText(NavigationDrawerController.getTheMostOrderedFood(RootActivity.this));
+        updateNavigationView(RootActivity.this);
     }
 
     private void setSlidingTabBar() {
@@ -216,6 +222,7 @@ public class RootActivity extends ActionBarActivity {
         tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
         icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
     }
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {

@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RequestActivity;
 import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.request.RequestActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
 import io.realm.Realm;

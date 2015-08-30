@@ -93,7 +93,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".RestaurantCorrectionActivity"
+            android:name=".restaurant_correction.RestaurantCorrectionActivity"
             android:label="@string/title_activity_restaurant_correction"
             android:parentActivityName=".restaurant.RestaurantInfoActivity"
             android:screenOrientation="portrait">
@@ -107,7 +107,7 @@
             android:value="@string/kakao_app_key"/>
 
         <activity
-            android:name=".RequestActivity"
+            android:name=".request.RequestActivity"
             android:label="@string/title_activity_request"
             android:parentActivityName=".setting.SeeMoreActivity">
             <meta-data
@@ -123,7 +123,7 @@
                 android:value="com.lchpatners.shadal.RSbyUserActivity"/>
         </activity>
         <activity
-            android:name=".RCPopUpActivity"
+            android:name=".restaurant_correction.RCPopUpActivity"
             android:label="@string/title_activity_rcpop_up">
         </activity>
         <activity

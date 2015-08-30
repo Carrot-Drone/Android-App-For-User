@@ -1,5 +1,6 @@
 package com.lchpatners.shadal.recommend;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.lchpatners.shadal.setting.SeeMoreActivity;
 
 public class RecommendedRestaurantActivity extends ActionBarActivity {
     static final int REQUEST_CODE = 0;
+    static NavigationView navigationView;
     Toolbar toolbar;
     DrawerLayout mDrawerLayout;
     TextView drawerTitle;
@@ -33,7 +35,6 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
     TextView tv_drawer_1;
     TextView tv_drawer_2;
     TextView tv_drawer_3;
-
     private ActionBarDrawerToggle mDrawerToggle;
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
@@ -61,6 +62,10 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         }
     };
 
+    public static void updateNavigationView(Activity activity) {
+        NavigationDrawerController.updateNavigationDrawer(activity, navigationView);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
@@ -71,7 +76,6 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
             }
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +111,7 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         icon_drawer_1 = (ImageView) navigationView.findViewById(R.id.drawer_ic_1);
         icon_drawer_2 = (ImageView) navigationView.findViewById(R.id.drawer_ic_2);
@@ -133,9 +137,7 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
         //TODO: get recent call information
         administrator.setText(mCampus.getName() + "\n주변음식점 정보의 수정 및 관리는\n" +
                 mCampus.getAdministrator() + "에서 전담합니다.");
-        myCalls.setText(NavigationDrawerController.getTotalCallCount(RecommendedRestaurantActivity.this) + "회");
-        lastDay.setText(NavigationDrawerController.getLastDay(RecommendedRestaurantActivity.this));
-        categoryName.setText(NavigationDrawerController.getTheMostOrderedFood(RecommendedRestaurantActivity.this));
+        updateNavigationView(RecommendedRestaurantActivity.this);
     }
 
     private void setDrawerStyleItem2NotClicked() {

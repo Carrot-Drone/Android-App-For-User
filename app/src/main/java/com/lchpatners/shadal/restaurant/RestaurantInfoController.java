@@ -20,8 +20,10 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
+import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
 import com.lchpatners.shadal.util.LogUtils;
@@ -44,14 +46,13 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 26..
  */
 public class RestaurantInfoController {
-    private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
     public static final int GOOD = 1;
     public static final int BAD = 0;
-
+    private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private Activity mActivity;
     private Restaurant mRestaurant;
     private View mHeader;
@@ -204,6 +205,8 @@ public class RestaurantInfoController {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
                 updateCallLog();
+                RootActivity.updateNavigationView(mActivity);
+                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
         });
     }

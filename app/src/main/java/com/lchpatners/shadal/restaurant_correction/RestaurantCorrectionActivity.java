@@ -1,4 +1,4 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.restaurant_correction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.lchpatners.shadal.R;
 
 public class RestaurantCorrectionActivity extends ActionBarActivity {
     static final String TAG = RestaurantCorrectionActivity.class.getSimpleName();
@@ -48,9 +50,9 @@ public class RestaurantCorrectionActivity extends ActionBarActivity {
                     }
                 }
                 details = editText.getText().toString();
+                RestaurantCorrectionController.sendRestaurantCorrection(RestaurantCorrectionActivity.this, majorCorrection, details, restaurantId);
                 Log.i(TAG, majorCorrection + "," + details);
 
-                finish();
             }
             if ((position >= 0) && (position <= 4)) {
                 if (checked[position] == false) {

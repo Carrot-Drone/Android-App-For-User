@@ -1,12 +1,13 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.request;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.lchpatners.shadal.R;
 
 
 public class RequestActivity extends ActionBarActivity {
@@ -34,8 +35,8 @@ public class RequestActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 String details = detail.getText().toString();
-                Log.i(TAG, String.valueOf(email.getEditableText()) + "," + details);
-                finish();
+                String email_address = email.getText().toString();
+                RequestController.sendUserRequest(RequestActivity.this, email_address, details);
             }
         });
 

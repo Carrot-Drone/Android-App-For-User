@@ -1,6 +1,8 @@
 package com.lchpatners.shadal;
 
 import android.app.Activity;
+import android.support.design.widget.NavigationView;
+import android.widget.TextView;
 
 import com.lchpatners.shadal.call.RecentCall;
 import com.lchpatners.shadal.restaurant.category.Category;
@@ -15,8 +17,23 @@ import io.realm.RealmResults;
  * Created by eunhyekim on 2015. 8. 29..
  */
 public class NavigationDrawerController {
+    static NavigationView mNavigationView;
+    static TextView lastDay;
+    static TextView categoryName;
+    static TextView myCalls;
 
-    public static int getTotalCallCount(Activity activity) {
+
+    public static void updateNavigationDrawer(Activity activity, NavigationView navigationView) {
+        lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
+        categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
+        myCalls = (TextView) navigationView.findViewById(R.id.my_calls); //내 주문수
+
+        setTotalCallCount(activity);
+        getLastDay(activity);
+        getTheMostOrderedFood(activity);
+    }
+
+    public static void setTotalCallCount(Activity activity) {
         Realm realm = Realm.getInstance(activity);
         realm.beginTransaction();
         int total_call_count = 0;
@@ -35,11 +52,11 @@ public class NavigationDrawerController {
             for (int i = 0; i < recentCallList.size(); i++)
                 total_call_count += recentCallList.get(i).getCall_count();
         }
-        return total_call_count;
+        myCalls.setText(total_call_count + "회");
     }
 
 
-    public static String getLastDay(Activity activity) {
+    public static void getLastDay(Activity activity) {
 
         int lastday = -1;
         Realm realm = Realm.getInstance(activity);
@@ -56,17 +73,17 @@ public class NavigationDrawerController {
             realm.close();
         }
         if (recentCall != null) {
-            long last = recentCall.getResent_call_date().getTime();
+            long last = recentCall.getRecent_call_date().getTime();
             Date date = new Date();
             Long now = date.getTime();
             last = now - last;
             lastday = (int) last / (24 * 60 * 60 * 1000);
         }
-
-        return (lastday == -1) ? "" : lastday + "일";
+        String day = (lastday == -1) ? "" : lastday + "일";
+        lastDay.setText(day);
     }
 
-    public static String getTheMostOrderedFood(Activity activity) {
+    public static void getTheMostOrderedFood(Activity activity) {
         Realm realm = Realm.getInstance(activity);
         int[] count = new int[8];
         int[] category_id = new int[8];
@@ -90,7 +107,7 @@ public class NavigationDrawerController {
         if (recentCallList != null) {
             for (int i = 0; i < recentCallList.size(); i++) {
                 count[recentCallList.get(i).getCategory_id() % 8] += 1;
-                category_id[i] = recentCallList.get(i).getCategory_id();
+                category_id[recentCallList.get(i).getCategory_id() % 8] = recentCallList.get(i).getCategory_id();
             }
             int max = -1;
             for (int i = 0; i < count.length; i++) {
@@ -116,7 +133,10 @@ public class NavigationDrawerController {
             }
 
         }
-        return (category != null) ? category.getTitle() : "";
+
+        categoryName.setText((category != null) ? category.getTitle() : "");
 
     }
+
+
 }

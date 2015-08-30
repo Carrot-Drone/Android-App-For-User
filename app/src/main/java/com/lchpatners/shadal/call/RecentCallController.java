@@ -2,6 +2,7 @@ package com.lchpatners.shadal.call;
 
 import android.app.Activity;
 
+import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.category.CategoryController;
@@ -27,8 +28,10 @@ public class RecentCallController {
         Realm realm = Realm.getInstance(activity);
         try {
             realm.beginTransaction();
-            RealmQuery<RecentCall> query = realm.where(RecentCall.class);
-            queriedRecentCallList = query.findAll();
+            RealmQuery<Campus> campusQuery = realm.where(Campus.class);
+            Campus campus = campusQuery.findFirst();
+            RealmQuery<RecentCall> RecentQuery = realm.where(RecentCall.class).equalTo("campus_id", campus.getId());
+            queriedRecentCallList = RecentQuery.findAll();
             switch (orderby) {
                 case ORDER_BY_CALL_RECENT:
                     queriedRecentCallList.sort("recent_call_date", RealmResults.SORT_ORDER_DESCENDING);
