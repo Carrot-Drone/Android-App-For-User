@@ -19,6 +19,9 @@ import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;

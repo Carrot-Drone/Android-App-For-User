@@ -30,6 +30,11 @@ public class RestaurantListViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         // this view pager adapter only handle 8 fragment (regard to category numbers)
         //TODO : make this function to flexible. (now, regard to length var in Category )

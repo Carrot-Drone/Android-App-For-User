@@ -28,7 +28,7 @@ public class CallListAdapter extends BaseAdapter {
     public CallListAdapter(Context context, String orderby) {
         this.context = context;
         data = new ArrayList<>();
-        reloadData(orderby);
+reloadData(orderby);
         this.orderby = orderby;
     }
 
