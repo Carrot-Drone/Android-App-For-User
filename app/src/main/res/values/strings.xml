@@ -65,6 +65,7 @@
     <string name="restaurant_suggestion">음식점추가 / 입점문의</string>
     <string name="title_activity_rsby_user">음식점 제보하기</string>
     <string name="title_activity_rsby_owner">음식점 입점하기</string>
+    <string name="rsby_owner">등록하기</string>
     <string name="minimum"> • 최소배달금액</string>
     <string name="title_activity_campuses">캠퍼스 선택하기</string>
     <string name="retention">재주문율</string>

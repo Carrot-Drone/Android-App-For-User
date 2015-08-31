@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white100"
-                tools:context="com.lchpatners.shadal.RSbyOwnerActivity"
+                tools:context="com.lchpatners.shadal.restaurant_suggestion.RSbyOwnerActivity"
     >
 
     <LinearLayout
@@ -70,10 +70,10 @@
                         android:id="@+id/campus_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="20dp"
                         android:gravity="center_vertical"
-                        android:textColor="@color/black87"
-                        android:textSize="15sp"/>
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -113,13 +113,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/black12">
+                    android:background="@color/list_background"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <EditText
                         android:id="@+id/restaurant_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/list_background"/>
+                        android:layout_marginLeft="20dp"
+                        android:background="@color/list_background"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -159,14 +164,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/black12">
+                    android:background="@color/list_background">
 
                     <EditText
                         android:id="@+id/restaurant_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
                         android:background="@color/list_background"
-                        android:inputType="phone"/>
+                        android:inputType="phone"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -206,13 +214,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/black12">
+                    android:background="@color/list_background">
 
                     <EditText
                         android:id="@+id/office_hours"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/list_background"/>
+                        android:layout_marginLeft="20dp"
+                        android:background="@color/list_background"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -256,112 +267,112 @@
                         android:textSize="12dp"/>
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/flyer_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="98dp"
+                    android:layout_below="@+id/linearLayout2"
+                    android:background="@color/list_background"
+                    android:gravity="center_horizontal"
+
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_1"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/icon_add_plus"/>
+
+
+                    <ImageView
+                        android:id="@+id/image_2"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:layout_toRightOf="@id/image_1"
+                        android:src="@drawable/icon_add_plus"
+                        />
+
+                    <ImageView
+                        android:id="@+id/image_3"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:layout_toRightOf="@id/image_2"
+                        android:src="@drawable/icon_add_plus"/>
+
+                    <ImageView
+                        android:id="@+id/image_4"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginRight="13dp"
+                        android:layout_toRightOf="@id/image_3"
+                        android:src="@drawable/icon_add_plus"/>
+
+
+                    <ImageView
+                        android:id="@+id/icon_delete_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="3dp"
+                        android:src="@drawable/icon_add_delete"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:id="@+id/icon_delete_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@id/icon_delete_1"
+                        android:src="@drawable/icon_add_delete"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:id="@+id/icon_delete_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@id/icon_delete_2"
+                        android:src="@drawable/icon_add_delete"
+                        android:visibility="invisible"/>
+
+
+                    <ImageView
+                        android:id="@+id/icon_delete_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@id/icon_delete_3"
+                        android:src="@drawable/icon_add_delete"
+                        android:visibility="invisible"/>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/tool_bar"
+                    android:text="@string/rsby_owner"
+                    android:textColor="@color/white100"
+                    android:textSize="15dp"
+                    android:textStyle="bold"/>
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/flyer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="98dp"
-        android:layout_below="@+id/linearLayout2"
-        android:background="@color/list_background"
-        android:gravity="center_horizontal"
-
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/image_1"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:src="@drawable/icon_add_plus"/>
-
-
-        <ImageView
-            android:id="@+id/image_2"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:layout_toRightOf="@id/image_1"
-            android:src="@drawable/icon_add_plus"
-            />
-
-        <ImageView
-            android:id="@+id/image_3"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:layout_toRightOf="@id/image_2"
-            android:src="@drawable/icon_add_plus"/>
-
-        <ImageView
-            android:id="@+id/image_4"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_toRightOf="@id/image_3"
-            android:src="@drawable/icon_add_plus"/>
-
-
-        <ImageView
-            android:id="@+id/icon_delete_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="3dp"
-            android:src="@drawable/icon_add_delete"
-            android:visibility="invisible"/>
-
-        <ImageView
-            android:id="@+id/icon_delete_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@id/icon_delete_1"
-            android:src="@drawable/icon_add_delete"
-            android:visibility="invisible"/>
-
-        <ImageView
-            android:id="@+id/icon_delete_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@id/icon_delete_2"
-            android:src="@drawable/icon_add_delete"
-            android:visibility="invisible"/>
-
-
-        <ImageView
-            android:id="@+id/icon_delete_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@id/icon_delete_3"
-            android:src="@drawable/icon_add_delete"
-            android:visibility="invisible"/>
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:background="@drawable/tool_bar"
-        android:text="등록하기"
-        android:textColor="@color/white100"
-        android:textSize="15dp"
-        android:textStyle="bold"/>
 
 </RelativeLayout>

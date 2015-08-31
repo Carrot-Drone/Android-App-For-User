@@ -59,13 +59,13 @@
                 android:id="@+id/base_rating_bar"
                 android:layout_width="264dp"
                 android:layout_height="15dp"
-                android:layout_alignTop="@+id/rating_Bar"
+                android:layout_alignTop="@+id/rating_bar"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/base_rating_bar"
                 android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
-                android:id="@+id/rating_Bar"
+                android:id="@+id/rating_bar"
                 android:layout_width="150dp"
                 android:layout_height="15dp"
                 android:layout_alignLeft="@+id/base_rating_bar"
@@ -128,9 +128,9 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rating_Bar"
+                android:layout_below="@+id/rating_bar"
                 android:layout_marginTop="4dp"
-                android:layout_toRightOf="@+id/rating_Bar">
+                android:layout_toRightOf="@+id/rating_bar">
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.RestaurantListFragment;
+import com.lchpatners.shadal.restaurant_suggestion.RestaurantSuggestionActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;

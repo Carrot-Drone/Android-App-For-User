@@ -1,16 +1,25 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.restaurant_suggestion;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.lchpatners.shadal.R;
 
 
-public class RSbyOwnerPopUpActivity extends ActionBarActivity {
+public class RSbyUserPopUpActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rsby_owner_pop_up);
+        setContentView(R.layout.activity_rsby_user_pop_up);
+        findViewById(R.id.okay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override

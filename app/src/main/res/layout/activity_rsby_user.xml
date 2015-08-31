@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white100"
-                tools:context="com.lchpatners.shadal.RSbyOwnerActivity"
+                tools:context="com.lchpatners.shadal.restaurant_suggestion.RSbyOwnerActivity"
     >
 
     <LinearLayout
@@ -16,9 +16,6 @@
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
 
             <LinearLayout
@@ -70,10 +67,10 @@
                         android:id="@+id/campus_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="20dp"
                         android:gravity="center_vertical"
-                        android:textColor="@color/black87"
-                        android:textSize="15sp"/>
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -113,13 +110,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/black12">
+                    android:background="@color/list_background"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <EditText
                         android:id="@+id/restaurant_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/list_background"/>
+                        android:layout_marginLeft="20dp"
+                        android:background="@color/list_background"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -159,14 +161,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/black12">
+                    android:background="@color/list_background">
 
                     <EditText
                         android:id="@+id/restaurant_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
                         android:background="@color/list_background"
-                        android:inputType="phone"/>
+                        android:inputType="phone"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="19sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -211,7 +216,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+
     </LinearLayout>
 
     <RelativeLayout

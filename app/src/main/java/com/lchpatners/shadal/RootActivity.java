@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
+import com.lchpatners.shadal.restaurant_suggestion.RestaurantSuggestionActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
@@ -233,28 +234,25 @@ public class RootActivity extends ActionBarActivity {
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_root, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_root, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mActionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
-        mMenu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
         switch (item.getItemId()) {
             case R.id.action_search:
-                mMenu.findItem(R.id.action_restaurant_suggestion).setVisible(false);
                 return true;
             case R.id.action_restaurant_suggestion:
                 Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
                 startActivity(intent);
                 return true;
             case android.R.id.home:
-                mMenu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
             default:
                 return super.onOptionsItemSelected(item);
         }

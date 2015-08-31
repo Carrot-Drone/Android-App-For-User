@@ -298,7 +298,7 @@ public class RestaurantInfoController {
                         final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder
                                 = kakaoLink.createKakaoTalkLinkMessageBuilder();
 
-                        String text = "아직";
+                        String text = mRestaurant.getName() + "\n" + mRestaurant.getPhone_number();
                         final String linkContent =
                                 kakaoTalkLinkMessageBuilder
                                         .addText(text)

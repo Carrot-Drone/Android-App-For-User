@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:background="@color/black54"
               android:gravity="center"
-              tools:context="com.lchpatners.shadal.RSbyUserPopUpActivity">
+              tools:context="com.lchpatners.shadal.restaurant_suggestion.RSbyUserPopUpActivity">
 
     <RelativeLayout
         android:layout_width="324dp"
@@ -66,7 +66,7 @@
             android:background="@color/divider"></RelativeLayout>
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/okay"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"

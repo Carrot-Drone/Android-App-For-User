@@ -61,7 +61,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".RestaurantSuggestionActivity"
+            android:name=".restaurant_suggestion.RestaurantSuggestionActivity"
             android:label="@string/title_activity_restaurant_suggestion"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
@@ -70,22 +70,22 @@
                 android:value="com.lchpatners.shadal.MainActivity"/>
         </activity>
         <activity
-            android:name=".RSbyUserActivity"
+            android:name=".restaurant_suggestion.RSbyUserActivity"
             android:label="@string/title_activity_rsby_user"
-            android:parentActivityName=".RestaurantSuggestionActivity"
+            android:parentActivityName=".restaurant_suggestion.RestaurantSuggestionActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
+                android:value=".restaurant_suggestion.RestaurantSuggestionActivity"/>
         </activity>
         <activity
-            android:name=".RSbyOwnerActivity"
+            android:name=".restaurant_suggestion.RSbyOwnerActivity"
             android:label="@string/title_activity_rsby_owner"
-            android:parentActivityName=".RestaurantSuggestionActivity"
+            android:parentActivityName=".restaurant_suggestion.RestaurantSuggestionActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.RestaurantSuggestionActivity"/>
+                android:value=".restaurant_suggestion.RestaurantSuggestionActivity"/>
         </activity>
         <activity
             android:name=".recommend.RecommendedRestaurantActivity"
@@ -115,12 +115,16 @@
                 android:value=".setting.SeeMoreActivity"/>
         </activity>
         <activity
-            android:name=".RSbyUserPopUpActivity"
+            android:name=".restaurant_suggestion.RSbyOwnerPopUpActivity"
+            android:label="@string/title_activity_rsby_user_dialog">
+        </activity>
+        <activity
+            android:name=".restaurant_suggestion.RSbyUserPopUpActivity"
             android:label="@string/title_activity_rsby_user_dialog"
-            android:parentActivityName=".RSbyUserActivity">
+            android:parentActivityName=".restaurant_suggestion.RSbyUserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.RSbyUserActivity"/>
+                android:value=".restaurant_suggestion.RSbyUserActivity"/>
         </activity>
         <activity
             android:name=".restaurant_correction.RCPopUpActivity"
@@ -159,6 +163,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".setting.SeeMoreActivity"/>
+        </activity>
+        <activity
+            android:name=".restaurant_suggestion.CampusSelectionActivity"
+            android:label="@string/title_activity_campus_selection">
         </activity>
     </application>
 
