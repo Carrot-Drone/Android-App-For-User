@@ -87,8 +87,6 @@ public class RootActivity extends ActionBarActivity {
         setContentView(R.layout.activity_root);
 
         mController = new RootController(RootActivity.this);
-
-        //TODO:checkAppMinimumVersion
         mController.isRecentVersion();
 
         //TODO : get popup list

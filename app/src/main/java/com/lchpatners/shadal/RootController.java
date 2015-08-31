@@ -40,10 +40,6 @@ public class RootController {
         setCampus();
     }
 
-    public static void showDownloadCompleteToast(Context context) {
-        Toast.makeText(context, "음식점 정보 저장 완료!", Toast.LENGTH_SHORT).show();
-    }
-
     private void setCampus() {
         Realm realm = Realm.getInstance(mActivity);
         RealmQuery<Campus> query = realm.where(Campus.class);
