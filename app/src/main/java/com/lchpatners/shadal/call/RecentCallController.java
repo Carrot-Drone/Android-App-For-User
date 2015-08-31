@@ -1,7 +1,6 @@
 package com.lchpatners.shadal.call;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusController;

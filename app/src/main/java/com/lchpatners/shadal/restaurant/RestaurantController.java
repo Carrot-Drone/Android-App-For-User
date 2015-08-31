@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.restaurant.category.Category;

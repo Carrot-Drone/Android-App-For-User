@@ -1,6 +1,5 @@
 package com.lchpatners.shadal.restaurant;
 
-import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
 import retrofit.Callback;

@@ -1,20 +1,16 @@
 package com.lchpatners.shadal.call;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.Restaurant;
-import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 
 /**
  * Created by eunhyekim on 2015. 8. 22..
@@ -76,24 +72,6 @@ public class RecentCallFragment extends Fragment {
         call.setOnClickListener(orderListener);
 
         listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mAdapter.getItem(position) instanceof Restaurant) {
-                    Restaurant restaurant = (Restaurant) mAdapter.getItem(position);
-
-//                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
-//                    helper.sendEvent("UX", "res_in_favorite_clicked", restaurant.getName());
-
-                    Intent intent = new Intent(activity, RestaurantInfoActivity.class);
-                    intent.putExtra("RESTAURANT", restaurant);
-                    intent.putExtra("REFERRER", "CallListFragment");
-                    startActivity(intent);
-                    mAdapter.notifyDataSetChanged();
-                    listView.deferNotifyDataSetChanged();
-                }
-            }
-        });
         return view;
     }
 

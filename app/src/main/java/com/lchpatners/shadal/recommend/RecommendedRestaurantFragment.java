@@ -146,8 +146,6 @@ public class RecommendedRestaurantFragment extends Fragment {
         tv_phone_number = (TextView) view.findViewById(R.id.call);
         upButton = (ImageButton) view.findViewById(R.id.upButton);
         downButton = (ImageButton) view.findViewById(R.id.downButton);
-        upButton.setOnClickListener(btnClickListener);
-        downButton.setOnClickListener(btnClickListener);
         bottom_bar = (Toolbar) view.findViewById(R.id.bottom_bar);
         ll_flyer = (LinearLayout) view.findViewById(R.id.flyerLayout);
 
@@ -171,6 +169,9 @@ public class RecommendedRestaurantFragment extends Fragment {
         iv_category.setOnClickListener(onCategoryButtonClickListener);
         iv_info.setOnClickListener(onInfoButtonClickListener);
         bottom_bar.setOnClickListener(onCallButtonClickListener);
+        upButton.setOnClickListener(btnClickListener);
+        downButton.setOnClickListener(btnClickListener);
+        tv_name.setOnClickListener(onInfoButtonClickListener);
 
         setEvaluationBar(view);
     }
@@ -238,7 +239,7 @@ public class RecommendedRestaurantFragment extends Fragment {
         downButton.setVisibility(View.INVISIBLE);
     }
 
-    public static String numberOfCallsFormatString(int numberOfCalls) {
+    private static String numberOfCallsFormatString(int numberOfCalls) {
         if ((numberOfCalls >= 10) && (numberOfCalls < 100)) {
             numberOfCalls = (numberOfCalls / 10) * 10;
         } else if ((numberOfCalls >= 100)) {
@@ -250,7 +251,7 @@ public class RecommendedRestaurantFragment extends Fragment {
         return strNumberOfCalls;
     }
 
-    public void newIconVisible() {
+    private void newIconVisible() {
         if (reason.equals("<캠달에 처음이에요>")) {
             iv_new.setVisibility(View.VISIBLE);
         } else {
@@ -258,7 +259,7 @@ public class RecommendedRestaurantFragment extends Fragment {
         }
     }
 
-    public int getCategoryIcon(String category_title) {
+    private int getCategoryIcon(String category_title) {
         int icon_id;
         switch (category_title) {
             case "치킨":

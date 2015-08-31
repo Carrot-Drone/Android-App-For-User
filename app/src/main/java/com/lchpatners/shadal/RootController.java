@@ -2,26 +2,13 @@ package com.lchpatners.shadal;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.lchpatners.shadal.campus.Campus;
-import com.lchpatners.shadal.campus.CampusAPI;
-import com.lchpatners.shadal.restaurant.RestaurantAPI;
-import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.util.LogUtils;
-import com.lchpatners.shadal.util.RetrofitConverter;
-
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
 
 /**
  * Created by YoungKim on 2015. 8. 24..

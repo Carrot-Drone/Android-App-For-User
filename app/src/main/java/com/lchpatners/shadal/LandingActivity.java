@@ -1,37 +1,20 @@
 package com.lchpatners.shadal;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.lchpatners.shadal.campus.Campus;
-import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
-import com.lchpatners.shadal.restaurant.RestaurantAPI;
 import com.lchpatners.shadal.restaurant.RestaurantController;
-import com.lchpatners.shadal.restaurant.category.Category;
-import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
-import com.lchpatners.shadal.util.RetrofitConverter;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
 
 public class LandingActivity extends ActionBarActivity {
     private static final String TAG = LogUtils.makeTag(LandingActivity.class);

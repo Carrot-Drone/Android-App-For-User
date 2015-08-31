@@ -1,7 +1,6 @@
 package com.lchpatners.shadal.setting;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,10 +12,7 @@ import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusAdapter;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.login.LoginCampusSelectActivity;
-import com.lchpatners.shadal.restaurant.RestaurantAPI;
 import com.lchpatners.shadal.restaurant.RestaurantController;
-import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;

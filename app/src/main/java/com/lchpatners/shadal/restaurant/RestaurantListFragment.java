@@ -3,7 +3,6 @@ package com.lchpatners.shadal.restaurant;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.lchpatners.shadal.R;
  * Created by YoungKim on 2015. 8. 25..
  */
 public class RestaurantListFragment extends Fragment {
-    private static final int LIST_ALL = 0;
     ListView listView;
 
     ImageView onlyFlyer;
@@ -37,7 +35,6 @@ public class RestaurantListFragment extends Fragment {
     public static RestaurantListFragment newInstance(int categoryNumber) {
         RestaurantListFragment restaurantListFragment = new RestaurantListFragment();
 
-        // TODO : why I have to deliver this args like this?
         Bundle args = new Bundle();
         args.putInt("mCategoryNumber", categoryNumber);
         restaurantListFragment.setArguments(args);
@@ -55,7 +52,6 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        getCheckBox();
         mAdapter.loadData(orderBy);
         if (getUserVisibleHint()) {
 //            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
@@ -87,7 +83,6 @@ public class RestaurantListFragment extends Fragment {
 
         getCheckBox();
 
-        //need when I use bundle
         int mCategoryNumber = getArguments().getInt("mCategoryNumber");
         this.mAdapter = new RestaurantListAdapter(mActivity, mCategoryNumber, orderBy);
 

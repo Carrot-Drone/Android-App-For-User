@@ -1,6 +1,5 @@
 package com.lchpatners.shadal.restaurant;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.lchpatners.shadal.restaurant.menu.RestaurantMenu;

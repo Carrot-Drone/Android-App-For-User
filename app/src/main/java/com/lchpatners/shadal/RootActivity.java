@@ -242,10 +242,10 @@ public class RootActivity extends ActionBarActivity {
             case R.id.action_search:
                 mMenu.findItem(R.id.action_restaurant_suggestion).setVisible(false);
                 return true;
-            case R.id.action_restaurant_suggestion:
-                Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
-                startActivity(intent);
-                return true;
+//            case R.id.action_restaurant_suggestion:
+//                Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
+//                startActivity(intent);
+//                return true;
             case android.R.id.home:
                 mMenu.findItem(R.id.action_restaurant_suggestion).setVisible(true);
             default:

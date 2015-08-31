@@ -2,13 +2,9 @@ package com.lchpatners.shadal.restaurant;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.lchpatners.shadal.R;
@@ -25,6 +21,7 @@ public class RestaurantListActivity extends ActionBarActivity {
     private static final int BOSSAM = 5;
     private static final int NAENGMYEON = 6;
     private static final int ETC = 7;
+
     private Toolbar mToolbar;
     private SlidingTabLayout mSlidingTabLayout;
     private RestaurantListViewPagerAdapter mRestaurantListViewPagerAdapter;

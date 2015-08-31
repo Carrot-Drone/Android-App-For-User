@@ -2,11 +2,8 @@ package com.lchpatners.shadal.restaurant;
 
 import android.app.Activity;
 
-import com.lchpatners.shadal.campus.Campus;
-
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by YoungKim on 2015. 8. 26..

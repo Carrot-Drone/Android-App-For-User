@@ -1,10 +1,8 @@
 package com.lchpatners.shadal.recommend;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
