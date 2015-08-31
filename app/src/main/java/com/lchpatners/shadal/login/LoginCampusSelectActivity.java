@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.setting.CampusChangeController;
@@ -47,6 +48,7 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
         buConfirmSelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                 if (controller.isCampusSelected()) {
                     controller.setCampus();
                     //Go to RootActivity at setCampus function

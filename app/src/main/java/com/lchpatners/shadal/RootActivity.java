@@ -1,7 +1,9 @@
 package com.lchpatners.shadal;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,12 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
@@ -82,13 +86,10 @@ public class RootActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
 
-        //TODO:checkAppMinimunVersion
-
         mController = new RootController(RootActivity.this);
 
-        //TODO:check previous Database
-
-        //TODO: set toast only one time
+        //TODO:checkAppMinimumVersion
+        mController.isRecentVersion();
 
         //TODO : get popup list
 
@@ -216,6 +217,7 @@ public class RootActivity extends ActionBarActivity {
         tv_drawer_3.setTextColor(getResources().getColor(R.color.primary));
         icon_drawer_3.setImageResource(R.drawable.icon_drawer_list_menu_more_selected);
     }
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {

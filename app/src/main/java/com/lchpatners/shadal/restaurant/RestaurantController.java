@@ -3,6 +3,7 @@ package com.lchpatners.shadal.restaurant;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.campus.CampusController;
@@ -86,7 +87,7 @@ public class RestaurantController {
                 } finally {
                     realm.close();
                 }
-
+                Toast.makeText(activity, "음식점 업데이트 완료!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(activity, clazz);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activity.startActivity(intent);
@@ -97,6 +98,7 @@ public class RestaurantController {
             public void failure(RetrofitError error) {
                 Log.d(TAG, error.toString());
                 error.printStackTrace();
+                Toast.makeText(activity, "업데이트 실패 ㅜㅠ\n앱 종료 후 재시작해주세요", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(activity, clazz);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activity.startActivity(intent);

@@ -41,25 +41,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
         mIntent = getIntent();
         mRestaurantInfoController = new RestaurantInfoController(RestaurantInfoActivity.this);
         mRestaurant = mRestaurantInfoController.getRestaurant(mIntent.getIntExtra(RESTAURANT_ID, 0));
-        //TODO : set referrer
-        setReferrer(mRestaurant);
         setView();
-    }
-
-    private void setReferrer(Restaurant restaurant) {
-        Category category = null;
-
-        Realm realm = Realm.getInstance(RestaurantInfoActivity.this);
-        try {
-            realm.beginTransaction();
-            RealmQuery<Category> query = realm.where(Category.class).equalTo("restaurants.id", restaurant.getId());
-            category = query.findFirst();
-            realm.commitTransaction();
-        } catch (Exception e) {
-            realm.cancelTransaction();
-        } finally {
-            realm.close();
-        }
     }
 
     @Override
@@ -147,7 +129,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
         }
 
         if (open_hours == 0 && close_hours == 0) {
-            return "";
+            return "정보없음";
         } else {
             return open + " ~ " + close;
         }

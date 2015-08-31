@@ -125,7 +125,7 @@ public class RecommendedRestaurantController {
         verticalViewPager.setAdapter(adapter);
 
         verticalViewPager.setOffscreenPageLimit(0);
-        verticalViewPager.setCurrentItem(0);
+        verticalViewPager.setCurrentItem(restaurants.size() / 2);
         verticalViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

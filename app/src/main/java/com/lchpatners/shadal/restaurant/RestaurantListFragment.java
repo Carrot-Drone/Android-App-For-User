@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 
@@ -78,8 +79,12 @@ public class RestaurantListFragment extends Fragment {
 
         onlyFlyer = (ImageView) view.findViewById(R.id.check_has_flyer);
         onlyOpen = (ImageView) view.findViewById(R.id.check_is_open);
+        TextView onlyOpenText = (TextView) view.findViewById(R.id.tv_open);
+        TextView onlyFlyerText = (TextView) view.findViewById(R.id.tv_flyer);
         onlyFlyer.setOnClickListener(checkListener);
         onlyOpen.setOnClickListener(checkListener);
+        onlyFlyerText.setOnClickListener(checkListener);
+        onlyOpenText.setOnClickListener(checkListener);
 
         getCheckBox();
 
@@ -104,9 +109,9 @@ public class RestaurantListFragment extends Fragment {
     View.OnClickListener checkListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.check_is_open) {
+            if (view.getId() == R.id.check_is_open || view.getId() == R.id.tv_open) {
                 isCheckedOfficeHour = !isCheckedOfficeHour;
-            } else if (view.getId() == R.id.check_has_flyer) {
+            } else if (view.getId() == R.id.check_has_flyer || view.getId() == R.id.tv_flyer) {
                 isCheckedHasFlyer = !isCheckedHasFlyer;
             }
 
