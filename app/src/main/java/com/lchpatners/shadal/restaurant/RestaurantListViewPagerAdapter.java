@@ -1,4 +1,4 @@
-package com.lchpatners.shadal;
+package com.lchpatners.shadal.restaurant;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,15 +30,15 @@ public class RestaurantListViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
-    }
-
-    @Override
     public int getCount() {
         // this view pager adapter only handle 8 fragment (regard to category numbers)
         //TODO : make this function to flexible. (now, regard to length var in Category )
         return new Category().getLength();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     @Override
