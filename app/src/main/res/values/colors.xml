@@ -35,4 +35,5 @@
     <color name="list_background">#FAFAFA</color>
     <color name="image_background">#DEDEDE</color>
     <color name="recommend_background">#D0D0D0</color>
+    <color name="notice">#a4a4a4</color>
 </resources>

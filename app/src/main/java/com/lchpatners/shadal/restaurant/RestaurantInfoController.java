@@ -160,11 +160,11 @@ public class RestaurantInfoController {
         TextView numberOfMyCalls = (TextView) mHeader.findViewById(R.id.number_of_my_calls);
         TextView totalNumberOfCalls = (TextView) mHeader.findViewById(R.id.total_number_of_calls);
         TextView notice = (TextView) mHeader.findViewById(R.id.notice);
-
+        LinearLayout noticeLayout = (LinearLayout) mHeader.findViewById(R.id.notice_layout);
         if (mRestaurant.getNotice() != null && mRestaurant.getNotice().length() > 0) {
             notice.setText(mRestaurant.getNotice());
         } else {
-            notice.setVisibility(View.GONE);
+            noticeLayout.setVisibility(View.GONE);
         }
 
         retention.setText(Math.round(mRestaurant.getRetention() * 100) + "");

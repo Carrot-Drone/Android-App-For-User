@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="kakao_app_key">6f5e55371b322cd6240d21546b75cbfa</string>
-    <string name="kakao_scheme">campusdal6f5e55371b322cd6240d21546b75cbfa</string>
+    <string name="kakao_app_key">47fddf941c123ee06413a5734d51f491</string>
+    <string name="kakao_scheme">kakao47fddf941c123ee06413a5734d51f491</string>
     <string name="kakao_host">market://details?id=com.lchpatners.shadal</string>
 </resources>
