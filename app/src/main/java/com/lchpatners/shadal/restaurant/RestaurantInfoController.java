@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +62,9 @@ public class RestaurantInfoController {
     private boolean hateBtnChecked = false;
     private int goodCount = 0;
     private int badCount = 0;
+    private int totalCount = 0;
+    // if there's no pre-evaluate -> -1, good -> 1, bad -> 0
+    private int userCount = -1;
 
     public RestaurantInfoController(Activity activity) {
         this.mActivity = activity;
@@ -155,6 +159,8 @@ public class RestaurantInfoController {
         checkPreEvaluateByUser();
         //TODO : update Evaluation
 
+        setEvaluationBar();
+
         TextView retention = (TextView) mHeader.findViewById(R.id.retention);
         TextView numberOfMyCalls = (TextView) mHeader.findViewById(R.id.number_of_my_calls);
         TextView totalNumberOfCalls = (TextView) mHeader.findViewById(R.id.total_number_of_calls);
@@ -169,6 +175,62 @@ public class RestaurantInfoController {
         retention.setText(Math.round(mRestaurant.getRetention() * 100) + "");
         numberOfMyCalls.setText(RecentCallController.getRecentCallCountByRestaurantId(mActivity, mRestaurant.getId()) + "");
         totalNumberOfCalls.setText(numberOfCallsFormatString(mRestaurant.getTotal_number_of_calls()));
+    }
+
+    private void setEvaluationBar() {
+        float percent = 0;
+
+        TextView tv_like = (TextView) mHeader.findViewById(R.id.tv_like);
+        TextView tv_hate = (TextView) mHeader.findViewById(R.id.tv_hate);
+        TextView tv_percent = (TextView) mHeader.findViewById(R.id.tv_percent);
+        LinearLayout base_rating_bar = (LinearLayout) mHeader.findViewById(R.id.base_rating_bar);
+        LinearLayout rating_bar = (LinearLayout) mHeader.findViewById(R.id.rating_bar);
+        LinearLayout max_rating_bar = (LinearLayout) mHeader.findViewById(R.id.max_rating_bar);
+        RelativeLayout rl_percent = (RelativeLayout) mHeader.findViewById(R.id.rl_percent);
+
+        base_rating_bar.setVisibility(View.VISIBLE);
+        max_rating_bar.setVisibility(View.INVISIBLE);
+        rating_bar.setVisibility(View.VISIBLE);
+
+        if (goodCount == 0 && badCount == 0) {
+            percent = 50;
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width * (percent / 100));
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        } else if (goodCount == 0) {
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = 0;
+            }
+
+            rating_bar.setVisibility(View.INVISIBLE);
+        } else if (badCount == 0) {
+            rating_bar.setVisibility(View.INVISIBLE);
+            max_rating_bar.setVisibility(View.VISIBLE);
+            percent = 100;
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width);
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        } else {
+            percent = ((float) goodCount / ((float) goodCount + (float) badCount) * 100);
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width * (percent / 100));
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        }
+
+        // Changes the height and width to the specified *pixels*
+        tv_like.setText(goodCount + "");
+        tv_hate.setText(badCount + "");
+        tv_percent.setText(Math.round(percent) + "%");
     }
 
     private String numberOfCallsFormatString(int numberOfCalls) {
@@ -209,7 +271,7 @@ public class RestaurantInfoController {
     }
 
     private void updateCallLog() {
-        SystemClock.sleep(5 * 100);
+        SystemClock.sleep(2 * 1000);
         RecentCallController.stackRecentCall(mActivity, mRestaurant.getId());
         CallLogController.sendCallLog(mActivity, mRestaurant.getId());
         setHeaderData();
@@ -253,10 +315,12 @@ public class RestaurantInfoController {
 
         if (score != -1) {
             if (score == GOOD) {
+                userCount = GOOD;
                 likeBtnChecked = true;
                 btnLike.setImageResource(R.drawable.icon_detail_page_btn_check);
                 btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
             } else if (score == BAD) {
+                userCount = BAD;
                 hateBtnChecked = true;
                 btnHate.setImageResource(R.drawable.icon_detail_page_btn_check_selected);
                 btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
@@ -346,7 +410,14 @@ public class RestaurantInfoController {
                             btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
                         }
                         btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
-                        setHeaderData();
+                        if (userCount == -1) {
+                            goodCount += 1;
+                            userCount = GOOD;
+                        } else {
+                            goodCount += 1;
+                            badCount -= 1;
+                        }
+                        setEvaluationBar();
                     }
                 } else if (view.getId() == R.id.btn_hate) {
                     if (hateBtnChecked != true) {
@@ -362,7 +433,14 @@ public class RestaurantInfoController {
                             btnHate.setImageResource(R.drawable.icon_detail_page_btn_hate);
                         }
                         btnLike.setImageResource(R.drawable.icon_detail_page_btn_like);
-                        setHeaderData();
+                        if (userCount == -1) {
+                            badCount += 1;
+                            userCount = BAD;
+                        } else {
+                            goodCount -= 1;
+                            badCount += 1;
+                        }
+                        setEvaluationBar();
                     }
                 }
             }
@@ -370,9 +448,5 @@ public class RestaurantInfoController {
 
         btnLike.setOnClickListener(listener);
         btnHate.setOnClickListener(listener);
-    }
-
-    public Restaurant getUpdatedRestaurant() {
-        return mRestaurant;
     }
 }
