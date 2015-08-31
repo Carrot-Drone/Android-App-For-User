@@ -12,7 +12,7 @@ public class RecommendedRestaurantList {
     private List<RecommendedRestaurantInfo> newRestaurant;
 
     @SerializedName("trend")
-    private List<RecommendedRestaurantInfo> trendRestaraurant;
+    private List<RecommendedRestaurantInfo> trendRestaurant;
 
     public List<RecommendedRestaurantInfo> getNewRestaurant() {
         return newRestaurant;
@@ -22,11 +22,11 @@ public class RecommendedRestaurantList {
         this.newRestaurant = newRestaurant;
     }
 
-    public List<RecommendedRestaurantInfo> getTrendRestaraurant() {
-        return trendRestaraurant;
+    public List<RecommendedRestaurantInfo> getTrendRestaurant() {
+        return trendRestaurant;
     }
 
-    public void setTrendRestaraurant(List<RecommendedRestaurantInfo> trendRestaraurant) {
-        this.trendRestaraurant = trendRestaraurant;
+    public void setTrendRestaurant(List<RecommendedRestaurantInfo> trendRestaurant) {
+        this.trendRestaurant = trendRestaurant;
     }
 }

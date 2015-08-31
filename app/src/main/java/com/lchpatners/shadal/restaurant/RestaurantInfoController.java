@@ -227,7 +227,6 @@ public class RestaurantInfoController {
             }
         }
 
-        // Changes the height and width to the specified *pixels*
         tv_like.setText(goodCount + "");
         tv_hate.setText(badCount + "");
         tv_percent.setText(Math.round(percent) + "%");

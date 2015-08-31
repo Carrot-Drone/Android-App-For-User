@@ -1,20 +1,26 @@
 package com.lchpatners.shadal.recommend;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import io.realm.Realm;
@@ -48,11 +54,7 @@ public class RecommendedRestaurantController {
                 .build();
 
         recommendedRestaurantAPI = restAdapter.create(RecommendedRestaurantAPI.class);
-        setCampus();
-    }
-
-    public static void changeCurrentPage(int i) {
-        verticalViewPager.setCurrentItem(verticalViewPager.getCurrentItem() + i, true);
+        mCampus = CampusController.getCurrentCampus(activity);
     }
 
     public static String getCategoryTitle(Context context, int restaurant_id) {
@@ -118,14 +120,14 @@ public class RecommendedRestaurantController {
     }
 
     private void fillRecommendedRestaurantView(RecommendedRestaurantList recommendedRestaurantList) {
-        final ArrayList<RecommendedRestaurant> restaurants = getRecommendedRestaurants(recommendedRestaurantList);
-        verticalViewPager = (VerticalViewPager) mActivity.findViewById(R.id.recommend_view_pager);
+        final List<RecommendedRestaurant> restaurants = getRecommendedRestaurants(recommendedRestaurantList);
 
-//        viewPager = (ViewPager) mActivity.findViewById(R.id.recommend_view_pager);
+        verticalViewPager = (VerticalViewPager) mActivity.findViewById(R.id.recommend_view_pager);
         adapter = new RecommendedRestaurantPagerAdapter(mFragmentManager, mActivity, restaurants);
         verticalViewPager.setAdapter(adapter);
-        final int count = restaurants.size();
-        verticalViewPager.setCurrentItem(count / 2);
+
+        verticalViewPager.setOffscreenPageLimit(0);
+        verticalViewPager.setCurrentItem(0);
         verticalViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -134,98 +136,61 @@ public class RecommendedRestaurantController {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
-                    RecommendedRestaurantFragment.setUpButtonInvisible();
-                } else if (position == count - 1) {
-                    RecommendedRestaurantFragment.setDownButtonInvisible();
-                    Log.d(TAG, "onPageselected ");
-                }
-            /*
-                if (position < count)
-                    verticalViewPager.setCurrentItem(position + count, false);
-                else if (position >= count * 2) {
-                    verticalViewPager.setCurrentItem(position - count, false);
-                }*/
+//                if (position == 0) {
+//                    RecommendedRestaurantFragment.setUpButtonInvisible();
+//                } else if (position == count) {
+//                    RecommendedRestaurantFragment.setDownButtonInvisible();
+//                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
 
-    private ArrayList<RecommendedRestaurant> getRecommendedRestaurants(RecommendedRestaurantList recommendedRestaurantList) {
-        ArrayList<RecommendedRestaurant> recommendedRestaurants = new ArrayList<>();
-        RecommendedRestaurant recommendedRestaurant;
-
-        List<RecommendedRestaurantInfo> newRestaurant = recommendedRestaurantList.getNewRestaurant();
-        List<RecommendedRestaurantInfo> trendRestaurant = recommendedRestaurantList.getTrendRestaraurant();
-
-        Restaurant restaurant;
-        String reason;
-
-        for (int i = 0; i < newRestaurant.size(); i++) {
-
-            Log.i(TAG, getRecommendedRestaurant(newRestaurant.get(i).getId()).getName());
-            recommendedRestaurant = new RecommendedRestaurant();
-            reason = newRestaurant.get(i).getReason();
-            restaurant = getRecommendedRestaurant(newRestaurant.get(i).getId());
-
-            recommendedRestaurant.setReason(reason);
-            recommendedRestaurant.setRestaurant(restaurant);
-            recommendedRestaurants.add(recommendedRestaurant);
-
-            Log.i(TAG, getRecommendedRestaurant(trendRestaurant.get(i).getId()).getName());
-            recommendedRestaurant = new RecommendedRestaurant();
-            reason = trendRestaurant.get(i).getReason();
-            restaurant = getRecommendedRestaurant(trendRestaurant.get(i).getId());
-
-            recommendedRestaurant.setReason(reason);
-            recommendedRestaurant.setRestaurant(restaurant);
-            recommendedRestaurants.add(recommendedRestaurant);
-        }
-        for (int i = 0; i < recommendedRestaurants.size(); i++) {
-            Log.d(TAG, recommendedRestaurants.get(i).getRestaurant().getName());
-            Log.d(TAG, recommendedRestaurants.get(i).getReason());
-        }
-        return recommendedRestaurants;
+    public static void changeCurrentPage(int i) {
+        verticalViewPager.setCurrentItem(verticalViewPager.getCurrentItem() + i, true);
     }
 
-    public void setCampus() {
-        Campus currentCampus = new Campus();
-        Realm realm = Realm.getInstance(mActivity);
-        try {
-            realm.beginTransaction();
-            RealmQuery<Campus> query = realm.where(Campus.class);
-            currentCampus = query.findFirst();
-            realm.commitTransaction();
-        } catch (Exception e) {
-            realm.cancelTransaction();
-        } finally {
-            realm.close();
+    private List<RecommendedRestaurant> getRecommendedRestaurants(RecommendedRestaurantList recommendedRestaurantList) {
+        List<RecommendedRestaurant> recommendedRestaurants = new ArrayList<>();
+
+        List<RecommendedRestaurantInfo> newRestaurant = recommendedRestaurantList.getNewRestaurant();
+        List<RecommendedRestaurantInfo> trendRestaurant = recommendedRestaurantList.getTrendRestaurant();
+
+        for (int i = 0; i < newRestaurant.size(); i++) {
+            Restaurant restaurant;
+            String reason;
+
+            RecommendedRestaurant recommendedRestaurant1 = new RecommendedRestaurant();
+            reason = newRestaurant.get(i).getReason();
+            restaurant = RestaurantController.getRestaurant(mActivity, newRestaurant.get(i).getId());
+
+            recommendedRestaurant1.setReason(reason);
+            recommendedRestaurant1.setRestaurant(restaurant);
+            recommendedRestaurants.add(recommendedRestaurant1);
         }
-        mCampus = currentCampus;
+        for (int i = 0; i < trendRestaurant.size(); i++) {
+            Restaurant restaurant;
+            String reason;
+
+            RecommendedRestaurant recommendedRestaurant2 = new RecommendedRestaurant();
+            reason = trendRestaurant.get(i).getReason();
+            restaurant = RestaurantController.getRestaurant(mActivity, trendRestaurant.get(i).getId());
+
+            recommendedRestaurant2.setReason(reason);
+            recommendedRestaurant2.setRestaurant(restaurant);
+            recommendedRestaurants.add(recommendedRestaurant2);
+        }
+
+        long seed = System.nanoTime();
+        Collections.shuffle(recommendedRestaurants, new Random(seed));
+
+        return recommendedRestaurants;
     }
 
     public Campus getCampus() {
         return mCampus;
     }
-
-    public Restaurant getRecommendedRestaurant(int id) {
-        Realm realm = Realm.getInstance(mActivity);
-        Restaurant restaurant = new Restaurant();
-        try {
-            realm.beginTransaction();
-            RealmQuery<Restaurant> query = realm.where(Restaurant.class).equalTo("id", id);
-            restaurant = query.findFirst();
-            realm.commitTransaction();
-        } catch (Exception e) {
-            realm.cancelTransaction();
-        } finally {
-            realm.close();
-        }
-        return restaurant;
-    }
-
 }

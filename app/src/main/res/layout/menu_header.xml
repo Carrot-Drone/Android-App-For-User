@@ -14,7 +14,7 @@
 
     <RelativeLayout
         android:id="@+id/rating_bar_layout"
-        android:layout_width="352dp"
+        android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 

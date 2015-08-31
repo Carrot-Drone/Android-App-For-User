@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.restaurant.RestaurantListActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
@@ -39,73 +41,15 @@ public class RecommendedRestaurantFragment extends Fragment {
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantFragment.class);
     private static Activity mActivity;
-    private static RecommendedRestaurant mRecommendedRestaurant;
     private static ImageButton upButton;
     private static ImageButton downButton;
-    View.OnClickListener btnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (view.getId() == R.id.upButton) {
-                RecommendedRestaurantController.changeCurrentPage(-1);
-            } else if (view.getId() == R.id.downButton) {
-                RecommendedRestaurantController.changeCurrentPage(1);
-            }
-        }
-    };
     private Restaurant restaurant;
-    View.OnClickListener onInfoButtonClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
-            intent.putExtra(RESTAURANT_ID, restaurant.getId());
-            mActivity.startActivity(intent);
-        }
-    };
-    View.OnClickListener onCallButtonClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            RecentCallController.stackRecentCall(mActivity, restaurant.getId());
-            CallLogController.sendCallLog(mActivity, restaurant.getId());
-            String number = "tel:" + restaurant.getPhone_number();
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
-            mActivity.startActivity(intent);
-        }
-    };
-    View.OnClickListener onFlyerButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            ArrayList<String> flyer_urls = new ArrayList<String>();
-            RealmList<Flyer> flyers = restaurant.getFlyers();
-            for (Flyer flyer : flyers) {
-                flyer_urls.add(flyer.getUrl());
-            }
-
-            Intent intent = new Intent(mActivity, FlyerActivity.class);
-            intent.putExtra(FLYER_URLS, flyer_urls);
-            intent.putExtra(RESTAURANT_ID, restaurant.getId());
-            intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
-            mActivity.startActivity(intent);
-        }
-    };
     private String restaurantName;
-    private String reason;
     private String retention;
     private String number_of_my_calls;
     private String total_number_of_calls;
     private String phone_number;
     private String category_title;
-    View.OnClickListener onCategoryButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            int position = RecommendedRestaurantController.getCategoryPosition(category_title);
-            Intent intent = new Intent(getActivity(), RestaurantListActivity.class);
-            intent.putExtra("category", category_title);
-            intent.putExtra("position", position);
-            startActivity(intent);
-        }
-    };
     private LinearLayout ll_flyer;
     private TextView tv_name;
     private TextView tv_reason;
@@ -119,32 +63,28 @@ public class RecommendedRestaurantFragment extends Fragment {
     private ImageView iv_info;
     private TextView tv_phone_number;
     private Toolbar bottom_bar;
+    private int count;
+    private int position;
+    private int restaurant_id;
+    private String reason;
+    private int goodCount = 0;
+    private int badCount = 0;
+    private View view;
 
-    public static RecommendedRestaurantFragment create(RecommendedRestaurant recommendedRestaurant) {
+    public static RecommendedRestaurantFragment newInstance(RecommendedRestaurant recommendedRestaurant, int count, int position) {
         RecommendedRestaurantFragment fragment = new RecommendedRestaurantFragment();
-        mRecommendedRestaurant = recommendedRestaurant;
+//        fragment.setRestaurant(recommendedRestaurant);
+//        fragment.position = position;
+//        fragment.count = count;
+
+        Bundle args = new Bundle();
+        args.putString("reason", recommendedRestaurant.getReason());
+        args.putInt("restaurant_id", recommendedRestaurant.getRestaurant().getId());
+        args.putInt("count", count);
+        args.putInt("position", position);
+        fragment.setArguments(args);
+
         return fragment;
-    }
-
-    public static void setUpButtonInvisible() {
-        upButton.setVisibility(View.INVISIBLE);
-    }
-
-    public static void setDownButtonInvisible() {
-        downButton.setVisibility(View.INVISIBLE);
-    }
-
-    public static String numberOfCallsFormatString(int numberOfCalls) {
-
-        if ((numberOfCalls >= 10) && (numberOfCalls < 100)) {
-            numberOfCalls = (numberOfCalls / 10) * 10;
-        } else if ((numberOfCalls >= 100)) {
-            numberOfCalls = (numberOfCalls / 100) * 100;
-        }
-
-        DecimalFormat formatter = new DecimalFormat("###,###,###");
-        String strNumberOfCalls = formatter.format(numberOfCalls);
-        return strNumberOfCalls;
     }
 
     @Override
@@ -154,30 +94,45 @@ public class RecommendedRestaurantFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        restaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
+        goodCount = restaurant.getTotal_number_of_goods();
+        badCount = restaurant.getTotal_number_of_bads();
+    }
 
-        restaurant = mRecommendedRestaurant.getRestaurant();
+    @Override
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_new, container, false);
+        this.view = view;
 
+        count = getArguments().getInt("count");
+        position = getArguments().getInt("position");
+        restaurant_id = getArguments().getInt("restaurant_id");
+        reason = getArguments().getString("reason");
+        restaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
+        goodCount = restaurant.getTotal_number_of_goods();
+        badCount = restaurant.getTotal_number_of_bads();
+
+        setView();
+
+        if (this.position == 0) {
+            setUpButtonInvisible();
+        } else if (this.position == count) {
+            setDownButtonInvisible();
+        }
+        return view;
+    }
+
+    public void setView() {
         restaurantName = restaurant.getName();
-        reason = "<" + mRecommendedRestaurant.getReason() + ">";
+        reason = "<" + reason + ">";
         retention = String.valueOf(Math.round(restaurant.getRetention() * 100));
         number_of_my_calls = String.valueOf(restaurant.getNumber_of_my_calls());
         total_number_of_calls = numberOfCallsFormatString(restaurant.getTotal_number_of_calls());
         phone_number = String.valueOf(restaurant.getPhone_number());
         category_title = RecommendedRestaurantController.getCategoryTitle(mActivity, restaurant.getId());
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_new, container, false);
-        setView(view);
-        return view;
-    }
-
-    public void setView(View view) {
         tv_name = (TextView) view.findViewById(R.id.name);
         tv_reason = (TextView) view.findViewById(R.id.reason);
         tv_retention = (TextView) view.findViewById(R.id.retention);
@@ -205,6 +160,7 @@ public class RecommendedRestaurantFragment extends Fragment {
 
         iv_category.setImageResource(getCategoryIcon(category_title));
         tv_category.setText(category_title);
+
         newIconVisible();
 
         if (!restaurant.isHas_flyer()) {
@@ -215,10 +171,87 @@ public class RecommendedRestaurantFragment extends Fragment {
         iv_category.setOnClickListener(onCategoryButtonClickListener);
         iv_info.setOnClickListener(onInfoButtonClickListener);
         bottom_bar.setOnClickListener(onCallButtonClickListener);
+
+        setEvaluationBar(view);
+    }
+
+    private void setEvaluationBar(View view) {
+        float percent = 0;
+
+        TextView tv_like = (TextView) view.findViewById(R.id.tv_like);
+        TextView tv_hate = (TextView) view.findViewById(R.id.tv_hate);
+        TextView tv_percent = (TextView) view.findViewById(R.id.tv_percent);
+        LinearLayout base_rating_bar = (LinearLayout) view.findViewById(R.id.base_rating_bar);
+        LinearLayout rating_bar = (LinearLayout) view.findViewById(R.id.rating_bar);
+        LinearLayout max_rating_bar = (LinearLayout) view.findViewById(R.id.max_rating_bar);
+        RelativeLayout rl_percent = (RelativeLayout) view.findViewById(R.id.rl_percent);
+
+        base_rating_bar.setVisibility(View.VISIBLE);
+        max_rating_bar.setVisibility(View.INVISIBLE);
+        rating_bar.setVisibility(View.VISIBLE);
+
+        if (goodCount == 0 && badCount == 0) {
+            percent = 50;
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width * (percent / 100));
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        } else if (goodCount == 0) {
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = 0;
+            }
+
+            rating_bar.setVisibility(View.INVISIBLE);
+        } else if (badCount == 0) {
+            rating_bar.setVisibility(View.INVISIBLE);
+            max_rating_bar.setVisibility(View.VISIBLE);
+            percent = 100;
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width);
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        } else {
+            percent = ((float) goodCount / ((float) goodCount + (float) badCount) * 100);
+            rating_bar.getLayoutParams().width = (int) (base_rating_bar.getLayoutParams().width * (percent / 100));
+
+            if (((ViewGroup) rl_percent).getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) ((ViewGroup) rl_percent).getLayoutParams()).leftMargin
+                        = (rating_bar.getLayoutParams().width);
+            }
+        }
+
+        tv_like.setText(goodCount + "");
+        tv_hate.setText(badCount + "");
+        tv_percent.setText(Math.round(percent) + "%");
+    }
+
+    public static void setUpButtonInvisible() {
+        upButton.setVisibility(View.INVISIBLE);
+    }
+
+    public static void setDownButtonInvisible() {
+        downButton.setVisibility(View.INVISIBLE);
+    }
+
+    public static String numberOfCallsFormatString(int numberOfCalls) {
+        if ((numberOfCalls >= 10) && (numberOfCalls < 100)) {
+            numberOfCalls = (numberOfCalls / 10) * 10;
+        } else if ((numberOfCalls >= 100)) {
+            numberOfCalls = (numberOfCalls / 100) * 100;
+        }
+
+        DecimalFormat formatter = new DecimalFormat("###,###,###");
+        String strNumberOfCalls = formatter.format(numberOfCalls);
+        return strNumberOfCalls;
     }
 
     public void newIconVisible() {
-        if (mRecommendedRestaurant.getReason().equals("캠달에 처음이에요")) {
+        if (reason.equals("<캠달에 처음이에요>")) {
             iv_new.setVisibility(View.VISIBLE);
         } else {
             iv_new.setVisibility(View.INVISIBLE);
@@ -255,5 +288,62 @@ public class RecommendedRestaurantFragment extends Fragment {
         }
         return icon_id;
     }
+
+    View.OnClickListener btnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.upButton) {
+                RecommendedRestaurantController.changeCurrentPage(-1);
+            } else if (view.getId() == R.id.downButton) {
+                RecommendedRestaurantController.changeCurrentPage(1);
+            }
+        }
+    };
+    View.OnClickListener onInfoButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
+            intent.putExtra(RESTAURANT_ID, restaurant.getId());
+            mActivity.startActivity(intent);
+        }
+    };
+    View.OnClickListener onCallButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            RecentCallController.stackRecentCall(mActivity, restaurant.getId());
+            CallLogController.sendCallLog(mActivity, restaurant.getId());
+            String number = "tel:" + restaurant.getPhone_number();
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
+            mActivity.startActivity(intent);
+        }
+    };
+    View.OnClickListener onFlyerButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ArrayList<String> flyer_urls = new ArrayList<String>();
+            RealmList<Flyer> flyers = restaurant.getFlyers();
+            for (Flyer flyer : flyers) {
+                flyer_urls.add(flyer.getUrl());
+            }
+
+            Intent intent = new Intent(mActivity, FlyerActivity.class);
+            intent.putExtra(FLYER_URLS, flyer_urls);
+            intent.putExtra(RESTAURANT_ID, restaurant.getId());
+            intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
+            mActivity.startActivity(intent);
+        }
+    };
+    View.OnClickListener onCategoryButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int position = RecommendedRestaurantController.getCategoryPosition(category_title);
+            Intent intent = new Intent(getActivity(), RestaurantListActivity.class);
+            intent.putExtra("category", category_title);
+            intent.putExtra("position", position);
+            startActivity(intent);
+        }
+    };
 
 }

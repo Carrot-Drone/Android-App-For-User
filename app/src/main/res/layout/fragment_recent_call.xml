@@ -5,7 +5,7 @@
                 android:background="@color/white100">
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/rating_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:background="@color/bg"
@@ -80,7 +80,7 @@
         android:id="@+id/call_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@+id/rating_bar_layout"
         android:layout_centerHorizontal="true"
         android:divider="@color/divider"
         android:dividerHeight="0.5dp"/>
