@@ -44,16 +44,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lchpatners.shadal.restaurant.RestaurantListActivity"/>
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="@string/kakao_host"
-                    android:scheme="@string/kakao_scheme"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".setting.SeeMoreActivity"
@@ -146,6 +136,16 @@
         <activity
             android:name=".RootActivity"
             android:label="@string/title_activity_root">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="@string/kakao_host"
+                    android:scheme="@string/kakao_scheme"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".restaurant.RestaurantListActivity"

@@ -3,6 +3,7 @@ package com.lchpatners.shadal;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
+import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.restaurant_suggestion.RestaurantSuggestionActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
@@ -28,6 +30,7 @@ import com.lchpatners.shadal.util.LogUtils;
  * Created by youngkim on 2015. 8. 24..
  */
 public class RootActivity extends ActionBarActivity {
+    public static final String RESTAURANT_ID = "restaurant_id";
     static final int REQUEST_CODE = 1;
     private static final String TAG = LogUtils.makeTag(RootActivity.class);
     static NavigationView navigationView;
@@ -90,6 +93,15 @@ public class RootActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            String restaurant_id = uri.getQueryParameter("restaurant_id");
+            String campus_name = uri.getQueryParameter("campusName");
+
+            Intent intent = new Intent(RootActivity.this, RestaurantInfoActivity.class);
+            //TODO:restaurant_id가 해당 캠퍼스 내에 있는지 확인.
+            intent.putExtra(RESTAURANT_ID, restaurant_id);
+        }
 
         //TODO:checkAppMinimunVersion
 
@@ -158,9 +170,6 @@ public class RootActivity extends ActionBarActivity {
         setDrawerStyleItem2NotClicked();
         setDrawerStyleItem3NotClicked();
 
-        TextView lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
-        TextView categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
-        TextView myCalls = (TextView) navigationView.findViewById(R.id.my_calls); //내 주문수
         TextView administrator = (TextView) navigationView.findViewById(R.id.administrator);
 
         //TODO: get recent call information

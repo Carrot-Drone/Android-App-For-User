@@ -11,6 +11,7 @@ public class RestaurantSuggestion {
     String office_hours;
     int is_suggested_by_restaurant;
     String files[];
+    String device;
 
     public String getUuid() {
         return uuid;
@@ -42,6 +43,14 @@ public class RestaurantSuggestion {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
     }
 
     public String getOffice_hours() {

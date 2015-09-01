@@ -39,10 +39,13 @@ public class RecommendedRestaurantFragment extends Fragment {
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantFragment.class);
+
     private static Activity mActivity;
     private static RecommendedRestaurant mRecommendedRestaurant;
+
     private static ImageButton upButton;
     private static ImageButton downButton;
+
     private Restaurant restaurant;
     private String restaurantName;
     private String reason;

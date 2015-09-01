@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
 import retrofit.Callback;
@@ -29,6 +30,8 @@ public class RestaurantSuggestionController {
 
         RestaurantSuggestionAPI restaurantSuggestionAPI = restAdapter.create(RestaurantSuggestionAPI.class);
 
+        restaurantSuggestion.setDevice("android");
+        restaurantSuggestion.setUuid(Preferences.getDeviceUuid(activity));
         restaurantSuggestionAPI.sendRestaurantSuggestion(restaurantSuggestion, new Callback<RestaurantSuggestion>() {
             @Override
             public void success(RestaurantSuggestion rs, Response response) {

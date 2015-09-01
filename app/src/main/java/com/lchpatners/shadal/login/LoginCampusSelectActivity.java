@@ -42,19 +42,22 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
                 R.layout.list_footer, null);
         lvCampusList.addFooterView(listFooterView);
 
-
         buConfirmSelection = (Button) findViewById(R.id.LoginCampusSelect_confirmButton);
-        buConfirmSelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (controller.isCampusSelected()) {
-                    controller.setCampus();
-                    //Go to RootActivity at setCampus function
+        buConfirmSelection.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (controller.isCampusSelected()) {
+
+                            controller.setCampus();
+                            //Go to RootActivity at setCampus function
 //                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
 //                    startActivity(intent);
-                }
-            }
-        });
 
+
+                        }
+                    }
+                }
+        );
     }
 }

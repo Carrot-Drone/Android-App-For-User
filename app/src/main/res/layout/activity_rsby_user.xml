@@ -149,13 +149,6 @@
                         android:textColor="@color/light_grey"
                         android:textSize="14sp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:text="@string/required"
-                        android:textColor="@color/point_color_pink"
-                        android:textSize="12dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -206,13 +199,7 @@
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:text="@string/required"
-                        android:textColor="@color/point_color_pink"
-                        android:textSize="12dp"/>
+
                 </LinearLayout>
 
             </LinearLayout>

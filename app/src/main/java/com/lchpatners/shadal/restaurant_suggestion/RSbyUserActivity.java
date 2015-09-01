@@ -15,10 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.util.Preferences;
 
 import java.io.ByteArrayOutputStream;
 
@@ -145,17 +145,26 @@ public class RSbyUserActivity extends ActionBarActivity {
         suggestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantSuggestion restaurantSuggestion = new RestaurantSuggestion();
-                restaurantSuggestion.setUuid(Preferences.getDeviceUuid(RSbyUserActivity.this));
-                restaurantSuggestion.setName(restaurantName.getText().toString());
-                restaurantSuggestion.setCampus_id(Integer.valueOf(campusId));
-                restaurantSuggestion.setIs_suggested_by_restaurant(0);
-                restaurantSuggestion.setFiles(files);
-                restaurantSuggestion.setPhone_number(restaurantPhoneNumber.getText().toString());
-                RestaurantSuggestionController.sendRestaurantSuggestion(RSbyUserActivity.this, restaurantSuggestion);
-                finish();
+
+                if (restaurantName.getText().length() <= 0) {
+                    Toast.makeText(RSbyUserActivity.this, "음식점 이름을 입력해 주세요", Toast.LENGTH_LONG).show();
+                } else {
+                    sendRestaurantSuggestion();
+                }
             }
         });
+
+    }
+
+    private void sendRestaurantSuggestion() {
+
+        RestaurantSuggestion restaurantSuggestion = new RestaurantSuggestion();
+        restaurantSuggestion.setName(restaurantName.getText().toString());
+        restaurantSuggestion.setCampus_id(Integer.valueOf(campusId));
+        restaurantSuggestion.setIs_suggested_by_restaurant(0);
+        restaurantSuggestion.setFiles(files);
+        restaurantSuggestion.setPhone_number(restaurantPhoneNumber.getText().toString());
+        RestaurantSuggestionController.sendRestaurantSuggestion(RSbyUserActivity.this, restaurantSuggestion);
 
     }
 

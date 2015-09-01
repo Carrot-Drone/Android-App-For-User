@@ -8,7 +8,6 @@ import com.lchpatners.shadal.util.RetrofitConverter;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -61,4 +60,5 @@ public class CampusController {
             }
         });
     }
+
 }

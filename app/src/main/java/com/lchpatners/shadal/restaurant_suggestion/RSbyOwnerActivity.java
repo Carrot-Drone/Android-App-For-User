@@ -15,10 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.util.Preferences;
 
 import java.io.ByteArrayOutputStream;
 
@@ -145,19 +145,36 @@ public class RSbyOwnerActivity extends ActionBarActivity {
         suggestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantSuggestion restaurantSuggestion = new RestaurantSuggestion();
-                restaurantSuggestion.setUuid(Preferences.getDeviceUuid(RSbyOwnerActivity.this));
-                restaurantSuggestion.setName(restaurantName.getText().toString());
-                restaurantSuggestion.setCampus_id(Integer.valueOf(campusId));
-                restaurantSuggestion.setIs_suggested_by_restaurant(1);
-                restaurantSuggestion.setFiles(files);
-                restaurantSuggestion.setPhone_number(restaurantPhoneNumber.getText().toString());
-                restaurantSuggestion.setOffice_hours(officeHours.getText().toString());
-                RestaurantSuggestionController.sendRestaurantSuggestion(RSbyOwnerActivity.this, restaurantSuggestion);
-                finish();
+
+                if (restaurantName.getText().length() <= 0) {
+                    Toast.makeText(RSbyOwnerActivity.this, "음식점 이름을 입력해 주세요", Toast.LENGTH_LONG).show();
+
+                } else if (restaurantPhoneNumber.getText().length() <= 0) {
+                    Toast.makeText(RSbyOwnerActivity.this, "전화번호를 입력해 주세요", Toast.LENGTH_LONG).show();
+
+                } else if (officeHours.getText().length() <= 0) {
+                    Toast.makeText(RSbyOwnerActivity.this, "영업시간 입력해 주세요", Toast.LENGTH_LONG).show();
+
+                } else if ((files[0] == null) && (files[1] == null) && (files[2] == null) && (files[3] == null)) {
+                    Toast.makeText(RSbyOwnerActivity.this, "전단지 사진을 등록해 주세요", Toast.LENGTH_LONG).show();
+
+                } else {
+                    sendRestaurantSuggestion();
+                }
             }
         });
 
+    }
+
+    private void sendRestaurantSuggestion() {
+        RestaurantSuggestion restaurantSuggestion = new RestaurantSuggestion();
+        restaurantSuggestion.setName(restaurantName.getText().toString());
+        restaurantSuggestion.setCampus_id(Integer.valueOf(campusId));
+        restaurantSuggestion.setIs_suggested_by_restaurant(1);
+        restaurantSuggestion.setFiles(files);
+        restaurantSuggestion.setPhone_number(restaurantPhoneNumber.getText().toString());
+        restaurantSuggestion.setOffice_hours(officeHours.getText().toString());
+        RestaurantSuggestionController.sendRestaurantSuggestion(RSbyOwnerActivity.this, restaurantSuggestion);
     }
 
     @Override

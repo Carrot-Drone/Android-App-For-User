@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kakao.kakaolink.AppActionBuilder;
+import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
@@ -23,6 +25,7 @@ import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
+import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
@@ -297,12 +300,29 @@ public class RestaurantInfoController {
                         final KakaoLink kakaoLink = KakaoLink.getKakaoLink(mActivity);
                         final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder
                                 = kakaoLink.createKakaoTalkLinkMessageBuilder();
+                        String campus_name = CampusController.getCurrentCampus(mActivity).getName();
+                        String text = "(" + campus_name + ")" + mRestaurant.getName() + "\n" + mRestaurant.getPhone_number();
 
-                        String text = mRestaurant.getName() + "\n" + mRestaurant.getPhone_number();
+
                         final String linkContent =
                                 kakaoTalkLinkMessageBuilder
                                         .addText(text)
-                                        .addAppButton("캠퍼스:달 앱으로 이동").build();
+                                        .addAppButton("캠퍼스:달 앱으로 이동",
+                                                new AppActionBuilder()
+                                                        .addActionInfo(AppActionInfoBuilder
+                                                                .createAndroidActionInfoBuilder()
+                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId())
+                                                                .setExecuteParam("campusName=" + campus_name)
+                                                                .setMarketParam("referrer=kakaotalklink")
+                                                                .build())
+                                                        .addActionInfo(AppActionInfoBuilder
+                                                                .createiOSActionInfoBuilder()
+                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId())
+                                                                .setExecuteParam("campusName=" + campus_name)
+                                                                .setMarketParam("referrer=kakaotalklink")
+                                                                .build())
+                                                        .build())
+                                        .build();
                         kakaoLink.sendMessage(linkContent, mActivity);
                     } catch (KakaoParameterException e) {
                         e.printStackTrace();
@@ -323,7 +343,7 @@ public class RestaurantInfoController {
         click_evaluation.setOnClickListener(listener);
         click_share.setOnClickListener(listener);
 
-        if (likeBtnChecked != false || hateBtnChecked != false) {
+        if (!likeBtnChecked || !hateBtnChecked) {
             click_evaluation.setVisibility(View.GONE);
         }
     }
@@ -336,7 +356,7 @@ public class RestaurantInfoController {
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.btn_like) {
-                    if (likeBtnChecked != true) {
+                    if (!likeBtnChecked) {
                         mRestaurantEvaluationController.evaluate(GOOD, mRestaurant.getId());
                         UserPreferenceController.sendUserPreference(mRestaurant.getId(), GOOD, Preferences.getDeviceUuid(mActivity));
                         if (!likeBtnChecked) {
@@ -352,7 +372,7 @@ public class RestaurantInfoController {
                         setHeaderData();
                     }
                 } else if (view.getId() == R.id.btn_hate) {
-                    if (hateBtnChecked != true) {
+                    if (!hateBtnChecked) {
                         mRestaurantEvaluationController.evaluate(BAD, mRestaurant.getId());
                         UserPreferenceController.sendUserPreference(mRestaurant.getId(), BAD, Preferences.getDeviceUuid(mActivity));
                         if (!hateBtnChecked) {
