@@ -1,6 +1,6 @@
 package com.lchpatners.shadal.restaurant;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
-import com.lchpatners.shadal.restaurant.menu.RestaurantMenu;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
@@ -26,19 +25,20 @@ import io.realm.RealmList;
  * Created by YoungKim on 2015. 8. 25..
  */
 public class RestaurantListAdapter extends BaseAdapter {
-    private static final String TAG = LogUtils.makeTag(RestaurantListAdapter.class);
-
     public static final String FLYER_URLS = "flyer_urls";
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String RESTAURANT_PHONE_NUMBER = "restaurant_phone_number";
-
-    private Context mContext;
+    private static final String TAG = LogUtils.makeTag(RestaurantListAdapter.class);
+    private Activity mActivity;
+    private int mCategoryNumber;
+    private String mOrder;
     private List<Restaurant> mRestaurantList;
 
-    public RestaurantListAdapter(Context context, List<Restaurant> restaurantList) {
-        this.mContext = context;
-        this.mRestaurantList = restaurantList;
-        sortRestaurantMenu();
+    public RestaurantListAdapter(Activity activity, int categoryNumber, String order_by) {
+        this.mActivity = activity;
+        this.mCategoryNumber = categoryNumber;
+        this.mOrder = order_by;
+        loadData(mOrder);
     }
 
     private void sortRestaurantMenu() {
@@ -60,16 +60,33 @@ public class RestaurantListAdapter extends BaseAdapter {
         });
 
         mRestaurantList = tempRestaurantList;
+//        notifyDataSetChanged();
+    }
+
+    public void loadData(String orderBy) {
+        mRestaurantList = RestaurantController.getRestaurantList(mActivity, mCategoryNumber, orderBy);
+        if (mRestaurantList != null) {
+            sortRestaurantMenu();
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mRestaurantList.size();
+        if (mRestaurantList != null) {
+            return mRestaurantList.size();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public Object getItem(int position) {
-        return mRestaurantList.get(position);
+        if (mRestaurantList != null) {
+            return mRestaurantList.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -82,7 +99,7 @@ public class RestaurantListAdapter extends BaseAdapter {
         final int pos = position;
         final Restaurant restaurant = mRestaurantList.get(pos);
 
-        convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_restaurant, null);
+        convertView = LayoutInflater.from(mActivity).inflate(R.layout.list_item_restaurant, null);
 
         TextView retention = (TextView) convertView.findViewById(R.id.retention);
         retention.setText(Math.round(restaurant.getRetention() * 100) + "");
@@ -105,11 +122,11 @@ public class RestaurantListAdapter extends BaseAdapter {
                         flyer_urls.add(flyer.getUrl());
                     }
 
-                    Intent intent = new Intent(mContext, FlyerActivity.class);
+                    Intent intent = new Intent(mActivity, FlyerActivity.class);
                     intent.putExtra(FLYER_URLS, flyer_urls);
                     intent.putExtra(RESTAURANT_ID, restaurant.getId());
                     intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
-                    mContext.startActivity(intent);
+                    mActivity.startActivity(intent);
                 }
             });
         }
@@ -119,9 +136,9 @@ public class RestaurantListAdapter extends BaseAdapter {
             public void onClick(View view) {
 //                AnalyticsHelper helper = new AnalyticsHelper(context);
 //                helper.sendEvent("UX", "res_clicked", restaurant.getName());
-                Intent intent = new Intent(mContext, RestaurantInfoActivity.class);
+                Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
                 intent.putExtra(RESTAURANT_ID, restaurant.getId());
-                mContext.startActivity(intent);
+                mActivity.startActivity(intent);
             }
         });
 

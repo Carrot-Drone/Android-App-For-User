@@ -5,7 +5,7 @@
                 android:background="@color/white100">
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/rating_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:background="@color/bg"
@@ -22,7 +22,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="32dp"
-
             android:text="내 주문수"
             android:textColor="@color/light_grey"
             android:textSize="13dp"/>
@@ -30,11 +29,13 @@
         <TextView
             android:id="@+id/title_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/title_call_count"
             android:layout_toRightOf="@+id/title_call_count"
+            android:gravity="center_vertical"
             android:maxLength="12"
+            android:paddingRight="3dp"
             android:singleLine="true"
             android:text="이름"
             android:textColor="@color/light_grey"
@@ -45,7 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
             android:layout_toEndOf="@+id/title_name"
             android:layout_toRightOf="@+id/title_name"
             android:src="@drawable/icon_list_recent_arrow"
@@ -55,9 +55,11 @@
         <TextView
             android:id="@+id/title_call"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/iv_order"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
             android:text="최근"
             android:textColor="@color/light_grey"
             android:textSize="13dp"/>
@@ -80,7 +82,7 @@
         android:id="@+id/call_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@+id/rating_bar_layout"
         android:layout_centerHorizontal="true"
         android:divider="@color/divider"
         android:dividerHeight="0.5dp"/>

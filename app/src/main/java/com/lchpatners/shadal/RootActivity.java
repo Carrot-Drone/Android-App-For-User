@@ -24,8 +24,6 @@ import com.lchpatners.shadal.restaurant_suggestion.RestaurantSuggestionActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
 
-;
-
 /**
  * Created by youngkim on 2015. 8. 24..
  */
@@ -48,7 +46,6 @@ public class RootActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private TextView drawerTitle;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private Menu mMenu;
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -79,6 +76,13 @@ public class RootActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setNavigationDrawer();
+        updateNavigationView(RootActivity.this);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -103,13 +107,8 @@ public class RootActivity extends ActionBarActivity {
             intent.putExtra(RESTAURANT_ID, restaurant_id);
         }
 
-        //TODO:checkAppMinimunVersion
-
         mController = new RootController(RootActivity.this);
-
-        //TODO:check previous Database
-
-        //TODO: set toast only one time
+        mController.isRecentVersion();
 
         //TODO : get popup list
 
@@ -255,8 +254,6 @@ public class RootActivity extends ActionBarActivity {
         if (mActionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
         switch (item.getItemId()) {
-            case R.id.action_search:
-                return true;
             case R.id.action_restaurant_suggestion:
                 Intent intent = new Intent(this, RestaurantSuggestionActivity.class);
                 startActivity(intent);

@@ -12,9 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
-import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
@@ -83,9 +81,9 @@ public class RecentCallAdapter extends BaseAdapter {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
                 loadData(mOrder);
-
-                RootActivity.updateNavigationView(mActivity);
-                RecommendedRestaurantActivity.updateNavigationView(mActivity);
+//
+//                RootActivity.updateNavigationView(mActivity);
+//                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
         });
 

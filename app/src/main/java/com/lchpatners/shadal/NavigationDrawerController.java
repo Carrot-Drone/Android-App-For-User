@@ -5,6 +5,8 @@ import android.support.design.widget.NavigationView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.call.RecentCall;
+import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.restaurant.category.Category;
 
 import java.util.Date;
@@ -24,22 +26,25 @@ public class NavigationDrawerController {
 
 
     public static void updateNavigationDrawer(Activity activity, NavigationView navigationView) {
+
         lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
         categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
         myCalls = (TextView) navigationView.findViewById(R.id.my_calls); //내 주문수
 
         setTotalCallCount(activity);
-        getLastDay(activity);
-        getTheMostOrderedFood(activity);
+        setLastDay(activity);
+        setTheMostOrderedFood(activity);
     }
 
     public static void setTotalCallCount(Activity activity) {
+        Campus campus = CampusController.getCurrentCampus(activity);
+
         Realm realm = Realm.getInstance(activity);
-        realm.beginTransaction();
         int total_call_count = 0;
         RealmResults<RecentCall> recentCallList = null;
         try {
-            RealmQuery<RecentCall> query = realm.where(RecentCall.class);
+            realm.beginTransaction();
+            RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("campus_id", campus.getId());
             recentCallList = query.findAll();
             realm.commitTransaction();
         } catch (Exception e) {
@@ -56,13 +61,13 @@ public class NavigationDrawerController {
     }
 
 
-    public static void getLastDay(Activity activity) {
+    public static void setLastDay(Activity activity) {
 
         int lastday = -1;
         Realm realm = Realm.getInstance(activity);
-        realm.beginTransaction();
         RecentCall recentCall = null;
         try {
+            realm.beginTransaction();
             RealmQuery<RecentCall> query = realm.where(RecentCall.class);
             recentCall = query.findFirst();
             realm.commitTransaction();
@@ -83,7 +88,7 @@ public class NavigationDrawerController {
         lastDay.setText(day);
     }
 
-    public static void getTheMostOrderedFood(Activity activity) {
+    public static void setTheMostOrderedFood(Activity activity) {
         Realm realm = Realm.getInstance(activity);
         int[] count = new int[8];
         int[] category_id = new int[8];

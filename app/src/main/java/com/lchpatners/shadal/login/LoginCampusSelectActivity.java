@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.setting.CampusChangeController;
@@ -43,21 +44,17 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
         lvCampusList.addFooterView(listFooterView);
 
         buConfirmSelection = (Button) findViewById(R.id.LoginCampusSelect_confirmButton);
-        buConfirmSelection.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (controller.isCampusSelected()) {
-
-                            controller.setCampus();
-                            //Go to RootActivity at setCampus function
+        buConfirmSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(LoginCampusSelectActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
+                if (controller.isCampusSelected()) {
+                    controller.setCampus();
+                    //Go to RootActivity at setCampus function
 //                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
 //                    startActivity(intent);
-
-
-                        }
-                    }
                 }
-        );
+            }
+        });
     }
 }

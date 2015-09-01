@@ -19,11 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.TouchImageView;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
-import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.squareup.picasso.Picasso;
 
@@ -76,9 +74,9 @@ public class FlyerActivity extends ActionBarActivity {
                 
                 RecentCallController.stackRecentCall(FlyerActivity.this, mRestaurantId);
                 CallLogController.sendCallLog(FlyerActivity.this, mRestaurantId);
-
-                RootActivity.updateNavigationView(FlyerActivity.this);
-                RecommendedRestaurantActivity.updateNavigationView(FlyerActivity.this);
+//
+//                RootActivity.updateNavigationView(FlyerActivity.this);
+//                RecommendedRestaurantActivity.updateNavigationView(FlyerActivity.this);
             }
         });
 

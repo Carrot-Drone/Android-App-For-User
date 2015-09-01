@@ -2,19 +2,16 @@ package com.lchpatners.shadal.restaurant;
 
 import android.app.Activity;
 
-import com.lchpatners.shadal.campus.Campus;
-
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by YoungKim on 2015. 8. 26..
  */
 public class RestaurantEvaluationController {
-    private Activity mActivity;
     private final int GOOD = 1;
     private final int BAD = 0;
+    private Activity mActivity;
 
     public RestaurantEvaluationController(Activity activity) {
         this.mActivity = activity;

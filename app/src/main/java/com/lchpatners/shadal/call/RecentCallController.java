@@ -35,12 +35,16 @@ public class RecentCallController {
             switch (orderby) {
                 case ORDER_BY_CALL_RECENT:
                     queriedRecentCallList.sort("recent_call_date", RealmResults.SORT_ORDER_DESCENDING);
+                    break;
                 case ORDER_BY_NAME:
                     queriedRecentCallList.sort("restaurant_name");
+                    break;
                 case ORDER_BY_CALL_COUNT:
                     queriedRecentCallList.sort("call_count", RealmResults.SORT_ORDER_DESCENDING);
+                    break;
                 default:
                     queriedRecentCallList.sort("recent_call_date", RealmResults.SORT_ORDER_DESCENDING);
+                    break;
             }
             realm.commitTransaction();
         } catch (Exception e) {
@@ -55,11 +59,11 @@ public class RecentCallController {
 
     public static int getRecentCallCountByRestaurantId(Activity activity, int restaurant_id) {
         Realm realm = Realm.getInstance(activity);
-        RealmResults<RecentCall> recentCallList = null;
+        RecentCall recentCall = null;
         try {
             realm.beginTransaction();
             RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("restaurant_id", restaurant_id);
-            recentCallList = query.findAll();
+            recentCall = query.findFirst();
             realm.commitTransaction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,18 +72,18 @@ public class RecentCallController {
             realm.close();
         }
 
-        return recentCallList.size();
+        return recentCall != null ? recentCall.getCall_count() : 0;
     }
 
-    public static void stackRecentCall(Activity mActivity, int restaurant_id) {
-        if (checkHasRecentCall(mActivity, restaurant_id) != 1) {
-            Realm realm = Realm.getInstance(mActivity);
+    public static void stackRecentCall(Activity activity, int restaurant_id) {
+        if (checkHasRecentCall(activity, restaurant_id) != 1) {
+            Realm realm = Realm.getInstance(activity);
 
             RecentCall recentCall = new RecentCall();
             recentCall.setRestaurant_id(restaurant_id);
-            recentCall.setCampus_id(CampusController.getCurrentCampus(mActivity).getId());
-            recentCall.setCategory_id(CategoryController.getRestaurantCategory(mActivity, restaurant_id));
-            recentCall.setRestaurant_name(RestaurantController.getRestaurant(mActivity, restaurant_id).getName());
+            recentCall.setCampus_id(CampusController.getCurrentCampus(activity).getId());
+            recentCall.setCategory_id(CategoryController.getRestaurantCategory(activity, restaurant_id));
+            recentCall.setRestaurant_name(RestaurantController.getRestaurant(activity, restaurant_id).getName());
             recentCall.setRecent_call_date(Calendar.getInstance().getTime());
 
             realm.beginTransaction();

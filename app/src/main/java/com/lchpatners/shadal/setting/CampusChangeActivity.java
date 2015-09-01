@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
@@ -57,12 +58,12 @@ public class CampusChangeActivity extends ActionBarActivity {
         mConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(CampusChangeActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                 if (mController.isCampusSelected()) {
                     mController.setCampus();
                 }
             }
         });
-
     }
 
 

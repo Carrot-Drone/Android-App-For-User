@@ -5,15 +5,12 @@
         <menu>
             <item
                 android:id="@+id/drawer_item_1"
-                android:icon="@drawable/tab_main_selected"
                 android:title="주문하기"/>
             <item
                 android:id="@+id/drawer_item_2"
-                android:icon="@drawable/tab_dice_selected"
                 android:title="추천"/>
             <item
                 android:id="@+id/drawer_item_3"
-                android:icon="@drawable/tab_more_selected"
                 android:title="더보기"/>
         </menu>
     </item>

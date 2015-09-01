@@ -4,11 +4,10 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.lchpatners.shadal.util.LogUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eunhyekim on 2015. 8. 26..
@@ -17,29 +16,24 @@ import java.util.ArrayList;
 public class RecommendedRestaurantPagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantPagerAdapter.class);
     Context mContext;
-    ArrayList<RecommendedRestaurant> mRecommendedRestaurants;
-    private int COUNT;
+    List<RecommendedRestaurant> mRecommendedRestaurants;
+    private int count;
 
-    public RecommendedRestaurantPagerAdapter(FragmentManager fm, Context context, ArrayList<RecommendedRestaurant> recommendedRestaurants) {
+    public RecommendedRestaurantPagerAdapter(FragmentManager fm, Context context, List<RecommendedRestaurant> recommendedRestaurants) {
         super(fm);
+        this.count = recommendedRestaurants.size() - 1;
         mContext = context;
         mRecommendedRestaurants = recommendedRestaurants;
-        COUNT = mRecommendedRestaurants.size();
     }
 
     @Override
     public Fragment getItem(int position) {
-        Log.d(TAG, "original position: " + position);
-//        position = position % COUNT;
-        Log.d(TAG, position + "");
-        Log.d(TAG, mRecommendedRestaurants.get(position).getRestaurant().getName());
-
-        return RecommendedRestaurantFragment.create(mRecommendedRestaurants.get(position));
+        return RecommendedRestaurantFragment.newInstance(mRecommendedRestaurants.get(position), count, position);
     }
 
     @Override
     public int getCount() {
-        return COUNT;
+        return mRecommendedRestaurants.size();
     }
 
 }

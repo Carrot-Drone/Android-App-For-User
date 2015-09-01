@@ -1,17 +1,13 @@
 package com.lchpatners.shadal.call.CallLog;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.restaurant.category.Category;
 import com.lchpatners.shadal.restaurant.category.CategoryController;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;

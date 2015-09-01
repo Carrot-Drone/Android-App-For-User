@@ -67,6 +67,13 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setNavigationDrawer();
+        updateNavigationView(RecommendedRestaurantActivity.this);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {

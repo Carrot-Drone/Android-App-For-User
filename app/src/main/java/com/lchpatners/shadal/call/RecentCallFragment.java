@@ -1,23 +1,16 @@
 package com.lchpatners.shadal.call;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.CallListAdapter;
-import com.lchpatners.shadal.DatabaseHelper;
-import com.lchpatners.shadal.restaurant.RestaurantController;
-import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.Restaurant;
 
 /**
  * Created by eunhyekim on 2015. 8. 22..
@@ -26,29 +19,28 @@ public class RecentCallFragment extends Fragment {
     private Activity activity;
     private ListView listView;
     private RecentCallAdapter mAdapter;
+    private String orderBy;
 
     private ImageView iv_call;
     private ImageView iv_name;
-
-    View.OnClickListener btnListener = new View.OnClickListener() {
+    View.OnClickListener orderListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.title_name) {
-                CallListAdapter adapter = new CallListAdapter(activity, DatabaseHelper.NAME);
-                listView.setAdapter(adapter);
-
+                mAdapter.loadData(RecentCallController.ORDER_BY_NAME);
                 iv_name.setVisibility(View.VISIBLE);
                 iv_call.setVisibility(View.INVISIBLE);
-
             } else if (view.getId() == R.id.title_call) {
-                CallListAdapter adapter = new CallListAdapter(activity, DatabaseHelper.CALL);
-                listView.setAdapter(adapter);
-
+                mAdapter.loadData(RecentCallController.ORDER_BY_CALL_RECENT);
                 iv_name.setVisibility(View.INVISIBLE);
                 iv_call.setVisibility(View.VISIBLE);
             }
         }
     };
+
+    public RecentCallFragment() {
+        this.orderBy = RecentCallController.ORDER_BY_CALL_RECENT;
+    }
 
     public static RecentCallFragment newInstance() {
         return new RecentCallFragment();
@@ -58,10 +50,13 @@ public class RecentCallFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
+        //default is ORDER_BY_RECENT
+        this.mAdapter = new RecentCallAdapter(activity, RecentCallController.ORDER_BY_CALL_RECENT);
     }
 
     @Override
     public void onResume() {
+        mAdapter.loadData(RecentCallController.ORDER_BY_CALL_RECENT);
         super.onResume();
     }
 
@@ -87,31 +82,10 @@ public class RecentCallFragment extends Fragment {
         iv_name = (ImageView) view.findViewById(R.id.iv_name_order);
         iv_call = (ImageView) view.findViewById(R.id.iv_order);
 
-        name.setOnClickListener(btnListener);
-        call.setOnClickListener(btnListener);
-
-        mAdapter = new RecentCallAdapter(activity, RecentCallController.ORDER_BY_CALL_RECENT);
-//        mAdapter.notifyDataSetChanged();
+        name.setOnClickListener(orderListener);
+        call.setOnClickListener(orderListener);
 
         listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mAdapter.getItem(position) instanceof Restaurant) {
-                    Restaurant restaurant = (Restaurant) mAdapter.getItem(position);
-
-//                    AnalyticsHelper helper = new AnalyticsHelper(getActivity().getApplication());
-//                    helper.sendEvent("UX", "res_in_favorite_clicked", restaurant.getName());
-
-                    Intent intent = new Intent(activity, RestaurantInfoActivity.class);
-                    intent.putExtra("RESTAURANT", restaurant);
-                    intent.putExtra("REFERRER", "CallListFragment");
-                    startActivity(intent);
-                    mAdapter.notifyDataSetChanged();
-                    listView.deferNotifyDataSetChanged();
-                }
-            }
-        });
         return view;
     }
 }

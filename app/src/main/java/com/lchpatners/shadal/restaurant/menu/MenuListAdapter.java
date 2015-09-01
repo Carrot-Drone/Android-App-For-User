@@ -1,23 +1,18 @@
 package com.lchpatners.shadal.restaurant.menu;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.DatabaseHelper;
-import com.lchpatners.shadal.Menu;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.Restaurant;
-import com.lchpatners.shadal.SubMenu;
 import com.lchpatners.shadal.restaurant.RestaurantMenuController;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
