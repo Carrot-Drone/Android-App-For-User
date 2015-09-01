@@ -171,7 +171,6 @@ public class RootActivity extends ActionBarActivity {
 
         TextView administrator = (TextView) navigationView.findViewById(R.id.administrator);
 
-        //TODO: get recent call information
         administrator.setText(mController.getCampus().getName() + "\n주변음식점 정보의 수정 및 관리는\n" +
                 mController.getCampus().getAdministrator() + "에서 전담합니다.");
         updateNavigationView(RootActivity.this);

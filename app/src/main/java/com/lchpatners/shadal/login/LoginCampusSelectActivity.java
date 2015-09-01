@@ -47,8 +47,8 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
         buConfirmSelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginCampusSelectActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                 if (controller.isCampusSelected()) {
+                    Toast.makeText(LoginCampusSelectActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                     controller.setCampus();
                     //Go to RootActivity at setCampus function
 //                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);

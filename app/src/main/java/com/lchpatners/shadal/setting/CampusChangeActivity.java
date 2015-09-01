@@ -58,8 +58,8 @@ public class CampusChangeActivity extends ActionBarActivity {
         mConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(CampusChangeActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                 if (mController.isCampusSelected()) {
+                    Toast.makeText(CampusChangeActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                     mController.setCampus();
                 }
             }

@@ -44,15 +44,19 @@ public class MenuListAdapter extends BaseAdapter {
     private void convertMenuList() {
         sortMenuList();
 
-        String currentSection = mRestaurantMenus.get(0).getSection();
-        mMenuData.add(currentSection);
+        if (mRestaurantMenus.size() != 0) {
+            String currentSection = mRestaurantMenus.get(0).getSection();
+            mMenuData.add(currentSection);
 
-        for (RestaurantMenu menu : mRestaurantMenus) {
-            if (!currentSection.equals(menu.getSection())) {
-                currentSection = menu.getSection();
-                mMenuData.add(currentSection);
+            for (RestaurantMenu menu : mRestaurantMenus) {
+                if (!currentSection.equals(menu.getSection())) {
+                    currentSection = menu.getSection();
+                    mMenuData.add(currentSection);
+                }
+                mMenuData.add(menu);
             }
-            mMenuData.add(menu);
+        } else {
+            mMenuData.add("메뉴가 없어요!");
         }
     }
 

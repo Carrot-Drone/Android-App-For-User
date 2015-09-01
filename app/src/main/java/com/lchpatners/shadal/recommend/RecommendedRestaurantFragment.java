@@ -42,12 +42,11 @@ public class RecommendedRestaurantFragment extends Fragment {
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantFragment.class);
 
     private static Activity mActivity;
-    private static RecommendedRestaurant mRecommendedRestaurant;
 
     private static ImageButton upButton;
     private static ImageButton downButton;
 
-    private Restaurant restaurant;
+    private Restaurant mRestaurant;
     private String restaurantName;
     private String retention;
     private String number_of_my_calls;
@@ -120,36 +119,21 @@ public class RecommendedRestaurantFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        restaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
-        goodCount = restaurant.getTotal_number_of_goods();
-        badCount = restaurant.getTotal_number_of_bads();
+        mRestaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
+        setView(view);
+        goodCount = mRestaurant.getTotal_number_of_goods();
+        badCount = mRestaurant.getTotal_number_of_bads();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        count = getArguments().getInt("count");
-        position = getArguments().getInt("position");
-        restaurant_id = getArguments().getInt("restaurant_id");
-        reason = getArguments().getString("reason");
-        restaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
-        goodCount = restaurant.getTotal_number_of_goods();
-        badCount = restaurant.getTotal_number_of_bads();
-
-        restaurantName = restaurant.getName();
-        reason = "<" + reason + ">";
-        retention = String.valueOf(Math.round(restaurant.getRetention() * 100));
-        number_of_my_calls = String.valueOf(restaurant.getNumber_of_my_calls());
-        total_number_of_calls = numberOfCallsFormatString(restaurant.getTotal_number_of_calls());
-        phone_number = String.valueOf(restaurant.getPhone_number());
-        category_title = RecommendedRestaurantController.getCategoryTitle(mActivity, restaurant.getId());
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new, container, false);
+        this.view = view;
 
         setView(view);
         setUpDownButtonEvent(view);
@@ -167,6 +151,23 @@ public class RecommendedRestaurantFragment extends Fragment {
     }
 
     public void setView(View view) {
+        mRestaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
+        count = getArguments().getInt("count");
+        position = getArguments().getInt("position");
+        restaurant_id = getArguments().getInt("restaurant_id");
+        reason = getArguments().getString("reason");
+        mRestaurant = RestaurantController.getRestaurant(mActivity, restaurant_id);
+        goodCount = mRestaurant.getTotal_number_of_goods();
+        badCount = mRestaurant.getTotal_number_of_bads();
+
+        restaurantName = mRestaurant.getName();
+        reason = "<" + reason + ">";
+        retention = String.valueOf(Math.round(mRestaurant.getRetention() * 100));
+        number_of_my_calls = RecentCallController.getRecentCallCountByRestaurantId(mActivity, mRestaurant.getId()) + "";
+        total_number_of_calls = numberOfCallsFormatString(mRestaurant.getTotal_number_of_calls());
+        phone_number = String.valueOf(mRestaurant.getPhone_number());
+        category_title = RecommendedRestaurantController.getCategoryTitle(mActivity, mRestaurant.getId());
+
         tv_name = (TextView) view.findViewById(R.id.name);
         tv_reason = (TextView) view.findViewById(R.id.reason);
         tv_retention = (TextView) view.findViewById(R.id.retention);
@@ -289,7 +290,7 @@ public class RecommendedRestaurantFragment extends Fragment {
         iv_flyer = (ImageView) view.findViewById(R.id.iv_flyer);
         ll_flyer = (LinearLayout) view.findViewById(R.id.flyerLayout);
 
-        if (!restaurant.isHas_flyer()) {
+        if (!mRestaurant.isHas_flyer()) {
             ll_flyer.setVisibility(View.GONE);
         } else {
             iv_flyer.setOnClickListener(new View.OnClickListener() {
@@ -297,15 +298,15 @@ public class RecommendedRestaurantFragment extends Fragment {
                 public void onClick(View view) {
 
                     ArrayList<String> flyer_urls = new ArrayList<String>();
-                    RealmList<Flyer> flyers = restaurant.getFlyers();
+                    RealmList<Flyer> flyers = mRestaurant.getFlyers();
                     for (Flyer flyer : flyers) {
                         flyer_urls.add(flyer.getUrl());
                     }
 
                     Intent intent = new Intent(mActivity, FlyerActivity.class);
                     intent.putExtra(FLYER_URLS, flyer_urls);
-                    intent.putExtra(RESTAURANT_ID, restaurant.getId());
-                    intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
+                    intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
+                    intent.putExtra(RESTAURANT_PHONE_NUMBER, mRestaurant.getPhone_number());
                     mActivity.startActivity(intent);
                 }
             });
@@ -318,12 +319,12 @@ public class RecommendedRestaurantFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                String number = "tel:" + restaurant.getPhone_number();
+                String number = "tel:" + mRestaurant.getPhone_number();
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
 
-                RecentCallController.stackRecentCall(mActivity, restaurant.getId());
-                CallLogController.sendCallLog(mActivity, restaurant.getId());
+                RecentCallController.stackRecentCall(mActivity, mRestaurant.getId());
+                CallLogController.sendCallLog(mActivity, mRestaurant.getId());
 //                RootActivity.updateNavigationView(mActivity);
 //                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
@@ -353,7 +354,7 @@ public class RecommendedRestaurantFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
-                intent.putExtra(RESTAURANT_ID, restaurant.getId());
+                intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 mActivity.startActivity(intent);
             }
         });
@@ -361,7 +362,7 @@ public class RecommendedRestaurantFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
-                intent.putExtra(RESTAURANT_ID, restaurant.getId());
+                intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 mActivity.startActivity(intent);
             }
         });

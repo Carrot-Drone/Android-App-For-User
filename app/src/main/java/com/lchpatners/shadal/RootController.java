@@ -25,7 +25,6 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 24..
  */
 public class RootController {
-    private static final String TAG = LogUtils.makeTag(RootController.class);
     private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     private Activity mActivity;

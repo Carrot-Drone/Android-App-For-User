@@ -20,12 +20,15 @@ import com.urqa.clientinterface.URQAController;
 
 public class LandingActivity extends ActionBarActivity {
     private static final String TAG = LogUtils.makeTag(LandingActivity.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //add URQA Libs, initialization.
+        //TODO : reveal comment
         URQAController.InitializeAndStartSession(getApplicationContext(), "63FB46FA");
+
         setContentView(R.layout.activity_landing);
 
         setSharedPreference();

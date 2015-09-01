@@ -152,7 +152,7 @@ public class FlyerActivity extends ActionBarActivity {
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                     exception.printStackTrace();
                 }
             });
@@ -165,7 +165,7 @@ public class FlyerActivity extends ActionBarActivity {
 
                 @Override
                 public void onError() {
-                    Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             });
             return img;

@@ -19,13 +19,13 @@ import io.realm.RealmResults;
  * Created by eunhyekim on 2015. 8. 29..
  */
 public class NavigationDrawerController {
-    static NavigationView mNavigationView;
     static TextView lastDay;
     static TextView categoryName;
     static TextView myCalls;
-
+    static Campus mCampus;
 
     public static void updateNavigationDrawer(Activity activity, NavigationView navigationView) {
+        mCampus = CampusController.getCurrentCampus(activity);
 
         lastDay = (TextView) navigationView.findViewById(R.id.last_day); //마지막 주문한날로부터
         categoryName = (TextView) navigationView.findViewById(R.id.category); //가장 많이 주문한 음식
@@ -37,14 +37,13 @@ public class NavigationDrawerController {
     }
 
     public static void setTotalCallCount(Activity activity) {
-        Campus campus = CampusController.getCurrentCampus(activity);
 
         Realm realm = Realm.getInstance(activity);
         int total_call_count = 0;
         RealmResults<RecentCall> recentCallList = null;
         try {
             realm.beginTransaction();
-            RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("campus_id", campus.getId());
+            RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("campus_id", mCampus.getId());
             recentCallList = query.findAll();
             realm.commitTransaction();
         } catch (Exception e) {
@@ -68,7 +67,7 @@ public class NavigationDrawerController {
         RecentCall recentCall = null;
         try {
             realm.beginTransaction();
-            RealmQuery<RecentCall> query = realm.where(RecentCall.class);
+            RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("campus_id", mCampus.getId());
             recentCall = query.findFirst();
             realm.commitTransaction();
         } catch (Exception e) {
@@ -99,7 +98,7 @@ public class NavigationDrawerController {
         RealmResults<RecentCall> recentCallList = null;
         try {
             realm.beginTransaction();
-            RealmQuery<RecentCall> query = realm.where(RecentCall.class);
+            RealmQuery<RecentCall> query = realm.where(RecentCall.class).equalTo("campus_id", mCampus.getId());
             recentCallList = query.findAll();
             realm.commitTransaction();
         } catch (Exception e) {
@@ -140,8 +139,5 @@ public class NavigationDrawerController {
         }
 
         categoryName.setText((category != null) ? category.getTitle() : "");
-
     }
-
-
 }
