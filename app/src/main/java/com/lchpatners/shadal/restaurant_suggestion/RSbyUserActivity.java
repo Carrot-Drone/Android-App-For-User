@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,6 +43,7 @@ public class RSbyUserActivity extends ActionBarActivity {
     private TextView campusName;
     private EditText restaurantName, restaurantPhoneNumber;
     private String[] files = new String[4];
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -147,8 +150,9 @@ public class RSbyUserActivity extends ActionBarActivity {
             public void onClick(View view) {
 
                 if (restaurantName.getText().length() <= 0) {
-                    Toast.makeText(RSbyUserActivity.this, "음식점 이름을 입력해 주세요", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RSbyUserActivity.this, "음식점 이름을 입력해주세요", Toast.LENGTH_LONG).show();
                 } else {
+                    Toast.makeText(RSbyUserActivity.this, "잠시만 기다려주세요!", Toast.LENGTH_LONG).show();
                     sendRestaurantSuggestion();
                 }
             }
@@ -176,7 +180,6 @@ public class RSbyUserActivity extends ActionBarActivity {
                 campusName.setText(data.getStringExtra(CAMPUS_NAME));
                 campusId = data.getIntExtra(CAMPUS_ID, 0);
             } else {
-
                 Uri uri = data.getData();
                 String[] projection = {MediaStore.Images.Media.DATA};
 
@@ -191,7 +194,7 @@ public class RSbyUserActivity extends ActionBarActivity {
                 Bitmap selectedImage = BitmapFactory.decodeFile(filePath, options);
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
 
                 switch (requestCode) {
@@ -223,5 +226,39 @@ public class RSbyUserActivity extends ActionBarActivity {
 
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Drawable d_1 = iv_1.getDrawable();
+        Drawable d_2 = iv_2.getDrawable();
+        Drawable d_3 = iv_3.getDrawable();
+        Drawable d_4 = iv_4.getDrawable();
+        if (d_1 instanceof BitmapDrawable) {
+            Bitmap b_1 = ((BitmapDrawable)d_1).getBitmap();
+            b_1.recycle();
+            b_1 = null;
+        }
+        if (d_2 instanceof BitmapDrawable) {
+            Bitmap b_2 = ((BitmapDrawable)d_2).getBitmap();
+            b_2.recycle();
+            b_2 = null;
+        }
+        if (d_3 instanceof BitmapDrawable) {
+            Bitmap b_3 = ((BitmapDrawable)d_3).getBitmap();
+            b_3.recycle();
+            b_3 = null;
+        }
+        if (d_4 instanceof BitmapDrawable) {
+            Bitmap b_4 = ((BitmapDrawable)d_4).getBitmap();
+            b_4.recycle();
+            b_4 = null;
+        }
+        d_1.setCallback(null);
+        d_2.setCallback(null);
+        d_3.setCallback(null);
+        d_4.setCallback(null);
+
+        super.onDestroy();
     }
 }
