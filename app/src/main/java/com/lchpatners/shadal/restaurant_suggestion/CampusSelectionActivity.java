@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +13,7 @@ import android.widget.ListView;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.setting.CampusChangeController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 
 
@@ -60,9 +60,9 @@ public class CampusSelectionActivity extends ActionBarActivity {
                             intent.putExtra(CAMPUS_ID, campus.getId());
                             setResult(RESULT_OK, intent);
                             finish();
-                            Log.d(TAG, campus.getName());
 
-
+                            AnalyticsHelper analyticsHelper = new AnalyticsHelper(CampusSelectionActivity.this);
+                            analyticsHelper.sendEvent("UX", "select_campus_in_restaurant_suggestion_start", campus.getName_kor_short());
                         }
 
 

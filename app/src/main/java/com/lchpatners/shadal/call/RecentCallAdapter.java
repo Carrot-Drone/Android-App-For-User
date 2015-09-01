@@ -16,6 +16,7 @@ import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.restaurant.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 import java.util.List;
 
@@ -81,6 +82,10 @@ public class RecentCallAdapter extends BaseAdapter {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
                 loadData(mOrder);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "phonenumber_clicked", restaurant.getName());
+                analyticsHelper.sendEvent("UX", "phonenumber_in_recent_clicked", restaurant.getName());
 //
 //                RootActivity.updateNavigationView(mActivity);
 //                RecommendedRestaurantActivity.updateNavigationView(mActivity);
@@ -101,6 +106,9 @@ public class RecentCallAdapter extends BaseAdapter {
                     intent.putExtra("REFERRER", "RecentCall");
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mActivity.startActivity(intent);
+
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                    analyticsHelper.sendEvent("UX", "res_in_restaurants_clicked", recentCall.getRestaurant_name());
                 }
             }
         });

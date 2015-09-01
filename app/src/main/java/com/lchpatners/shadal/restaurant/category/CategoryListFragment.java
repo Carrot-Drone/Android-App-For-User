@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.RestaurantListActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 /**
  * Created by youngkim on 2015. 8. 25..
@@ -34,12 +36,10 @@ public class CategoryListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-//        if (getUserVisibleHint()) {
-//            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
-//            helper.sendScreen(((MainActivity) getActivity()).restaurantListFragmentCurrentlyOn == null ?
-//                    "메인 화면" : "음식점 리스트 화면");
-//        }
+        if (getUserVisibleHint()) {
+            AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+            analyticsHelper.sendScreen("카테고리 화면");
+        }
     }
 
     @Override
@@ -53,13 +53,15 @@ public class CategoryListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_view, container, false);
+        final CategoryListAdapter adapter = new CategoryListAdapter(mActivity);
 
         ListView listView = (ListView) view.findViewById(R.id.list_view);
-        final CategoryListAdapter adapter = new CategoryListAdapter(mActivity);
+        FrameLayout listFooterView = (FrameLayout) inflater.inflate(
+                R.layout.category_list_footer, null);
+        listView.addFooterView(listFooterView);
 
         listView.setAdapter(adapter);
 
-        // TODO: KNOWN ISSUE: duplicated onItemClick() calls when double-tapping
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -85,6 +87,9 @@ public class CategoryListFragment extends Fragment {
                 intent.putExtra("category", category);
                 intent.putExtra("position", position);
                 startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "category_in_categories_clicked", category);
             }
         });
 

@@ -19,7 +19,7 @@ import retrofit.converter.GsonConverter;
  */
 public class CampusController {
     private static final String TAG = LogUtils.makeTag(CampusController.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     public static Campus getCurrentCampus(Activity activity) {
         Realm realm = Realm.getInstance(activity);

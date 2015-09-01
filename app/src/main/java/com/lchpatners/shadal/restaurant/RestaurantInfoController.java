@@ -28,6 +28,7 @@ import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
@@ -54,7 +55,7 @@ public class RestaurantInfoController {
     public static final int GOOD = 1;
     public static final int BAD = 0;
     private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
     private Activity mActivity;
     private Restaurant mRestaurant;
     private View mHeader;
@@ -94,6 +95,10 @@ public class RestaurantInfoController {
         updateCurrentRestaurant();
 
         return restaurant;
+    }
+
+    public void setKAKAORestaurant(Restaurant restaurant) {
+        mRestaurant = restaurant;
     }
 
     private void updateCurrentRestaurant() {
@@ -267,6 +272,11 @@ public class RestaurantInfoController {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(number));
                 mActivity.startActivity(intent);
                 updateCallLog();
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "phonenumber_clicked", mRestaurant.getName());
+                analyticsHelper.sendEvent("UX", "phonenumber_in_restaurant_clicked", mRestaurant.getName());
+
 //                RootActivity.updateNavigationView(mActivity);
 //                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
@@ -301,6 +311,9 @@ public class RestaurantInfoController {
                 intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 intent.putExtra(RESTAURANT_PHONE_NUMBER, mRestaurant.getPhone_number());
                 mActivity.startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "flyer_in_restaurant_clicked", mRestaurant.getName());
             }
         });
     }
@@ -361,32 +374,31 @@ public class RestaurantInfoController {
                         final KakaoLink kakaoLink = KakaoLink.getKakaoLink(mActivity);
                         final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder
                                 = kakaoLink.createKakaoTalkLinkMessageBuilder();
-                        String campus_name = CampusController.getCurrentCampus(mActivity).getName();
-                        String text = "(" + campus_name + ")" + mRestaurant.getName() + "\n" + mRestaurant.getPhone_number();
-
+                        String campus_name = CampusController.getCurrentCampus(mActivity).getName_kor_short();
+                        String text = mRestaurant.getName() + "(" + campus_name + ")" + "\n" + mRestaurant.getPhone_number();
 
                         final String linkContent =
                                 kakaoTalkLinkMessageBuilder
                                         .addText(text)
-                                        .addAppButton("캠퍼스:달 앱으로 이동",
+                                        .addAppButton("캠퍼스:달 바로가기",
                                                 new AppActionBuilder()
                                                         .addActionInfo(AppActionInfoBuilder
                                                                 .createAndroidActionInfoBuilder()
-                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId())
-                                                                .setExecuteParam("campusName=" + campus_name)
+                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId() + "&" + "campusName=" + campus_name)
                                                                 .setMarketParam("referrer=kakaotalklink")
                                                                 .build())
                                                         .addActionInfo(AppActionInfoBuilder
                                                                 .createiOSActionInfoBuilder()
-                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId())
-                                                                .setExecuteParam("campusName=" + campus_name)
-                                                                .setMarketParam("referrer=kakaotalklink")
+                                                                .setExecuteParam("restaurant_id=" + mRestaurant.getId() + "&" + "campusName=" + campus_name)
                                                                 .build())
                                                         .build())
                                         .build();
                         kakaoLink.sendMessage(linkContent, mActivity);
                     } catch (KakaoParameterException e) {
                         e.printStackTrace();
+                    } finally {
+                        AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                        analyticsHelper.sendEvent("UX", "share_kakao_clicked", mRestaurant.getName());
                     }
 
                 } else if (view.getId() == R.id.click_evaluation) {
@@ -439,6 +451,8 @@ public class RestaurantInfoController {
                         }
                         setEvaluationBar();
                     }
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                    analyticsHelper.sendEvent("UX", "like_button_clicked", mRestaurant.getName());
                 } else if (view.getId() == R.id.btn_hate) {
                     if (!hateBtnChecked) {
                         mRestaurantEvaluationController.evaluate(BAD, mRestaurant.getId());
@@ -462,6 +476,8 @@ public class RestaurantInfoController {
                         }
                         setEvaluationBar();
                     }
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                    analyticsHelper.sendEvent("UX", "dislike_button_clicked", mRestaurant.getName());
                 }
             }
         };

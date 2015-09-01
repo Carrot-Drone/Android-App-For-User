@@ -23,6 +23,7 @@ import com.lchpatners.shadal.TouchImageView;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
 import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.restaurant.RestaurantController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -74,6 +75,12 @@ public class FlyerActivity extends ActionBarActivity {
                 
                 RecentCallController.stackRecentCall(FlyerActivity.this, mRestaurantId);
                 CallLogController.sendCallLog(FlyerActivity.this, mRestaurantId);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(FlyerActivity.this);
+                analyticsHelper.sendEvent("UX", "phonenumber_clicked",
+                        RestaurantController.getRestaurant(FlyerActivity.this, mRestaurantId).getName());
+                analyticsHelper.sendEvent("UX", "phonenumber_in_flyer_clicked",
+                        RestaurantController.getRestaurant(FlyerActivity.this, mRestaurantId).getName());
 //
 //                RootActivity.updateNavigationView(FlyerActivity.this);
 //                RecommendedRestaurantActivity.updateNavigationView(FlyerActivity.this);
@@ -103,6 +110,9 @@ public class FlyerActivity extends ActionBarActivity {
         });
 
         initPageMark(mURLS.size());
+
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(FlyerActivity.this);
+        analyticsHelper.sendScreen("전단지 화면");
     }
 
     private void initPageMark(int count) {

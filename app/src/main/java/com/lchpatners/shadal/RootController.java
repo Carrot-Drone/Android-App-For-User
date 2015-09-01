@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.lchpatners.shadal.campus.Campus;
-import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 import com.lchpatners.shadal.util.System.System;
 import com.lchpatners.shadal.util.System.SystemAPI;
@@ -25,7 +24,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 24..
  */
 public class RootController {
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     private Activity mActivity;
     private Campus mCampus;

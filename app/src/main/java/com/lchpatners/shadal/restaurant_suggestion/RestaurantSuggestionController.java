@@ -18,7 +18,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RestaurantSuggestionController {
 
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     public static void sendRestaurantSuggestion(final Activity activity, final RestaurantSuggestion restaurantSuggestion) {
 

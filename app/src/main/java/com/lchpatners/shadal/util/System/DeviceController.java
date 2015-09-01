@@ -12,7 +12,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 28..
  */
 public class DeviceController {
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     public static void sendDeviceInfo(int campud_id, String uuid) {
         Device device = new Device();

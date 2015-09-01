@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 21
@@ -8,8 +9,8 @@ android {
         applicationId "com.lchpatners.shadal"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 310
-        versionName "3.1.0"
+        versionCode 320
+        versionName "3.2.0"
     }
     buildTypes {
         release {
@@ -23,7 +24,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.android.support:design:22.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -32,4 +33,5 @@ dependencies {
     compile 'com.kakao.sdk:kakaolink:1.1.0'
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
     compile files('library/UrQA-Client_0.97.jar')
+    compile files('library/FlurryAnalytics-6.0.0.jar')
 }

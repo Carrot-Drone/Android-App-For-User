@@ -14,6 +14,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
@@ -82,43 +83,40 @@
         <activity
             android:name=".request.RequestActivity"
             android:label="@string/title_activity_request"
-            android:parentActivityName=".setting.SeeMoreActivity">
+            android:parentActivityName=".setting.SeeMoreActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".setting.SeeMoreActivity"/>
         </activity>
         <activity
             android:name=".restaurant_suggestion.RSbyOwnerPopUpActivity"
-            android:label="@string/title_activity_rsby_user_dialog">
+            android:label="@string/title_activity_rsby_user_dialog"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".restaurant_suggestion.RSbyUserPopUpActivity"
             android:label="@string/title_activity_rsby_user_dialog"
-            android:parentActivityName=".restaurant_suggestion.RSbyUserActivity">
+            android:parentActivityName=".restaurant_suggestion.RSbyUserActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".restaurant_suggestion.RSbyUserActivity"/>
         </activity>
         <activity
             android:name=".restaurant_correction.RCPopUpActivity"
-            android:label="@string/title_activity_rcpop_up">
+            android:label="@string/title_activity_rcpop_up"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".login.LoginCampusSelectActivity"
-            android:label="@string/title_activity_login_campus_select">
+            android:label="@string/title_activity_login_campus_select"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".LandingActivity"
-            android:label="캠퍼스:달">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".RootActivity"
-            android:label="@string/title_activity_root">
+            android:label="캠퍼스:달"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -126,13 +124,23 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                    android:host="@string/kakao_host"
+                    android:host="@string/kakaolink_host"
                     android:scheme="@string/kakao_scheme"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
+            android:name=".RootActivity"
+            android:label="@string/title_activity_root"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".restaurant.RestaurantListActivity"
-            android:label="@string/title_activity_restaurant">
+            android:label="@string/title_activity_restaurant"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".restaurant.flyer.FlyerActivity"
@@ -142,14 +150,16 @@
         <activity
             android:name=".setting.CampusChangeActivity"
             android:label="@string/title_activity_campus_selection"
-            android:parentActivityName=".setting.SeeMoreActivity">
+            android:parentActivityName=".setting.SeeMoreActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".setting.SeeMoreActivity"/>
         </activity>
         <activity
             android:name=".restaurant_suggestion.CampusSelectionActivity"
-            android:label="@string/title_activity_campus_selection">
+            android:label="@string/title_activity_campus_selection"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

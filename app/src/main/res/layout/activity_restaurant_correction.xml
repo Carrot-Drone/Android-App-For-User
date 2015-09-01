@@ -35,8 +35,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:src="@drawable/icon_list_check_box_normal"
                     />
 
@@ -64,9 +64,10 @@
                 <ImageView
                     android:id="@+id/checkbox_2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:src="@drawable/icon_list_check_box_normal"/>
 
                 <TextView
@@ -93,9 +94,10 @@
                 <ImageView
                     android:id="@+id/checkbox_3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:src="@drawable/icon_list_check_box_normal"/>
 
                 <TextView
@@ -123,10 +125,10 @@
                 <ImageView
                     android:id="@+id/checkbox_4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:src="@drawable/icon_list_check_box_normal"/>
 
                 <TextView
@@ -154,10 +156,10 @@
                 <ImageView
                     android:id="@+id/checkbox_5"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:src="@drawable/icon_list_check_box_normal"/>
 
                 <TextView

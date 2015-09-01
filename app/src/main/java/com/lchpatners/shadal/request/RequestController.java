@@ -17,7 +17,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RequestController {
 
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     public static void sendUserRequest(final Activity activity, String email, String details) {
         Request request = new Request();

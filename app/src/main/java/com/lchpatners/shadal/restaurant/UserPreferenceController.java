@@ -12,7 +12,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 27..
  */
 public class UserPreferenceController {
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
     private static int GOOD = 1;
     private static int BAD = -1;
 

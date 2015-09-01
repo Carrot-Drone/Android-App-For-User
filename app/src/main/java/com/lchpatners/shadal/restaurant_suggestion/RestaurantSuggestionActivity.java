@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 
 public class RestaurantSuggestionActivity extends ActionBarActivity {
@@ -19,10 +21,15 @@ public class RestaurantSuggestionActivity extends ActionBarActivity {
             if (view.getId() == R.id.RSbyUser) {
                 Intent intent = new Intent(RestaurantSuggestionActivity.this, RSbyUserActivity.class);
                 startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(RestaurantSuggestionActivity.this);
+                analyticsHelper.sendEvent("UX", "restaurant_suggestion_by_user", CampusController.getCurrentCampus(RestaurantSuggestionActivity.this).getName_kor_short());
             } else if (view.getId() == R.id.RSbyOwner) {
                 Intent intent = new Intent(RestaurantSuggestionActivity.this, RSbyOwnerActivity.class);
                 startActivity(intent);
 
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(RestaurantSuggestionActivity.this);
+                analyticsHelper.sendEvent("UX", "restaurant_suggestion_by_restaurant", CampusController.getCurrentCampus(RestaurantSuggestionActivity.this).getName_kor_short());
             }
         }
     };
@@ -30,6 +37,7 @@ public class RestaurantSuggestionActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_restaurant_suggestion);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         String title = getString(R.string.title_activity_restaurant_suggestion);
@@ -42,6 +50,9 @@ public class RestaurantSuggestionActivity extends ActionBarActivity {
 
         byUser.setOnClickListener(btnListener);
         byOwner.setOnClickListener(btnListener);
+
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(RestaurantSuggestionActivity.this);
+        analyticsHelper.sendScreen("음식점추가 / 입점문의 화면");
     }
 
 

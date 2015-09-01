@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 /**
  * Created by YoungKim on 2015. 8. 25..
@@ -27,13 +28,20 @@ public class RestaurantListFragment extends Fragment {
     private boolean isCheckedOfficeHour = false;
     private boolean isCheckedHasFlyer = false;
     private String orderBy;
+
     View.OnClickListener checkListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.check_is_open || view.getId() == R.id.tv_open) {
                 isCheckedOfficeHour = !isCheckedOfficeHour;
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "filter_by_office_hours", "");
             } else if (view.getId() == R.id.check_has_flyer || view.getId() == R.id.tv_flyer) {
                 isCheckedHasFlyer = !isCheckedHasFlyer;
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "filter_by_flyer", "");
             }
 
             if (isCheckedOfficeHour && isCheckedHasFlyer) {
@@ -90,8 +98,8 @@ public class RestaurantListFragment extends Fragment {
         super.onResume();
         mAdapter.loadData(orderBy);
         if (getUserVisibleHint()) {
-//            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
-//            helper.sendScreen("음식점 리스트 화면");
+            AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+            analyticsHelper.sendScreen("음식점 리스트 화면");
         }
     }
 
@@ -99,8 +107,7 @@ public class RestaurantListFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isResumed()) {
-//            AnalyticsHelper helper = new AnalyticsHelper(activity.getApplication());
-//            helper.sendScreen("음식점 리스트 화면");
+            onResume();
         }
     }
 

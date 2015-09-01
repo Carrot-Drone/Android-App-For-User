@@ -6,12 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.ArrayList;
@@ -110,9 +111,9 @@ public class RestaurantListAdapter extends BaseAdapter {
         convertView.findViewById(R.id.flyer).setVisibility(restaurant.isHas_flyer() ? View.VISIBLE : View.GONE);
 
         if (restaurant.isHas_flyer()) {
-            final ImageButton imgBtn = (ImageButton) convertView.findViewById(R.id.flyer);
-            imgBtn.setClickable(true);
-            imgBtn.setOnClickListener(new View.OnClickListener() {
+            final RelativeLayout flyerBtn = (RelativeLayout) convertView.findViewById(R.id.flyer);
+            flyerBtn.setClickable(true);
+            flyerBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ArrayList<String> flyer_urls = new ArrayList<String>();
@@ -127,6 +128,9 @@ public class RestaurantListAdapter extends BaseAdapter {
                     intent.putExtra(RESTAURANT_ID, restaurant.getId());
                     intent.putExtra(RESTAURANT_PHONE_NUMBER, restaurant.getPhone_number());
                     mActivity.startActivity(intent);
+
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                    analyticsHelper.sendEvent("UX", "flyer_in_restaurants_clicked", restaurant.getName());
                 }
             });
         }
@@ -139,6 +143,9 @@ public class RestaurantListAdapter extends BaseAdapter {
                 Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
                 intent.putExtra(RESTAURANT_ID, restaurant.getId());
                 mActivity.startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "res_in_restaurants_clicked", restaurant.getName());
             }
         });
 

@@ -3,7 +3,6 @@ package com.lchpatners.shadal;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.recommend.RecommendedRestaurantActivity;
-import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.restaurant_suggestion.RestaurantSuggestionActivity;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.LogUtils;
@@ -97,15 +95,6 @@ public class RootActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            String restaurant_id = uri.getQueryParameter("restaurant_id");
-            String campus_name = uri.getQueryParameter("campusName");
-
-            Intent intent = new Intent(RootActivity.this, RestaurantInfoActivity.class);
-            //TODO:restaurant_id가 해당 캠퍼스 내에 있는지 확인.
-            intent.putExtra(RESTAURANT_ID, restaurant_id);
-        }
 
         mController = new RootController(RootActivity.this);
         mController.isRecentVersion();

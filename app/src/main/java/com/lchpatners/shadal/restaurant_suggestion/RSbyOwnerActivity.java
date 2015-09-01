@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 import java.io.ByteArrayOutputStream;
 
@@ -129,6 +130,9 @@ public class RSbyOwnerActivity extends ActionBarActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(RSbyOwnerActivity.this, CampusSelectionActivity.class);
                 startActivityForResult(intent, SELECTED_CAMPUS);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(RSbyOwnerActivity.this);
+                analyticsHelper.sendEvent("UX", "select_campus_in_restaurant_suggestion", CampusController.getCurrentCampus(RSbyOwnerActivity.this).getName_kor_short());
             }
         });
 
@@ -167,6 +171,8 @@ public class RSbyOwnerActivity extends ActionBarActivity {
             }
         });
 
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(RSbyOwnerActivity.this);
+        analyticsHelper.sendScreen("입점문의 화면");
     }
 
     private void sendRestaurantSuggestion() {
@@ -216,6 +222,7 @@ public class RSbyOwnerActivity extends ActionBarActivity {
                     case SELECTED_PICTURE_2:
                         iv_2.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         iv_2.setImageBitmap(selectedImage);
+
                         iv_delete_2.setVisibility(View.VISIBLE);
                         files[1] = encodedImage;
                         break;

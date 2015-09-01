@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 import java.io.ByteArrayOutputStream;
 
@@ -130,6 +131,9 @@ public class RSbyUserActivity extends ActionBarActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(RSbyUserActivity.this, CampusSelectionActivity.class);
                 startActivityForResult(intent, SELECTED_CAMPUS);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(RSbyUserActivity.this);
+                analyticsHelper.sendEvent("UX", "select_campus_in_restaurant_suggestion", CampusController.getCurrentCampus(RSbyUserActivity.this).getName_kor_short());
             }
         });
 
@@ -226,6 +230,9 @@ public class RSbyUserActivity extends ActionBarActivity {
 
             }
         }
+
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(RSbyUserActivity.this);
+        analyticsHelper.sendScreen("음식점제보 화면");
     }
 
     @Override

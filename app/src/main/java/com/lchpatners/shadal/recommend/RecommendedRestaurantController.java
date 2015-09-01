@@ -34,7 +34,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RecommendedRestaurantController {
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantController.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
     private static VerticalViewPager verticalViewPager;
     private RecommendedRestaurantPagerAdapter adapter;
     private Activity mActivity;

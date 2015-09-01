@@ -2,5 +2,5 @@
 <resources>
     <string name="kakao_app_key">47fddf941c123ee06413a5734d51f491</string>
     <string name="kakao_scheme">kakao47fddf941c123ee06413a5734d51f491</string>
-    <string name="kakao_host">market://details?id=com.lchpatners.shadal</string>
+    <string name="kakaolink_host">kakaolink</string>
 </resources>

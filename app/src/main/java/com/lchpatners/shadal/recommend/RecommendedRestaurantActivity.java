@@ -20,6 +20,7 @@ import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RootActivity;
 import com.lchpatners.shadal.campus.Campus;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 
 public class RecommendedRestaurantActivity extends ActionBarActivity {
@@ -69,6 +70,8 @@ public class RecommendedRestaurantActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(RecommendedRestaurantActivity.this);
+        analyticsHelper.sendScreen("추천 화면");
         setNavigationDrawer();
         updateNavigationView(RecommendedRestaurantActivity.this);
     }

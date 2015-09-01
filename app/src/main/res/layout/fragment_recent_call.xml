@@ -92,7 +92,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="아직 주문한 음식점이 없어요"/>
+        android:layout_marginTop="200dp"
+        android:textColor="@color/primary"
+        android:text="최근 주문이 없습니다"/>
 
 </RelativeLayout>

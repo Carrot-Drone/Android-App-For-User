@@ -35,7 +35,7 @@ public class RestaurantController {
     public static final String LIST_HAS_FLYER = "list_has_flyer";
     public static final String LIST_FLYER_OFFICE = "list_flyer_office";
     private static final String TAG = LogUtils.makeTag(RestaurantController.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
     public static boolean officeHour = false;
 
     public static Restaurant getRestaurant(Activity activity, int restaurant_id) {

@@ -18,7 +18,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 27..
  */
 public class CallLogController {
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
 
     public static void sendCallLog(Activity activity, int restaurant_id) {
         CallLog callLog = new CallLog();

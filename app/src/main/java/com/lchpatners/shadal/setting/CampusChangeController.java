@@ -32,7 +32,7 @@ import retrofit.converter.GsonConverter;
 
 public class CampusChangeController {
     private static final String TAG = LogUtils.makeTag(CampusChangeController.class);
-    private static final String BASE_URL = "http://www.shadal.kr:3000";
+    private static final String BASE_URL = "http://www.shadal.kr";
     private CampusAPI mCampusAPI;
     private Activity mActivity;
     private ListView lvCampusListView;

@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.request.RequestActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 
 import io.realm.Realm;
@@ -46,6 +48,8 @@ public class SeeMoreActivity extends ActionBarActivity {
                 Intent intent = new Intent(SeeMoreActivity.this, CampusChangeActivity.class);
                 startActivity(intent);
 
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(SeeMoreActivity.this);
+                analyticsHelper.sendEvent("UX", "select_campus_in_about", CampusController.getCurrentCampus(SeeMoreActivity.this).getName_kor_short());
             }
         });
 
@@ -55,8 +59,14 @@ public class SeeMoreActivity extends ActionBarActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SeeMoreActivity.this, RequestActivity.class);
                 startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(SeeMoreActivity.this);
+                analyticsHelper.sendEvent("UX", "user_request", CampusController.getCurrentCampus(SeeMoreActivity.this).getName_kor_short());
             }
         });
+
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(SeeMoreActivity.this);
+        analyticsHelper.sendScreen("추천 화면");
     }
 
     private String getCampusName() {

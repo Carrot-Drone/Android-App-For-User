@@ -213,11 +213,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
                     android:layout_toRightOf="@+id/number_of_my_calls"
                     android:text="회"
                     android:textColor="@color/primary"
-                    android:textSize="14sp"/>
+                    android:textSize="13sp"/>
             </LinearLayout>
 
             <TextView

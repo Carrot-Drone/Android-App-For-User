@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 
 /**
  * Created by eunhyekim on 2015. 8. 22..
@@ -30,10 +31,16 @@ public class RecentCallFragment extends Fragment {
                 mAdapter.loadData(RecentCallController.ORDER_BY_NAME);
                 iv_name.setVisibility(View.VISIBLE);
                 iv_call.setVisibility(View.INVISIBLE);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(activity);
+                analyticsHelper.sendEvent("UX", "sort_by_name", "");
             } else if (view.getId() == R.id.title_call) {
                 mAdapter.loadData(RecentCallController.ORDER_BY_CALL_RECENT);
                 iv_name.setVisibility(View.INVISIBLE);
                 iv_call.setVisibility(View.VISIBLE);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(activity);
+                analyticsHelper.sendEvent("UX", "sort_by_recent_order", "");
             }
         }
     };
@@ -56,8 +63,12 @@ public class RecentCallFragment extends Fragment {
 
     @Override
     public void onResume() {
-        mAdapter.loadData(RecentCallController.ORDER_BY_CALL_RECENT);
         super.onResume();
+        mAdapter.loadData(RecentCallController.ORDER_BY_CALL_RECENT);
+        if (getUserVisibleHint()) {
+            AnalyticsHelper analyticsHelper = new AnalyticsHelper(activity);
+            analyticsHelper.sendScreen("최근주문 화면");
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.restaurant.RestaurantListActivity;
 import com.lchpatners.shadal.restaurant.flyer.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerActivity;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.text.DecimalFormat;
@@ -308,6 +309,9 @@ public class RecommendedRestaurantFragment extends Fragment {
                     intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                     intent.putExtra(RESTAURANT_PHONE_NUMBER, mRestaurant.getPhone_number());
                     mActivity.startActivity(intent);
+
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                    analyticsHelper.sendEvent("UX", "flyer_in_recommend_clicked", mRestaurant.getName());
                 }
             });
         }
@@ -325,6 +329,11 @@ public class RecommendedRestaurantFragment extends Fragment {
 
                 RecentCallController.stackRecentCall(mActivity, mRestaurant.getId());
                 CallLogController.sendCallLog(mActivity, mRestaurant.getId());
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "phonenumber_clicked", mRestaurant.getName());
+                analyticsHelper.sendEvent("UX", "phonenumber_in_recommend_clicked", mRestaurant.getName());
+
 //                RootActivity.updateNavigationView(mActivity);
 //                RecommendedRestaurantActivity.updateNavigationView(mActivity);
             }
@@ -344,6 +353,9 @@ public class RecommendedRestaurantFragment extends Fragment {
                 intent.putExtra("category", category_title);
                 intent.putExtra("position", position);
                 startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "category_in_recommend_clicked", category_title);
             }
         });
     }
@@ -356,6 +368,9 @@ public class RecommendedRestaurantFragment extends Fragment {
                 Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
                 intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 mActivity.startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "res_in_recommend_clicked", mRestaurant.getName());
             }
         });
         iv_info.setOnClickListener(new View.OnClickListener() {
@@ -364,6 +379,9 @@ public class RecommendedRestaurantFragment extends Fragment {
                 Intent intent = new Intent(mActivity, RestaurantInfoActivity.class);
                 intent.putExtra(RESTAURANT_ID, mRestaurant.getId());
                 mActivity.startActivity(intent);
+
+                AnalyticsHelper analyticsHelper = new AnalyticsHelper(mActivity);
+                analyticsHelper.sendEvent("UX", "res_in_recommend_clicked", mRestaurant.getName());
             }
         });
     }

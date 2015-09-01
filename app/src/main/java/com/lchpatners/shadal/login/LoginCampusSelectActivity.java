@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.setting.CampusChangeController;
+import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;
 
 /**
@@ -50,11 +51,17 @@ public class LoginCampusSelectActivity extends ActionBarActivity {
                 if (controller.isCampusSelected()) {
                     Toast.makeText(LoginCampusSelectActivity.this, "음식점 정보를 받아옵니다", Toast.LENGTH_LONG).show();
                     controller.setCampus();
+
+                    AnalyticsHelper analyticsHelper = new AnalyticsHelper(LoginCampusSelectActivity.this);
+                    analyticsHelper.sendEvent("UX", "select_campus_start", controller.getCampus().getName_kor_short());
                     //Go to RootActivity at setCampus function
 //                    Intent intent = new Intent(LoginCampusSelectActivity.this, RootActivity.class);
 //                    startActivity(intent);
                 }
             }
         });
+
+        AnalyticsHelper analyticsHelper = new AnalyticsHelper(LoginCampusSelectActivity.this);
+        analyticsHelper.sendScreen("캠퍼스 선택하기 화면");
     }
 }
