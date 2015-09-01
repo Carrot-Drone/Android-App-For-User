@@ -16,14 +16,16 @@ import com.lchpatners.shadal.util.Preferences;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 
+import com.urqa.clientinterface.URQAController;
+
 public class LandingActivity extends ActionBarActivity {
     private static final String TAG = LogUtils.makeTag(LandingActivity.class);
     private static final String BASE_URL = "http://www.shadal.kr:3000";
-    private Campus mCampus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        URQAController.InitializeAndStartSession(getApplicationContext(), "63FB46FA");
         setContentView(R.layout.activity_landing);
 
         setSharedPreference();

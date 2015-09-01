@@ -29,7 +29,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'io.realm:realm-android:0.82.1'
-    compile group: 'com.kakao.sdk', name: 'kakaolink', version: '1.1.0'
+    compile 'com.kakao.sdk:kakaolink:1.1.0'
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
-
+    compile files('library/UrQA-Client_0.97.jar')
 }

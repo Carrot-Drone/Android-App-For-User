@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:allowBackup="true"
@@ -16,25 +17,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-
-        <activity
-            android:name=".InitializationActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".CampusSelectionActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
         <activity
             android:name=".restaurant.RestaurantInfoActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -53,11 +35,11 @@
         <activity
             android:name=".restaurant_suggestion.RestaurantSuggestionActivity"
             android:label="@string/title_activity_restaurant_suggestion"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".RootActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lchpatners.shadal.MainActivity"/>
+                android:value="com.lchpatners.shadal.RootActivity"/>
         </activity>
         <activity
             android:name=".restaurant_suggestion.RSbyUserActivity"
