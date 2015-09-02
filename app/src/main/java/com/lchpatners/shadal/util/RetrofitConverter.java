@@ -5,7 +5,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.lchpatners.shadal.restaurant.flyer.Flyer;
+import com.lchpatners.shadal.dao.Flyer;
 import com.lchpatners.shadal.restaurant.flyer.FlyerDeserializer;
 
 import io.realm.RealmList;

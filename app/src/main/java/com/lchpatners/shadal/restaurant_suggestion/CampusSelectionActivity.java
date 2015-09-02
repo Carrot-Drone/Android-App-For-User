@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.setting.CampusChangeController;
 import com.lchpatners.shadal.util.AnalyticsHelper;
 import com.lchpatners.shadal.util.LogUtils;

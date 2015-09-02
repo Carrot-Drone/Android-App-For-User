@@ -7,9 +7,9 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.util.RetrofitConverter;
-import com.lchpatners.shadal.util.System.System;
+import com.lchpatners.shadal.dao.System;
 import com.lchpatners.shadal.util.System.SystemAPI;
 
 import io.realm.Realm;
@@ -54,7 +54,7 @@ public class RootController {
 
         SystemAPI systemAPI = restAdapter.create(SystemAPI.class);
 
-        systemAPI.getMinimunAppVersion(new Callback<com.lchpatners.shadal.util.System.System>() {
+        systemAPI.getMinimunAppVersion(new Callback<System>() {
             @Override
             public void success(System system, Response response) {
                 if (Integer.parseInt(system.getMinimum_android_version()) > getCurrentVersion()) {

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.lchpatners.shadal.NavigationDrawerController;
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RootActivity;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.setting.SeeMoreActivity;
 import com.lchpatners.shadal.util.AnalyticsHelper;
 

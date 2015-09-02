@@ -16,10 +16,35 @@
 #   public *;
 #}
 
+-printmapping mapping.txt
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+-keep class com.lchpatners.shadal.dao.** { *; }
+-keep class io.realm.** { *; }
 -keep class io.realm.annotations.RealmModule
 -keep @io.realm.annotations.RealmModule class *
 -dontwarn javax.**
 -dontwarn io.realm.**
+
+-dontwarn com.squareup.okhttp.**
+
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+-keep class com.flurry.** { *; }
+-dontwarn com.flurry.**
+-keepattributes *Annotation*,EnclosingMethod
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-dontwarn android.support.**
+
+-keep class com.urqa.** { *; }
+
 -keep class com.kakao.** { *; }
 -keepattributes Signature
 -keepclassmembers class * {
@@ -27,50 +52,3 @@
   public *;
 }
 -dontwarn android.support.v4.**,com.ning.http.client.**,org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**
-
--keep class com.urqa.** { *; }
--libraryjars libs/UrQA-Client_0.97.jar
-
--optimizationpasses 25
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontpreverify
--verbose
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
--printmapping out.map
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
--keep class com.urqa.** { *; }
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
--keep public class com.android.vending.licensing.ILicensingService
-
--keepclasseswithmembernames class * {
-    native <methods>;
-}
-
--keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet);
-}
-
--keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet, int);
-}
-
--keepclassmembers class * extends android.app.Activity {
-   public void *(android.view.View);
-}
-
--keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
-
--keep class * implements android.os.Parcelable {
-  public static final android.os.Parcelable$Creator *;
-}

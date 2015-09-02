@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.lchpatners.shadal.dao.RestaurantSuggestion;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
@@ -35,7 +36,6 @@ public class RestaurantSuggestionController {
         restaurantSuggestionAPI.sendRestaurantSuggestion(restaurantSuggestion, new Callback<RestaurantSuggestion>() {
             @Override
             public void success(RestaurantSuggestion rs, Response response) {
-
                 if (restaurantSuggestion.getIs_suggested_by_restaurant() == 1) {
                     Intent intent = new Intent(activity, RSbyOwnerPopUpActivity.class);
                     activity.startActivity(intent);
@@ -49,7 +49,12 @@ public class RestaurantSuggestionController {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(activity, "실패했습니다. 다시 시도해주세요!", Toast.LENGTH_LONG).show();
+//                if (error.toString().contains("java.io.EOFException")) {
+                    sendRestaurantSuggestion(activity, restaurantSuggestion);
+                error.printStackTrace();
+//                } else {
+//                    Toast.makeText(activity, "실패했습니다. 다시 시도해주세요!", Toast.LENGTH_LONG).show();
+//                }
             }
         });
     }

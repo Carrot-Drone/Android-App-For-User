@@ -3,6 +3,7 @@ package com.lchpatners.shadal.campus;
 import android.app.Activity;
 import android.util.Log;
 
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 

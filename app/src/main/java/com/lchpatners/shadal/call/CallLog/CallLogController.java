@@ -1,9 +1,11 @@
 package com.lchpatners.shadal.call.CallLog;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.CallLog;
 import com.lchpatners.shadal.restaurant.category.CategoryController;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
@@ -20,7 +22,7 @@ import retrofit.converter.GsonConverter;
 public class CallLogController {
     private static final String BASE_URL = "http://www.shadal.kr";
 
-    public static void sendCallLog(Activity activity, int restaurant_id) {
+    public static void sendCallLog(final Activity activity, final int restaurant_id) {
         CallLog callLog = new CallLog();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -46,7 +48,12 @@ public class CallLogController {
 
             @Override
             public void failure(RetrofitError error) {
+//                if (error.toString().contains("java.io.EOFException")) {
+                    sendCallLog(activity, restaurant_id);
                 error.printStackTrace();
+//                } else {
+//                    Toast.makeText(activity, "실패했어요! 다시 시도해 주세요", Toast.LENGTH_LONG).show();
+//                }
             }
         });
     }

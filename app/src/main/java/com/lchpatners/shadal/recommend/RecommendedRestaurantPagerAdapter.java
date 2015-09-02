@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.lchpatners.shadal.dao.RecommendedRestaurant;
 import com.lchpatners.shadal.util.LogUtils;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.lchpatners.shadal.call.CallLog;
 
+import com.lchpatners.shadal.dao.CallLog;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;

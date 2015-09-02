@@ -1,5 +1,7 @@
 package com.lchpatners.shadal.request;
 
+import com.lchpatners.shadal.dao.Request;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;

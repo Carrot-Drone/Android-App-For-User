@@ -1,5 +1,7 @@
 package com.lchpatners.shadal.restaurant_suggestion;
 
+import com.lchpatners.shadal.dao.RestaurantSuggestion;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;

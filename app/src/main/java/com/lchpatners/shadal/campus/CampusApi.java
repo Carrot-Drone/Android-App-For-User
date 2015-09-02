@@ -1,5 +1,7 @@
 package com.lchpatners.shadal.campus;
 
+import com.lchpatners.shadal.dao.Campus;
+
 import java.util.List;
 
 import retrofit.Callback;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.lchpatners.shadal.dao.RestaurantCorrection;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
@@ -19,7 +20,7 @@ import retrofit.converter.GsonConverter;
 public class RestaurantCorrectionController {
     private static final String BASE_URL = "http://www.shadal.kr";
 
-    public static void sendRestaurantCorrection(final Activity activity, String major, String details, int restaurant_id) {
+    public static void sendRestaurantCorrection(final Activity activity, final String major, final String details, final int restaurant_id) {
         RestaurantCorrection correction = new RestaurantCorrection();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -43,7 +44,12 @@ public class RestaurantCorrectionController {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(activity, "실패했어요! 다시 시도해 주세요", Toast.LENGTH_LONG).show();
+//                if (error.toString().contains("java.io.EOFException")) {
+                    sendRestaurantCorrection(activity, major, details, restaurant_id);
+                error.printStackTrace();
+//                } else {
+//                    Toast.makeText(activity, "실패했어요! 다시 시도해 주세요", Toast.LENGTH_LONG).show();
+//                }
             }
         });
     }

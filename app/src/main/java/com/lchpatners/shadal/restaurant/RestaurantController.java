@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.restaurant.category.Category;
-import com.lchpatners.shadal.restaurant.flyer.Flyer;
+import com.lchpatners.shadal.dao.Category;
+import com.lchpatners.shadal.dao.Flyer;
+import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 

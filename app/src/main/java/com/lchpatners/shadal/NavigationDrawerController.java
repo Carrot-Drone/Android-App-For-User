@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.support.design.widget.NavigationView;
 import android.widget.TextView;
 
-import com.lchpatners.shadal.call.RecentCall;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.RecentCall;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.dao.Category;
 
 import java.util.Date;
 

@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.call.CallLog.CallLogController;
-import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.dao.RecentCall;
+import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.RestaurantInfoActivity;
 import com.lchpatners.shadal.util.AnalyticsHelper;

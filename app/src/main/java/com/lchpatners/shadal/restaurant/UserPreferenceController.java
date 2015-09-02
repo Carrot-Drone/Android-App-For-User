@@ -1,5 +1,8 @@
 package com.lchpatners.shadal.restaurant;
 
+import android.widget.Toast;
+
+import com.lchpatners.shadal.dao.UserPreference;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
 import retrofit.Callback;
@@ -16,7 +19,7 @@ public class UserPreferenceController {
     private static int GOOD = 1;
     private static int BAD = -1;
 
-    public static void sendUserPreference(int restaurant_id, int preference, String uuid) {
+    public static void sendUserPreference(final int restaurant_id, final int preference, final String uuid) {
         UserPreference userPreference = setUserPreference(preference, uuid);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -30,11 +33,13 @@ public class UserPreferenceController {
         restaurantAPI.sendUserEvaluation(restaurant_id, userPreference, new Callback<UserPreference>() {
             @Override
             public void success(UserPreference userPreference, Response response) {
-
             }
 
             @Override
             public void failure(RetrofitError error) {
+//                if (error.toString().contains("java.io.EOFException")) {
+                    sendUserPreference(restaurant_id, preference, uuid);
+//                }
                 error.printStackTrace();
             }
         });

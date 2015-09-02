@@ -1,5 +1,8 @@
 package com.lchpatners.shadal.util.System;
 
+import android.widget.Toast;
+
+import com.lchpatners.shadal.dao.Device;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
 import retrofit.Callback;
@@ -14,7 +17,7 @@ import retrofit.converter.GsonConverter;
 public class DeviceController {
     private static final String BASE_URL = "http://www.shadal.kr";
 
-    public static void sendDeviceInfo(int campud_id, String uuid) {
+    public static void sendDeviceInfo(final int campud_id, final String uuid) {
         Device device = new Device();
         device.setCampus_id(campud_id);
         device.setUuid(uuid);
@@ -35,6 +38,9 @@ public class DeviceController {
 
             @Override
             public void failure(RetrofitError error) {
+//                if (error.toString().contains("java.io.EOFException")) {
+                    sendDeviceInfo(campud_id, uuid);
+//                }
                 error.printStackTrace();
             }
         });

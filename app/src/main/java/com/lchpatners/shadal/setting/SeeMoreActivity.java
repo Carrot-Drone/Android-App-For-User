@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.request.RequestActivity;
 import com.lchpatners.shadal.util.AnalyticsHelper;

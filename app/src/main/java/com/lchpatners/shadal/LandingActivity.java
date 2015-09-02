@@ -7,7 +7,7 @@ import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
 import com.lchpatners.shadal.login.LoginCampusSelectActivity;
 import com.lchpatners.shadal.restaurant.RestaurantController;

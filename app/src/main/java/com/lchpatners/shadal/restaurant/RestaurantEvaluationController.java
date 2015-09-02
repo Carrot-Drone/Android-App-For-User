@@ -2,6 +2,8 @@ package com.lchpatners.shadal.restaurant;
 
 import android.app.Activity;
 
+import com.lchpatners.shadal.dao.RestaurantEvaluation;
+
 import io.realm.Realm;
 import io.realm.RealmQuery;
 

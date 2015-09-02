@@ -7,11 +7,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
-import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.dao.RecommendedRestaurant;
+import com.lchpatners.shadal.dao.RecommendedRestaurantInfo;
+import com.lchpatners.shadal.dao.RecommendedRestaurantList;
+import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.dao.Category;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 

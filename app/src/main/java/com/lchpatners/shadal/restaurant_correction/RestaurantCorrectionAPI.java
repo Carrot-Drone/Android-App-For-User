@@ -1,5 +1,7 @@
 package com.lchpatners.shadal.restaurant_correction;
 
+import com.lchpatners.shadal.dao.RestaurantCorrection;
+
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;

@@ -2,8 +2,9 @@ package com.lchpatners.shadal.call;
 
 import android.app.Activity;
 
-import com.lchpatners.shadal.campus.Campus;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.RecentCall;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.restaurant.category.CategoryController;
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.RestaurantSuggestion;
 import com.lchpatners.shadal.util.AnalyticsHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -243,40 +244,40 @@ public class RSbyOwnerActivity extends ActionBarActivity {
             }
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        Drawable d_1 = iv_1.getDrawable();
-        Drawable d_2 = iv_2.getDrawable();
-        Drawable d_3 = iv_3.getDrawable();
-        Drawable d_4 = iv_4.getDrawable();
-        if (d_1 instanceof BitmapDrawable) {
-            Bitmap b_1 = ((BitmapDrawable)d_1).getBitmap();
-            b_1.recycle();
-            b_1 = null;
-        }
-        if (d_2 instanceof BitmapDrawable) {
-            Bitmap b_2 = ((BitmapDrawable)d_2).getBitmap();
-            b_2.recycle();
-            b_2 = null;
-        }
-        if (d_3 instanceof BitmapDrawable) {
-            Bitmap b_3 = ((BitmapDrawable)d_3).getBitmap();
-            b_3.recycle();
-            b_3 = null;
-        }
-        if (d_4 instanceof BitmapDrawable) {
-            Bitmap b_4 = ((BitmapDrawable)d_4).getBitmap();
-            b_4.recycle();
-            b_4 = null;
-        }
-        d_1.setCallback(null);
-        d_2.setCallback(null);
-        d_3.setCallback(null);
-        d_4.setCallback(null);
-
-        super.onDestroy();
-    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        Drawable d_1 = iv_1.getDrawable();
+//        Drawable d_2 = iv_2.getDrawable();
+//        Drawable d_3 = iv_3.getDrawable();
+//        Drawable d_4 = iv_4.getDrawable();
+//        if (d_1 instanceof BitmapDrawable) {
+//            Bitmap b_1 = ((BitmapDrawable)d_1).getBitmap();
+//            b_1.recycle();
+//            b_1 = null;
+//        }
+//        if (d_2 instanceof BitmapDrawable) {
+//            Bitmap b_2 = ((BitmapDrawable)d_2).getBitmap();
+//            b_2.recycle();
+//            b_2 = null;
+//        }
+//        if (d_3 instanceof BitmapDrawable) {
+//            Bitmap b_3 = ((BitmapDrawable)d_3).getBitmap();
+//            b_3.recycle();
+//            b_3 = null;
+//        }
+//        if (d_4 instanceof BitmapDrawable) {
+//            Bitmap b_4 = ((BitmapDrawable)d_4).getBitmap();
+//            b_4.recycle();
+//            b_4 = null;
+//        }
+//        d_1.setCallback(null);
+//        d_2.setCallback(null);
+//        d_3.setCallback(null);
+//        d_4.setCallback(null);
+//
+//        super.onDestroy();
+//    }
 }
 
 

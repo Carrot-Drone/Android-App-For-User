@@ -2,6 +2,7 @@ package com.lchpatners.shadal.restaurant;
 
 import android.content.Context;
 
+import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.menu.RestaurantMenu;
 
 import java.util.List;

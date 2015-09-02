@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.dao.Category;
 
 /**
  * Created by YoungKim on 2015. 8. 25..

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.restaurant.Restaurant;
+import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantMenuController;
 import com.lchpatners.shadal.util.LogUtils;
 

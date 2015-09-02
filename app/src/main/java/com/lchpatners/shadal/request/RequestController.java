@@ -3,6 +3,7 @@ package com.lchpatners.shadal.request;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.lchpatners.shadal.dao.Request;
 import com.lchpatners.shadal.util.Preferences;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
@@ -19,7 +20,7 @@ public class RequestController {
 
     private static final String BASE_URL = "http://www.shadal.kr";
 
-    public static void sendUserRequest(final Activity activity, String email, String details) {
+    public static void sendUserRequest(final Activity activity, final String email, final String details) {
         Request request = new Request();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -41,8 +42,12 @@ public class RequestController {
 
             @Override
             public void failure(RetrofitError error) {
-
-                Toast.makeText(activity, "실패했습니다. 다시 시도해주세요!", Toast.LENGTH_LONG).show();
+//                if (error.toString().contains("java.io.EOFException")) {
+                sendUserRequest(activity, email, details);
+                error.printStackTrace();
+//                } else {
+//                    Toast.makeText(activity, "실패했어요! 다시 시도해 주세요", Toast.LENGTH_LONG).show();
+//                }
             }
         });
     }

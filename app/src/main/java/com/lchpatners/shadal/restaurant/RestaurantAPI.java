@@ -1,6 +1,8 @@
 package com.lchpatners.shadal.restaurant;
 
-import com.lchpatners.shadal.restaurant.category.Category;
+import com.lchpatners.shadal.dao.Category;
+import com.lchpatners.shadal.dao.Restaurant;
+import com.lchpatners.shadal.dao.UserPreference;
 
 import java.util.List;
 
