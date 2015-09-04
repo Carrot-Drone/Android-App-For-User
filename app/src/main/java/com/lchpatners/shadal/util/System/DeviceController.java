@@ -1,7 +1,5 @@
 package com.lchpatners.shadal.util.System;
 
-import android.widget.Toast;
-
 import com.lchpatners.shadal.dao.Device;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
@@ -15,7 +13,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 28..
  */
 public class DeviceController {
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     public static void sendDeviceInfo(final int campud_id, final String uuid) {
         Device device = new Device();

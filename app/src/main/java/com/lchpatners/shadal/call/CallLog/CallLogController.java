@@ -1,7 +1,6 @@
 package com.lchpatners.shadal.call.CallLog;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.lchpatners.shadal.call.RecentCallController;
 import com.lchpatners.shadal.campus.CampusController;
@@ -20,7 +19,7 @@ import retrofit.converter.GsonConverter;
  * Created by YoungKim on 2015. 8. 27..
  */
 public class CallLogController {
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     public static void sendCallLog(final Activity activity, final int restaurant_id) {
         CallLog callLog = new CallLog();

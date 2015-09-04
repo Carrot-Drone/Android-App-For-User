@@ -56,7 +56,7 @@ public class RestaurantInfoController {
     public static final int GOOD = 1;
     public static final int BAD = 0;
     private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private Activity mActivity;
     private Restaurant mRestaurant;
     private View mHeader;

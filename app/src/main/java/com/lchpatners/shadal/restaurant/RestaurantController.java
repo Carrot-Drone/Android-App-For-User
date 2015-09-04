@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.dao.Category;
 import com.lchpatners.shadal.dao.Flyer;
 import com.lchpatners.shadal.dao.Restaurant;
@@ -36,7 +36,7 @@ public class RestaurantController {
     public static final String LIST_HAS_FLYER = "list_has_flyer";
     public static final String LIST_FLYER_OFFICE = "list_flyer_office";
     private static final String TAG = LogUtils.makeTag(RestaurantController.class);
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     public static boolean officeHour = false;
 
     public static Restaurant getRestaurant(Activity activity, int restaurant_id) {

@@ -2,7 +2,6 @@ package com.lchpatners.shadal.restaurant_correction;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.lchpatners.shadal.dao.RestaurantCorrection;
 import com.lchpatners.shadal.util.Preferences;
@@ -18,7 +17,7 @@ import retrofit.converter.GsonConverter;
  * Created by eunhyekim on 2015. 8. 30..
  */
 public class RestaurantCorrectionController {
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     public static void sendRestaurantCorrection(final Activity activity, final String major, final String details, final int restaurant_id) {
         RestaurantCorrection correction = new RestaurantCorrection();

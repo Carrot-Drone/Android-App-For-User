@@ -20,8 +20,8 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.menu.MenuListAdapter;
 import com.lchpatners.shadal.restaurant_correction.RestaurantCorrectionActivity;
@@ -42,7 +42,7 @@ public class RestaurantInfoActivity extends ActionBarActivity {
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String KAKAO_RESTAURANT_ID = "kakao_restaurant_id";
     public static final String KAKAO_CAMPUS = "kakao_restaurant_in_campus";
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private static final String TAG = LogUtils.makeTag(RestaurantInfoActivity.class);
     private Intent mIntent;
     private RestaurantInfoController mRestaurantInfoController;

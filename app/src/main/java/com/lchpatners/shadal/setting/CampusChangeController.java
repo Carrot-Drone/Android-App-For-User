@@ -8,10 +8,10 @@ import android.widget.ListView;
 
 import com.lchpatners.shadal.R;
 import com.lchpatners.shadal.RootActivity;
-import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusAPI;
 import com.lchpatners.shadal.campus.CampusAdapter;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.restaurant.RestaurantController;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.Preferences;
@@ -32,7 +32,7 @@ import retrofit.converter.GsonConverter;
 
 public class CampusChangeController {
     private static final String TAG = LogUtils.makeTag(CampusChangeController.class);
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private CampusAPI mCampusAPI;
     private Activity mActivity;
     private ListView lvCampusListView;

@@ -2,7 +2,6 @@ package com.lchpatners.shadal.restaurant_suggestion;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.lchpatners.shadal.dao.RestaurantSuggestion;
 import com.lchpatners.shadal.util.Preferences;
@@ -19,7 +18,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RestaurantSuggestionController {
 
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
 
     public static void sendRestaurantSuggestion(final Activity activity, final RestaurantSuggestion restaurantSuggestion) {
 

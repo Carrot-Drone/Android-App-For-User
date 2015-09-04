@@ -7,14 +7,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.lchpatners.shadal.R;
-import com.lchpatners.shadal.dao.Campus;
 import com.lchpatners.shadal.campus.CampusController;
+import com.lchpatners.shadal.dao.Campus;
+import com.lchpatners.shadal.dao.Category;
 import com.lchpatners.shadal.dao.RecommendedRestaurant;
 import com.lchpatners.shadal.dao.RecommendedRestaurantInfo;
 import com.lchpatners.shadal.dao.RecommendedRestaurantList;
 import com.lchpatners.shadal.dao.Restaurant;
 import com.lchpatners.shadal.restaurant.RestaurantController;
-import com.lchpatners.shadal.dao.Category;
 import com.lchpatners.shadal.util.LogUtils;
 import com.lchpatners.shadal.util.RetrofitConverter;
 
@@ -37,7 +37,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RecommendedRestaurantController {
     private static final String TAG = LogUtils.makeTag(RecommendedRestaurantController.class);
-    private static final String BASE_URL = "http://www.shadal.kr";
+    private static final String BASE_URL = "http://www.shadal.kr:3000";
     private static VerticalViewPager verticalViewPager;
     private RecommendedRestaurantPagerAdapter adapter;
     private Activity mActivity;
