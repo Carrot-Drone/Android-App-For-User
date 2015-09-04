@@ -29,8 +29,8 @@ public class LandingActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         //add URQA Libs, initialization.
-        //TODO : reveal comment
-        URQAController.InitializeAndStartSession(getApplicationContext(), "63FB46FA");
+        //TODO : change urqa code to realese code
+        URQAController.InitializeAndStartSession(getApplicationContext(), "7EF2DF8D");
 
         setContentView(R.layout.activity_landing);
 

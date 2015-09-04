@@ -9,8 +9,8 @@ android {
         applicationId "com.lchpatners.shadal"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 330
-        versionName "3.3.0"
+        versionCode 331
+        versionName "3.3.1"
     }
     buildTypes {
         release {
@@ -32,6 +32,6 @@ dependencies {
     compile 'io.realm:realm-android:0.82.1'
     compile 'com.kakao.sdk:kakaolink:1.1.0'
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
-    compile files('library/UrQA-Client_0.97.jar')
-    compile files('library/FlurryAnalytics-6.0.0.jar')
+    compile files('libs/UrQA-Client_0.97.jar')
+    compile files('libs/FlurryAnalytics-6.0.0.jar')
 }
