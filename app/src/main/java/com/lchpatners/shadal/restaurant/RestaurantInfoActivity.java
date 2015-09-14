@@ -55,7 +55,10 @@ public class RestaurantInfoActivity extends ActionBarActivity {
 
         Campus campus = CampusController.getCurrentCampus(RestaurantInfoActivity.this);
         int restaurant_id;
-        String currentCampusShortName = campus.getName_kor_short();
+        String currentCampusShortName = "";
+        if (campus != null) {
+            currentCampusShortName = campus.getName_kor_short();
+        }
         String kakaoCampusName;
 
         mIntent = getIntent();

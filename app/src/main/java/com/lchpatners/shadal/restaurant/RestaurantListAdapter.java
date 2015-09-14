@@ -43,7 +43,7 @@ public class RestaurantListAdapter extends BaseAdapter {
         loadData(mOrder);
     }
 
-    private void sortRestaurantMenu() {
+    private void sortRestaurantList() {
         List<Restaurant> tempRestaurantList = new ArrayList<Restaurant>();
 
         for (Restaurant restaurant : mRestaurantList) {
@@ -68,7 +68,7 @@ public class RestaurantListAdapter extends BaseAdapter {
     public void loadData(String orderBy) {
         mRestaurantList = RestaurantController.getRestaurantList(mActivity, mCategoryNumber, orderBy);
         if (mRestaurantList != null) {
-            sortRestaurantMenu();
+            sortRestaurantList();
         }
         notifyDataSetChanged();
     }
@@ -110,6 +110,7 @@ public class RestaurantListAdapter extends BaseAdapter {
         name.setText(restaurant.getName());
 
         convertView.findViewById(R.id.flyer).setVisibility(restaurant.isHas_flyer() ? View.VISIBLE : View.GONE);
+        convertView.findViewById(R.id.flyer_image).setVisibility(restaurant.isHas_flyer() ? View.VISIBLE : View.GONE);
 
         if (restaurant.isHas_flyer()) {
             final RelativeLayout flyerBtn = (RelativeLayout) convertView.findViewById(R.id.flyer);

@@ -37,12 +37,12 @@ public class MenuListAdapter extends BaseAdapter {
     public MenuListAdapter(Context context, Restaurant restaurant) {
         this.mContext = context;
         this.mRestaurantMenuController = new RestaurantMenuController(context, restaurant);
-        this.mRestaurantMenus = mRestaurantMenuController.getRestaurantMenus();
+        this.mRestaurantMenus = restaurant.getMenus();
         convertMenuList();
     }
 
     private void convertMenuList() {
-        sortMenuList();
+//        sortMenuList();
 
         if (mRestaurantMenus.size() != 0) {
             String currentSection = mRestaurantMenus.get(0).getSection();
